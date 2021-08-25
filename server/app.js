@@ -8,9 +8,9 @@ import logger from 'morgan';
 import postsRouter from './routes/posts.js';
 import { connectDB } from './utils/mongo.js'
 
-const { PORT, MONGO_URI, USER_ID, PASSWORD } = process.env;
+const { PORT, MONGO_URI, USER_ID, USER_PASSWORD } = process.env;
 
-connectDB(mongoose, MONGO_URI, USER_ID, PASSWORD);
+connectDB(mongoose, MONGO_URI, USER_ID, USER_PASSWORD);
 
 const app = express();
 
