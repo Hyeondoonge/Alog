@@ -1,12 +1,17 @@
-import Search from './post/Search';
-import './App.css';
+import Template from './Template';
+import Home from './page/Home';
+import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 
-function App() {
+export default function App() {
   return (
     <div className="App">
-      <Search />
+      <Template>
+        <Router>
+          <Switch>
+            <Route path="/" exact component={Home} />
+          </Switch>
+        </Router>
+      </Template>
     </div>
   );
 }
-
-export default App;
