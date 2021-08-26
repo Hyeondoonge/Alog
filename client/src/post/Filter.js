@@ -7,7 +7,7 @@ export default function Filter({ elements, state, updateState }) {
     <Tag
       label={lan}
       selected={state[index]}
-      clickHandler={() => {
+      handleClick={() => {
         const newState = [...state];
         newState[index] = !state[index];
         updateState(newState);
