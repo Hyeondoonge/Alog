@@ -6,12 +6,13 @@ import ThemeContext from '../contexts/ThemeContext';
 // 사용자 정보 입력할 때도 쓰일 듯
 
 const StyledTextFieldWrapper = styled.div`
-  width: fit-content;
   border: 1.5px solid ${(props) => props.color};
   border-radius: 25px;
   box-shadow: 0 0 3px 1px ${(props) => props.color};
   padding: 2% 3%;
   font-size: 3rem;
+  display: flex;
+  flex-direction: row;
 `;
 
 const StyledTextField = styled.input`

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const StyledTemplate = styled.div`
-  padding: 5%;
+  padding: 5% 15%;
 `;
 
 export default function Template({ children }) {
