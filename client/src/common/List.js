@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import Tag from './Tag';
 
 const StyledList = styled.div`
-  width: 100%;
   flex-wrap: wrap;
   display: flex;
   & * {
@@ -16,17 +15,17 @@ function ListItem({ element, index }) {
 }
 
 // 1. for filter
-export default function List({ elements, state, updateState }) {
+export default function List({ elements, states, updateStates }) {
   return (
     <StyledList>
       {elements.map((element, index) => (
         <Tag
           label={element}
-          selected={state[index]}
+          selected={states[element]}
           handleClick={() => {
-            const newState = [...state];
-            newState[index] = !state[index];
-            updateState(newState);
+            const newStates = { ...states };
+            newStates[element] = !newStates[element];
+            updateStates(newStates);
           }}
         />
       ))}
