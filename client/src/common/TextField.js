@@ -16,6 +16,7 @@ const StyledTextFieldWrapper = styled.div`
 `;
 
 const StyledTextField = styled.input`
+  width: 100%;
   font-size: inherit;
   border: 0px;
   &:focus {
@@ -31,7 +32,6 @@ export default function TextField({ size, placeholder, handleChange, handleKeyUp
     <StyledTextFieldWrapper color={theme.main}>
       <StyledTextField
         ref={inputRef}
-        size={size}
         type="text"
         placeholder={placeholder}
         onChange={handleChange}
