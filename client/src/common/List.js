@@ -22,6 +22,7 @@ export default function List({ elements, states, updateStates }) {
         <Tag
           label={element}
           selected={states[element]}
+          clickable
           handleClick={() => {
             const newStates = { ...states };
             newStates[element] = !newStates[element];
