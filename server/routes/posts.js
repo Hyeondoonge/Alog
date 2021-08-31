@@ -1,5 +1,6 @@
 import express from 'express';
-import { findPost, countPosts } from '../utils/post.js';
+import { findPost, countPosts } from '../queries/post.js';
+import { docsMap, formatDate } from '../utils.js';
 const router = express.Router();
 
 // use함수를 이용해 사용자 권한을 체크하는 기능을 구현할 수 있다.
@@ -7,19 +8,25 @@ const router = express.Router();
 // data formatting 함수 만들기
 
 router.get('/search', async (req, res, next) => {
-  const totalCount = await countPosts();
   const { keyword, writerId } = req.query;
-  const posts = await findPost(keyword, writerId);
+  const totalCount = await countPosts(keyword);
+  let posts = await findPost(keyword, writerId);
+
+  // doc 데이터들 변형
+  posts = docsMap(posts, (post) => {
+    post.writeDate = formatDate(post.writeDate);
+    return post;
+  });
 
   if (!posts.length) {
     res.status(204).end();
+    return;
   }
-  else {
-    res.status(200).json({
+
+  res.status(200).json({
       totalCount,
       posts
     });
-  }
 });
 
 export default router;
