@@ -6,7 +6,8 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
 import postsRouter from './routes/posts.js';
-import { connectDB } from './utils/mongo.js'
+import { connectDB } from './queries/mongo.js'
+import { insertPosts } from './queries/post.js';
 
 const { PORT, MONGO_URI, USER_ID, USER_PASSWORD } = process.env;
 
@@ -16,7 +17,7 @@ const app = express();
 
 const corsOptions = {
   origin: 'http://localhost:3000', // 배열로 여러 도메인 등록도 가능
-  methods: 'GET'
+  methods: 'GET',
   // methods: 허용할 메소드 종류
   // optionSuccessStatus: options 요청의 성공 코드
   // preflightContinue: preflight응답을 다음 next 핸들러로 전달

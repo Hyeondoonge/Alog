@@ -6,6 +6,7 @@
  */
 
  const connectDB = (mongoose, uri, user, pass) => {
+  console.log(uri, user, pass);
   try {
     mongoose.connect(uri, { // options
       auth: { authSource: 'admin' },
