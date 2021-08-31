@@ -1,16 +1,31 @@
-import styled from 'styled-components';
+import { useContext } from 'react';
+import styled, { keyframes } from 'styled-components';
 import Tag from '../common/Tag';
+import ThemeContext from '../contexts/ThemeContext';
 
-const StyledCard = styled.div`
-  box-shadow: 0 0 2px 1px #eee;
-  border-radius: 5px;
-  padding: 5%;
-  transition: 0.5s;
-  cursor: pointer;
+const scale = keyframes`
+ 50% {
+  transform: translateY(-5%);
+ }
+ 100% {
+  transform: translateY(0%);
+ }
 `;
 
-function Card({ children }) {
-  return <StyledCard>{children}</StyledCard>;
+const StyledCard = styled.div`
+  background-color: ${(props) => props?.color ?? 'white'};
+  color: black;
+  border-radius: 10px;
+  padding: 50px;
+  transition: 0.5s;
+  cursor: pointer;
+  &:hover {
+    animation: 1s ${scale};
+  }
+`;
+
+function Card({ color, children }) {
+  return <StyledCard color={color}>{children}</StyledCard>;
 }
 
 const StyledPost = styled.div`
@@ -23,9 +38,11 @@ const StyledPost = styled.div`
 
 export default function Post({ post }) {
   const { _id: id, title, subtitle, platform, language, writerId, writeDate } = post;
+  const theme = useContext(ThemeContext);
+
   return (
-    <Card>
-      <StyledPost key={id}>
+    <Card color={theme.content}>
+      <StyledPost>
         <div>
           <div
             style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center' }}
@@ -34,8 +51,12 @@ export default function Post({ post }) {
             <strong>{title}</strong>
             <Tag label={language} size={1.0} />
           </div>
-          <span>너무 어려운 문제였다...</span>
-          {writeDate}
+          <div>
+            <span>{subtitle}</span>
+          </div>
+          <div>
+            {writerId} ・ {writeDate}에 작성된 글
+          </div>
         </div>
         <div>좋아요 8</div>
         <div>댓글 3</div>
