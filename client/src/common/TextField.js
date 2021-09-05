@@ -16,6 +16,7 @@ const StyledTextFieldWrapper = styled.div`
 `;
 
 const StyledTextField = styled.input`
+  width: 100%;
   font-size: inherit;
   border: 0px;
   &:focus {
@@ -23,7 +24,7 @@ const StyledTextField = styled.input`
   }
 `;
 
-export default function TextField({ size, placeholder, handleChange, handleKeyUp }) {
+export default function TextField({ size, placeholder, handleKeyUp, handleClickRemove }) {
   const inputRef = useRef(null);
   const theme = useContext(ThemeContext);
 
@@ -34,13 +35,13 @@ export default function TextField({ size, placeholder, handleChange, handleKeyUp
         size={size}
         type="text"
         placeholder={placeholder}
-        onChange={handleChange}
         onKeyUp={handleKeyUp}
       />
       <span
         style={{ cursor: 'pointer' }}
         onClick={() => {
           inputRef.current.value = '';
+          handleClickRemove();
         }}
       >
         ✖️

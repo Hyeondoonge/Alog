@@ -8,9 +8,9 @@ const router = express.Router();
 // data formatting 함수 만들기
 
 router.get('/search', async (req, res, next) => {
-  const { keyword, writerId } = req.query;
+  const { keyword, writerId, cursor, size } = req.query;
   const totalCount = await countPosts(keyword);
-  let posts = await findPost(keyword, writerId);
+  let posts = await findPost(keyword, writerId, cursor, size);
 
   // doc 데이터들 변형
   posts = docsMap(posts, (post) => {
@@ -25,7 +25,8 @@ router.get('/search', async (req, res, next) => {
 
   res.status(200).json({
       totalCount,
-      posts
+      posts,
+      cursor: posts[posts.length -1]._id
     });
 });
 

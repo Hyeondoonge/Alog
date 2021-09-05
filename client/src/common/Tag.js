@@ -2,32 +2,41 @@ import { useContext } from 'react';
 import styled, { css } from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
-// clickableTag인 것과 아닌 것으로, 고차 컴포넌트 만들기
+// Extending styles
+// 말 그대로 스타일을 확장해서 재사용할 수 있다. (=> 코드 중복 감소)
 
 const StyledTag = styled.span`
-  font-size: ${(props) => props?.size ?? '1.5'}rem;
-  border: 1.5px solid ${(props) => props.color};
+  background-color: ${(props) => props.color};
+  font-size: ${(props) => `${props?.size}rem;` ?? 'inherit;'}
+  border: 2px solid ${(props) => props.color};
+  padding: 0.1rem 1.0rem;
   cursor: pointer;
-  padding: 0.4em 0.7em;
-  border-radius: 1.5rem;
+  border-radius: 3rem;
+`;
+
+const StyledClickableTag = styled(StyledTag)`
+  ${(props) =>
+    !props.selected &&
+    css`
+      background-color: transparent !important;
+    `}
   transition: 0.4s;
+  padding: 1rem 1.5rem !important;
   &:hover {
     box-shadow: 0 0 2px 1px #eee;
   }
-  ${(props) =>
-    props.selected &&
-    css`
-      background-color: ${props.color};
-      color: white;
-    `}
 `;
 
-export default function Tag({ label, size, selected, handleClick }) {
+export default function Tag({ label, size, clickable, selected, handleClick }) {
   const theme = useContext(ThemeContext);
 
-  return (
-    <StyledTag color={theme.main} size={size} selected={selected} onClick={handleClick}>
+  return !clickable ? (
+    <StyledTag color={theme.main} size={size}>
       {label}
     </StyledTag>
+  ) : (
+    <StyledClickableTag color={theme.main} selected={selected} onClick={handleClick} size={size}>
+      {label}
+    </StyledClickableTag>
   );
 }

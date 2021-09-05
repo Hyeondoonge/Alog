@@ -14,18 +14,20 @@ const insertPosts = async (data) => {
 /**
  * 해당 키워드 그리고 작성자에 해당하는 포스트 반환
  */
-const findPost = async (keyword, writerId) => {
+const findPost = async (keyword, writerId, cursor, size) => {
    // json > query builder, query builder 사용 시 체인이 많이 필요할 경우 가독성이 떨어진다
 
    // 데이터를 페이징 하며 가져오도록 추후 변경 (무한 스크롤 구현 기능 시)
   try {
     if (!keyword) return [];
-    const filter = { title: { $regex: '.*' + keyword + '.*' } };
+    const filter = { title: { $regex: '.*' + keyword + '.*' }};
+    if (cursor !== 'none') {
+      filter._id = { $lt: cursor };
+    }
+
     if (writerId) filter.writerId = writerId;
 
-    console.log('db connection');
-    
-    const doc = await Post.find(filter).exec();
+    const doc = await Post.find(filter).sort('field -_id').limit(parseInt(size)).exec();
     return doc;
   } catch (err) {
     console.log(err);
@@ -38,7 +40,7 @@ const findPost = async (keyword, writerId) => {
 const countPosts = async (keyword, writerId) => { 
  try {
   if (!keyword) return [];
-  const filter = { title: { $regex: '.*' + keyword + '.*' } };
+  const filter = { title: { $regex: '.*' + keyword + '.*' }};
   if (writerId) filter.writerId = writerId;
 
   const doc = await Post.find(filter).exec();
