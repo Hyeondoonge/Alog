@@ -24,13 +24,7 @@ const StyledTextField = styled.input`
   }
 `;
 
-export default function TextField({
-  size,
-  placeholder,
-  handleChange,
-  handleKeyUp,
-  handleClickRemove
-}) {
+export default function TextField({ size, placeholder, handleKeyUp, handleClickRemove }) {
   const inputRef = useRef(null);
   const theme = useContext(ThemeContext);
 
@@ -41,7 +35,6 @@ export default function TextField({
         size={size}
         type="text"
         placeholder={placeholder}
-        onChange={handleChange}
         onKeyUp={handleKeyUp}
       />
       <span
