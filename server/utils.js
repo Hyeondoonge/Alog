@@ -7,12 +7,12 @@ const formatDate = (date) => {
   const today = moment(new Date());
   const writeDate = moment(date);
 
-  if (today.diff(writeDate, 'years')) {
+  if (!today.isSame(writeDate, 'years')) {
     return writeDate.format('YYYY년 MM월');
   }
    
-  if (today.diff(writeDate, 'months') || today.diff(writeDate, 'days')) {
-    return writeDate.format('MM월 DD일');
+  if (!today.isSame(writeDate, 'months') || !today.isSame(writeDate, 'days')) {
+    return writeDate.format('MM월 DD일'); 
   }
 
   return `오늘 ${writeDate.format('H:mm')}`;
