@@ -15,7 +15,7 @@ const loading = keyframes`
 `;
 
 const StyledLoading = styled.div`
-  height: 50vh;
+  padding: 5rem;
   display: flex;
   flex-direction: column;
   align-items: center;

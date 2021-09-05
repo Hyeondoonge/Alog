@@ -20,6 +20,7 @@ export default function List({ elements, states, updateStates }) {
     <StyledList>
       {elements.map((element, index) => (
         <Tag
+          size={2.0}
           label={element}
           selected={states[element]}
           clickable

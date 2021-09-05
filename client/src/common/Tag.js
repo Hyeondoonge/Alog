@@ -7,11 +7,11 @@ import ThemeContext from '../contexts/ThemeContext';
 
 const StyledTag = styled.span`
   background-color: ${(props) => props.color};
-  font-size: ${(props) => props?.size ?? '1.5'}rem;
-  border: 1.5px solid ${(props) => props.color};
+  font-size: ${(props) => `${props?.size}rem;` ?? 'inherit;'}
+  border: 2px solid ${(props) => props.color};
+  padding: 0.1rem 1.0rem;
   cursor: pointer;
-  padding: 0.4em 0.7em;
-  border-radius: 1.5rem;
+  border-radius: 3rem;
 `;
 
 const StyledClickableTag = styled(StyledTag)`
@@ -21,6 +21,7 @@ const StyledClickableTag = styled(StyledTag)`
       background-color: transparent !important;
     `}
   transition: 0.4s;
+  padding: 1rem 1.5rem !important;
   &:hover {
     box-shadow: 0 0 2px 1px #eee;
   }
