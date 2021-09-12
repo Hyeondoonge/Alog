@@ -7,9 +7,9 @@ import ThemeContext from '../contexts/ThemeContext';
 
 const StyledTag = styled.span`
   background-color: ${(props) => props.color};
-  font-size: ${(props) => `${props?.size}rem;` ?? 'inherit;'}
+  font-size: ${(props) => (props.size ? `${props.size}rem` : 'inherit')};
   border: 2px solid ${(props) => props.color};
-  padding: 0.1rem 1.0rem;
+  padding: 0.1rem 1rem;
   cursor: pointer;
   border-radius: 3rem;
 `;
@@ -35,7 +35,7 @@ export default function Tag({ label, size, clickable, selected, handleClick }) {
       {label}
     </StyledTag>
   ) : (
-    <StyledClickableTag color={theme.main} selected={selected} onClick={handleClick} size={size}>
+    <StyledClickableTag color={theme.main} size={size} selected={selected} onClick={handleClick}>
       {label}
     </StyledClickableTag>
   );
