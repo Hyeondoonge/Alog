@@ -5,26 +5,26 @@ const getFilter = () => { // 필터 조건을 받아 쿼리를 위한 필터를 
 };
 
 const insertPosts = async (data) => {
-  Post.insertMany(data, (err) => {
-    if (err) console.log(err);
-    else console.log('succefully save post');
-  });
+  try {
+    await Post.insertMany(data);
+    console.log('succefully save post');
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 /**
  * 해당 키워드 그리고 작성자에 해당하는 포스트 반환
  */
-const findPost = async (keyword, writerId, cursor, size) => {
+const findPost = async (keyword, language, cursor, size, writerId) => {
    // json > query builder, query builder 사용 시 체인이 많이 필요할 경우 가독성이 떨어진다
 
    // 데이터를 페이징 하며 가져오도록 추후 변경 (무한 스크롤 구현 기능 시)
   try {
     if (!keyword) return [];
     const filter = { title: { $regex: '.*' + keyword + '.*' }};
-    if (cursor !== 'none') {
-      filter._id = { $lt: cursor };
-    }
-
+    if (cursor) filter._id = { $lt: cursor };
+    if (language) filter.language = { $in: language };
     if (writerId) filter.writerId = writerId;
 
     const doc = await Post.find(filter).sort('field -_id').limit(parseInt(size)).exec();
@@ -37,10 +37,11 @@ const findPost = async (keyword, writerId, cursor, size) => {
 /**
  * 키워드의 연관된 전체 포스트를 카운팅
  */
-const countPosts = async (keyword, writerId) => { 
+const countPosts = async (keyword, language, writerId) => { 
  try {
   if (!keyword) return [];
   const filter = { title: { $regex: '.*' + keyword + '.*' }};
+  if (language) filter.language = { $in: language };
   if (writerId) filter.writerId = writerId;
 
   const doc = await Post.find(filter).exec();

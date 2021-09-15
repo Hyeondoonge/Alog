@@ -24,24 +24,24 @@ const StyledTextField = styled.input`
   }
 `;
 
-export default function TextField({ size, placeholder, handleKeyUp, handleClickRemove }) {
+// click 및 tab 발생 시 focus 이벤트로 처리
+export default function TextField({ placeholder, handleFocus, handleChange, handleRemove }) {
   const inputRef = useRef(null);
   const theme = useContext(ThemeContext);
 
   return (
-    <StyledTextFieldWrapper color={theme.main}>
+    <StyledTextFieldWrapper color={theme.main} onFocus={handleFocus}>
       <StyledTextField
         ref={inputRef}
-        size={size}
         type="text"
         placeholder={placeholder}
-        onKeyUp={handleKeyUp}
+        onChange={handleChange}
       />
       <span
         style={{ cursor: 'pointer' }}
         onClick={() => {
           inputRef.current.value = '';
-          handleClickRemove();
+          handleRemove();
         }}
       >
         ✖️
