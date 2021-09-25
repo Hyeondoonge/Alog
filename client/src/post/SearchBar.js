@@ -1,5 +1,5 @@
-import TextField from '../common/TextField';
+import SearchField from '../common/SearchField';
 
 export default function SearchBar(props) {
-  return <TextField {...props} />;
+  return <SearchField {...props} />;
 }
