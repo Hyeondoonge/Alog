@@ -1,30 +1,30 @@
-import { useContext } from 'react';
-import styled from 'styled-components';
-import Form from '../common/Form';
+import { useContext, useState } from 'react';
 import ThemeContext from '../contexts/ThemeContext';
-
-const StyledButton = styled.button`
-  border: none;
-  cursor: pointer;
-  font-size: 1.5rem;
-  padding: 1% 2%;
-  border-radius: 8px;
-  background: ${(props) => props.color || 'default'};
-  color: #ffffff;
-  opacity: 0.9;
-  &:hover {
-    opacity: 1;
-  }
-`;
+import Form from '../common/Form';
+import Button from '../common/Button';
+import Template from '../Template';
 
 export default function WritePost() {
-  // 상태관리 (?)
   const theme = useContext(ThemeContext);
+  const [post, setPost] = useState({
+    title: '',
+    platform: '',
+    subtitle: '',
+    language: '',
+    content: ''
+  });
 
-  const onClick = (data) => {
+  const onClick = () => {
     console.log('fetch...');
+    console.log(post);
   };
 
-  const writeButton = () => <StyledButton color={theme.main}>등록</StyledButton>;
-  return <Form Button={writeButton} />;
+  const writeButton = () => (
+    <Button label="등록" color={theme.main} size="medium" onClick={onClick} />
+  );
+  return (
+    <Template>
+      <Form post={post} setPost={setPost} Button={writeButton} />
+    </Template>
+  );
 }
