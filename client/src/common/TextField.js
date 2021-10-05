@@ -28,7 +28,6 @@ const styleWithWidth = {
 const TypographyWrapper = styled.div`
   width: fit-content;
   height: fit-content;
-  border: 1px solid black;
 `;
 
 const StyledHighlight = styled.div`
@@ -56,6 +55,7 @@ const StyledTextField = styled.input`
   width: 100%;
   margin: var(--textfield-margin, 11%);
   font-size: inherit;
+  background-color: ${(props) => props.backgroundColor};
   border: 0px;
   &:focus {
     outline: none;
@@ -67,7 +67,7 @@ const StyledTextArea = styled.textarea`
   ${(props) => props.styleWithWidth};
   margin: var(--textarea-margin, 11%);
   resize: none;
-  background-color: black;
+  background-color: ${(props) => props.backgroundColor};
   color: white;
   font-size: inherit;
   border: 0px;
@@ -133,7 +133,7 @@ export default function TextField({
       {label && <Typography highlightRef={highlightRef}>{label}</Typography>}
       <StyledTextFieldWrapper
         ref={inputRef}
-        color={theme.main}
+        backgroundColor={theme.background}
         styleWithWidth={wrapperStyleWithWidth}
         onFocus={onFocus}
         onBlur={onBlur}
@@ -143,6 +143,7 @@ export default function TextField({
             name={name}
             rows={rows}
             placeholder={placeholder}
+            backgroundColor={theme.background}
             styleWithWidth={areaStyleWithWidth}
             onChange={onChange}
           />
@@ -152,6 +153,8 @@ export default function TextField({
             name={name}
             maxLength={maxLength}
             placeholder={placeholder}
+            autoComplete="off"
+            backgroundColor={theme.background}
             styleWithWidth={fieldStyleWithWidth}
             onChange={onChange}
           />

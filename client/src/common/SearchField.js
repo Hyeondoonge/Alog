@@ -3,20 +3,22 @@ import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
 const StyledTextFieldWrapper = styled.div`
-  width: ${({ size }) => (size ? `${size}%;` : '100%;')}
+  width: 100%;
   border: 1.5px solid ${(props) => props.color};
   border-radius: 25px;
   box-shadow: 0 0 3px 1px ${(props) => props.color};
-  padding: 2% 3%;
   font-size: 3rem;
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 
 const StyledTextField = styled.input`
-  width: 100%;
+  width: 87%;
+  margin: 2% 3%;
   font-size: inherit;
   border: 0px;
+  background-color: ${(props) => props.background};
   &:focus {
     outline: none;
   }
@@ -34,8 +36,10 @@ export default function SearchField({ placeholder, handleFocus, handleChange, ha
           ref={inputRef}
           type="text"
           placeholder={placeholder}
+          background={theme.background}
           onChange={handleChange}
         />
+        {/* indorment */}
         <span
           style={{ cursor: 'pointer' }}
           onClick={() => {

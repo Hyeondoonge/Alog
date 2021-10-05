@@ -8,8 +8,8 @@ body {
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: black;
-  color: white;
+  background-color: #131313;
+  color: #eeeeee;
 }
 
 code {
@@ -17,8 +17,7 @@ code {
 }
 
 input {
-  background-color: black;
-  color: white;
+  color: #eeeeee;
 }
 
 @media screen and (max-width: 600px) {

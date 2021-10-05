@@ -113,6 +113,17 @@ export default function Home() {
           handleChange={handleChangeKeyword}
           handleRemove={handleRemoveKeyword}
           handleFocus={handleFocusBar}
+          value={keyword}
+          endorment={
+            <span
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                handleRemoveKeyword();
+              }}
+            >
+              ✖️
+            </span>
+          }
         />
         <div ref={filterRef} style={{ transition: '1s', opacity: 0 }}>
           <FilterList elements={languages} state={isSelected} handleClick={handleChangeLanguage} />

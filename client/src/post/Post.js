@@ -43,8 +43,8 @@ export default function Post({ post }) {
           </div>
         </div>
         <div style={{ width: '10%' }}>
-          <div>👍🏻 8</div>
-          <div>💬 3</div>
+          {/* <div>👍🏻 8</div>
+          <div>💬 3</div> */}
         </div>
       </StyledPost>
     </Card>

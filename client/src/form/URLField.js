@@ -4,7 +4,7 @@ import useDebounce from '../hooks/useDebounce';
 
 // 재사용하기 위해서가 아니라 로직 분리를 위함
 
-export function URLField({ setStates }) {
+export function URLField({ setTitleAndPlatform }) {
   const theme = useContext(ThemeContext);
   const alertRef = useRef(null);
   const hrRef = useRef(null);
@@ -49,7 +49,7 @@ export function URLField({ setStates }) {
       if (!url) return;
       try {
         const [title, platform] = await parseFromURL(url);
-        setStates(title, platform); // ...post, title, platform => 무의미한 post 전달할 필요가 없어졌다.
+        setTitleAndPlatform(title, platform); // ...post, title, platform => 무의미한 post 전달할 필요가 없어졌다.
       } catch (error) {
         alertRef.current.style.opacity = 1;
         return;
@@ -60,26 +60,30 @@ export function URLField({ setStates }) {
   return (
     <>
       <input
-        style={{ border: 'none', outline: 'none', width: '100%', fontSize: '2rem' }}
+        style={{
+          border: 'none',
+          outline: 'none',
+          width: '100%',
+          fontSize: '2rem',
+          backgroundColor: theme.background
+        }}
         placeholder="문제의 링크를 올려 풀이의 제목을 완성해보세요"
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
       />
-      <hr ref={hrRef} style={{ width: '100%', border: '1px solid white' }} />
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <span
-          ref={alertRef}
-          style={{
-            color: '#FA3737',
-            fontSize: '1.5rem',
-            transition: 'opacity 1s',
-            opacity: 0
-          }}
-        >
-          유효하지 않은 링크입니다
-        </span>
-      </div>
+      <hr ref={hrRef} style={{ border: '1px solid white', marginBottom: 0 }} />
+      <span
+        ref={alertRef}
+        style={{
+          color: '#FA3737',
+          fontSize: '1.5rem',
+          transition: 'opacity 1s',
+          opacity: 0
+        }}
+      >
+        유효하지 않은 링크입니다
+      </span>
     </>
   );
 }
