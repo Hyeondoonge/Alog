@@ -18,4 +18,13 @@ const findLanguages = async () => {
   }
 };
 
-export { insertLanguages, findLanguages };
+const findLanguagesByKeyword = async (keyword) => {
+  try {
+    const doc = await Language.find({ name: { $regex: `^${keyword}`, $options: 'i' }});
+    return doc;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { insertLanguages, findLanguages, findLanguagesByKeyword };

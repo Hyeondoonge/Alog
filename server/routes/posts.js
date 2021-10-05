@@ -8,6 +8,7 @@ const router = express.Router();
 // writerId, language, cursor는 undefined로 전달될 수도 있는 값.
 // 클라이언트 단에서 부터 요청 전 이를 처리해주도록 해야한다.
 
+// post search
 router.get('/search', async (req, res, next) => {
   const { keyword, languages, cursor, size, writerId } = req.query;
   
