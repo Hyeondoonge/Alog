@@ -13,7 +13,7 @@ const createQuery = (option) => {
 
 const fetchLanguages = async () => {
   try {
-    const response = await fetch(`/languages`);
+    const response = await fetch('/api/languages');
 
     const result = await response.json();
     return result;
@@ -27,7 +27,7 @@ const fetchPosts = async (option) => {
   // keyword, language, cursor, size
   try {
     const query = createQuery(option);
-    const response = await fetch(`/posts/search?${query}`);
+    const response = await fetch(`/api/posts/search?${query}`);
     const result = await response.json();
     return result;
   } catch (err) {
