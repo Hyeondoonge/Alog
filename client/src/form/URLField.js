@@ -11,6 +11,15 @@ export function URLField({ setTitleAndPlatform }) {
   const debounce = useDebounce();
 
   const parseFromURL = async (url) => {
+    let platform = '';
+    if (url.startsWith('https://programmers.co.kr')) {
+      platform = 'programmers';
+    } else if (url.startsWith('https://www.acmicpc.net')) {
+      platform = 'baekjoon';
+    }
+
+    url = url.replace('https://www.acmicpc.net', '');
+
     try {
       const res = await fetch(url, {
         headers: { 'Content-type': 'text/html' }
@@ -20,16 +29,14 @@ export function URLField({ setTitleAndPlatform }) {
       const html = await res.text();
       const doc = parser.parseFromString(html, 'text/html');
 
-      let title = '',
-        platform = '';
+      let title = '';
 
-      if (url.startsWith('https://programmers.co.kr')) {
-        platform = 'programmers';
+      if (platform === 'programmers')
         title = doc.querySelector('.algorithm-title').innerHTML.trim();
-      } else if (url.startsWith('https://www.acmicpc.net')) {
-        platform = 'baekjoon';
-        title = document.querySelector('#problem_title').innerHTML.trim();
+      else if (platform === 'baekjoon') {
+        title = doc.querySelector('#problem_title').innerHTML.trim();
       }
+
       return [title, platform];
     } catch (error) {}
   };
