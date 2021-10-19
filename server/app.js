@@ -26,8 +26,8 @@ const corsOptions = {
 app.use(logger('dev'));
 app.use(cors(corsOptions));
 // app.use(express.urlencoded({ extended: false }));
-app.use('/api/posts', postsRouter);
-app.use('/api/languages', languagesRouter);
+app.use('/posts', postsRouter);
+app.use('/languages', languagesRouter);
 app.use((req, res, next) => { // 매핑되는 경로 없을 때
   res.status(404).send('not found page');
 });
