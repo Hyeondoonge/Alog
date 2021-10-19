@@ -4,41 +4,43 @@ import useDebounce from '../hooks/useDebounce';
 
 // 재사용하기 위해서가 아니라 로직 분리를 위함
 
-export function URLField({ setTitleAndPlatform }) {
+export function URLField({ setPlatformAndTitle }) {
   const theme = useContext(ThemeContext);
   const alertRef = useRef(null);
   const hrRef = useRef(null);
   const debounce = useDebounce();
 
-  const parseFromURL = async (url) => {
-    let platform = '';
+  const getPlatform = (url) => {
     if (url.startsWith('https://programmers.co.kr')) {
-      platform = 'programmers';
+      return 'programmers';
     } else if (url.startsWith('https://www.acmicpc.net')) {
-      platform = 'baekjoon';
+      return 'baekjoon';
     }
+    throw new Error('unvalid url error'); // 등록되지 않은 url
+  };
 
-    url = url.replace('https://www.acmicpc.net', '');
+  const getTitle = async (platform, url) => {
+    // useCallback 사용해서 함수 재사용??
+    if (platform === 'baekjoon') {
+      url = url.replace('https://www.acmicpc.net', `/${platform}`);
+    }
 
     try {
       const res = await fetch(url, {
         headers: { 'Content-type': 'text/html' }
       });
-      if (res.status === 404) return new Error('unvalid url error');
       const parser = new DOMParser();
       const html = await res.text();
       const doc = parser.parseFromString(html, 'text/html');
 
-      let title = '';
-
-      if (platform === 'programmers')
-        title = doc.querySelector('.algorithm-title').innerHTML.trim();
-      else if (platform === 'baekjoon') {
-        title = doc.querySelector('#problem_title').innerHTML.trim();
+      if (platform === 'programmers') {
+        return doc.querySelector('.algorithm-title').innerHTML.trim();
+      } else if (platform === 'baekjoon') {
+        return doc.querySelector('#problem_title').innerHTML.trim();
       }
-
-      return [title, platform];
-    } catch (error) {}
+    } catch (error) {
+      throw new Error('unvalid url error');
+    }
   };
 
   const onFocus = () => {
@@ -55,8 +57,8 @@ export function URLField({ setTitleAndPlatform }) {
     debounce(async () => {
       if (!url) return;
       try {
-        const [title, platform] = await parseFromURL(url);
-        setTitleAndPlatform(title, platform); // ...post, title, platform => 무의미한 post 전달할 필요가 없어졌다.
+        const platform = getPlatform(url);
+        setPlatformAndTitle(platform, await getTitle(platform, url));
       } catch (error) {
         alertRef.current.style.opacity = 1;
         return;

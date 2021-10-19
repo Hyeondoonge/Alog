@@ -5,14 +5,20 @@ module.exports = function (app) {
     '/api',
     proxy({
       target: 'http://localhost:4500',
-      changeOrigin: true
+      changeOrigin: true,
+      pathRewrite: {
+        '^/api': ''
+      }
     })
   );
   app.use(
-    '/problem',
+    '/baekjoon',
     proxy({
       target: 'https://www.acmicpc.net',
-      changeOrigin: true
+      changeOrigin: true,
+      pathRewrite: {
+        '^/baekjoon': ''
+      }
     })
   );
 };
