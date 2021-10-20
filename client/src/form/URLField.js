@@ -1,47 +1,18 @@
 import { useContext, useRef } from 'react';
 import ThemeContext from '../contexts/ThemeContext';
 import useDebounce from '../hooks/useDebounce';
+import Platform from './Platform';
 
 // 재사용하기 위해서가 아니라 로직 분리를 위함
+
+// platform 클래스를 이용하는 client는 내부 타입에 대해서 알지않게함.
+// 새로운 플랫폼에 신경쓰지 않고 유연한 처리 가능해짐.
 
 export function URLField({ setPlatformAndTitle }) {
   const theme = useContext(ThemeContext);
   const alertRef = useRef(null);
   const hrRef = useRef(null);
   const debounce = useDebounce();
-
-  const getPlatform = (url) => {
-    if (url.startsWith('https://programmers.co.kr')) {
-      return 'programmers';
-    } else if (url.startsWith('https://www.acmicpc.net')) {
-      return 'baekjoon';
-    }
-    throw new Error('unvalid url error'); // 등록되지 않은 url
-  };
-
-  const getTitle = async (platform, url) => {
-    // useCallback 사용해서 함수 재사용??
-    if (platform === 'baekjoon') {
-      url = url.replace('https://www.acmicpc.net', `/${platform}`);
-    }
-
-    try {
-      const res = await fetch(url, {
-        headers: { 'Content-type': 'text/html' }
-      });
-      const parser = new DOMParser();
-      const html = await res.text();
-      const doc = parser.parseFromString(html, 'text/html');
-
-      if (platform === 'programmers') {
-        return doc.querySelector('.algorithm-title').innerHTML.trim();
-      } else if (platform === 'baekjoon') {
-        return doc.querySelector('#problem_title').innerHTML.trim();
-      }
-    } catch (error) {
-      throw new Error('unvalid url error');
-    }
-  };
 
   const onFocus = () => {
     hrRef.current.style.border = `1px solid ${theme.main}`;
@@ -51,14 +22,32 @@ export function URLField({ setPlatformAndTitle }) {
     hrRef.current.style.border = `1px solid white`;
   };
 
+  const fetchPlatformAndTitle = async (url) => {
+    // 입력된 url로부터 document를 획득
+    try {
+      const platform = new Platform(url);
+      const res = await fetch(platform.getUrl(), {
+        headers: { 'Content-type': 'text/html' }
+      });
+      const parser = new DOMParser();
+      const html = await res.text();
+      const doc = parser.parseFromString(html, 'text/html');
+      platform.setProblemTitle(doc);
+
+      return [platform.getName(), platform.getProblemTitle()];
+    } catch (error) {
+      throw new Error('unvalid url error');
+    }
+  };
+
   const onChange = (event) => {
     const url = event.target.value;
     alertRef.current.style.opacity = 0;
     debounce(async () => {
       if (!url) return;
       try {
-        const platform = getPlatform(url);
-        setPlatformAndTitle(platform, await getTitle(platform, url));
+        const [name, title] = await fetchPlatformAndTitle(url);
+        setPlatformAndTitle(name, title);
       } catch (error) {
         alertRef.current.style.opacity = 1;
         return;

@@ -21,4 +21,14 @@ module.exports = function (app) {
       }
     })
   );
+  app.use(
+    '/goorm',
+    proxy({
+      target: 'https://level.goorm.io/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/goorm': ''
+      }
+    })
+  );
 };
