@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import TextField from './TextField';
 import { URLField } from '../form/URLField';
 import LanguageField from '../form/LanguageField';
+import Solution from '../form/Solution';
 
 const ResponsiveImage = ({ src }) => (
   <div>
-    <img src={src} width="100%" height="100%" />
+    <img src={src} />
   </div>
 );
 
@@ -25,10 +26,10 @@ export default function Form({ post, setPost, Button }) {
   return (
     <>
       <div style={{ height: 50 }}>
-        {!title ? (
+        {!(title && platform) ? (
           <URLField
-            setTitleAndPlatform={(title, platform) => {
-              setPost({ ...post, title, platform });
+            setPlatformAndTitle={(platform, title) => {
+              setPost({ ...post, platform, title });
             }}
           />
         ) : (
@@ -47,7 +48,7 @@ export default function Form({ post, setPost, Button }) {
         )}
       </div>
       <TextField
-        name="sumsubtitlemary"
+        name="subtitle"
         label="한 줄 요약"
         placeholder="풀이를 간단하게 요약해보세요"
         onChange={(event) => {
@@ -61,13 +62,11 @@ export default function Form({ post, setPost, Button }) {
           setPost({ ...post, language });
         }}
       />
-      <TextField
-        name="content"
-        label="풀이"
-        rows={20}
-        placeholder="풀이 방식을 공유해주세요"
-        value={content}
-        fullWidth
+      <Solution
+        content={content}
+        setContent={(content) => {
+          setPost({ ...post, content });
+        }}
       />
       <div style={{ textAlign: 'right' }}>
         <Button />

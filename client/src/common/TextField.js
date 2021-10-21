@@ -17,11 +17,6 @@ const styleWithWidth = {
     true: css`
       --textfield-margin: 2%;
     `
-  },
-  area: {
-    true: css`
-      --textarea-margin: 2%;
-    `
   }
 };
 
@@ -48,6 +43,7 @@ const StyledTextFieldWrapper = styled.div`
   font-size: 2rem;
   display: flex;
   flex-direction: row;
+  height: 500;
 `;
 
 const StyledTextField = styled.input`
@@ -63,13 +59,14 @@ const StyledTextField = styled.input`
 `;
 
 const StyledTextArea = styled.textarea`
+  font: inherit;
+  font-size: inherit;
   width: 100%;
   ${(props) => props.styleWithWidth};
-  margin: var(--textarea-margin, 11%);
+  margin: var(--textarea-margin, 2%);
   resize: none;
   background-color: ${(props) => props.backgroundColor};
   color: white;
-  font-size: inherit;
   border: 0px;
   &:focus {
     outline: none;
@@ -97,6 +94,7 @@ function Typography({ highlightRef, children, option }) {
 export default function TextField({
   label,
   name,
+  value,
   maxLength,
   placeholder,
   fullWidth,
@@ -108,7 +106,6 @@ export default function TextField({
   const theme = useContext(ThemeContext);
   const wrapperStyleWithWidth = fullWidth && styleWithWidth.wrapper[fullWidth];
   const fieldStyleWithWidth = fullWidth && styleWithWidth.field[fullWidth];
-  const areaStyleWithWidth = fullWidth && styleWithWidth.area[fullWidth];
 
   const onFocus = () => {
     if (highlightRef.current) {
@@ -142,15 +139,16 @@ export default function TextField({
           <StyledTextArea
             name={name}
             rows={rows}
+            value={value}
             placeholder={placeholder}
             backgroundColor={theme.background}
-            styleWithWidth={areaStyleWithWidth}
             onChange={onChange}
           />
         ) : (
           <StyledTextField
             type="text"
             name={name}
+            value={value}
             maxLength={maxLength}
             placeholder={placeholder}
             autoComplete="off"
