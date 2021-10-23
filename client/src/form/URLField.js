@@ -2,6 +2,7 @@ import { useContext, useRef } from 'react';
 import ThemeContext from '../contexts/ThemeContext';
 import useDebounce from '../hooks/useDebounce';
 import Platform from './Platform';
+import { RiCloseFill } from 'react-icons/ri';
 
 // 재사용하기 위해서가 아니라 로직 분리를 위함
 

@@ -3,6 +3,7 @@ import TextField from './TextField';
 import { URLField } from '../form/URLField';
 import LanguageField from '../form/LanguageField';
 import Solution from '../form/Solution';
+import { RiCloseFill } from 'react-icons/ri';
 
 const ResponsiveImage = ({ src }) => (
   <div>
@@ -42,7 +43,7 @@ export default function Form({ post, setPost, Button }) {
                 setPost({ ...post, title: '', platform: '' });
               }}
             >
-              ✖️
+              <RiCloseFill size="3rem" />
             </h1>
           </div>
         )}
@@ -68,9 +69,6 @@ export default function Form({ post, setPost, Button }) {
           setPost({ ...post, content });
         }}
       />
-      <div style={{ textAlign: 'right' }}>
-        <Button />
-      </div>
     </>
   );
 }

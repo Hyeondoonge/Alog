@@ -107,7 +107,9 @@ export default function Home() {
           gap: '2rem'
         }}
       >
-        <Logo />
+        <div style={{ fontSize: '6rem' }}>
+          <Logo />
+        </div>
         <SearchBar
           placeholder="찾고자하는 문제의 제목을 입력하세요."
           handleChange={handleChangeKeyword}

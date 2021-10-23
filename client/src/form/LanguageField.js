@@ -71,6 +71,7 @@ export default function LanguageField({ language, setLanguage }) {
         return name.toUpperCase() === language.toUpperCase();
       })
     ) {
+      // dom직접 제어... 음...
       document.querySelector('input[name=language]').value = newLanguage;
       setLanguage(newLanguage);
     } else {
@@ -107,7 +108,8 @@ export default function LanguageField({ language, setLanguage }) {
           color: 'black',
           borderRadius: 5,
           fontSize: 'inherit',
-          position: 'absolute'
+          position: 'absolute',
+          zIndex: 1
         }}
       >
         <StyledList ref={listRef} onMouseDown={onMouseDown}>
