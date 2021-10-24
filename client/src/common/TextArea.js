@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
@@ -24,9 +24,11 @@ const StyledTextFieldWrapper = styled.div`
   font-size: 2rem;
   display: flex;
   flex-direction: row;
+  position: relative;
 `;
 
 const StyledTextArea = styled.textarea`
+  padding: 0;
   font: inherit;
   font-size: inherit;
   width: 100%;
@@ -38,7 +40,7 @@ const StyledTextArea = styled.textarea`
   &:focus {
     outline: none;
   }
-  min-height: 50rem;
+  height: auto;
 `;
 
 function Typography({ highlightRef, children, option }) {
@@ -61,7 +63,8 @@ function Typography({ highlightRef, children, option }) {
 
 export default function TextArea({ label, name, value, placeholder, rows, onChange }) {
   const inputRef = useRef(null);
-  const areaRef = useRef(null);
+  const textareaRef = useRef(null);
+  const sideTextareaRef = useRef(null);
   const highlightRef = useRef(null);
   const theme = useContext(ThemeContext);
 
@@ -83,11 +86,21 @@ export default function TextArea({ label, name, value, placeholder, rows, onChan
     inputRef.current.style.boxShadow = `none`;
   };
 
-  useEffect(() => {
-    areaRef.current.rows = areaRef.current.value.split('\n').length;
+  const onInput = (event) => {
+    // autoresize height
+    resizeTextarea(event.target.value);
+  };
 
-    // textarea 현재 line 수..> ㅠㅠ
-  }, [value]);
+  const resizeTextarea = (value) => {
+    const textarea = textareaRef.current;
+    sideTextareaRef.current.value = value;
+    sideTextareaRef.current.style.height = 'auto';
+    textarea.style.height = `${sideTextareaRef.current.scrollHeight}px`;
+  };
+
+  useEffect(() => {
+    resizeTextarea(textareaRef.current.value);
+  }, []);
 
   return (
     <div>
@@ -99,13 +112,17 @@ export default function TextArea({ label, name, value, placeholder, rows, onChan
         onBlur={onBlur}
       >
         <StyledTextArea
-          ref={areaRef}
+          ref={textareaRef}
           name={name}
-          rows={rows}
           value={value}
           placeholder={placeholder}
           backgroundColor={theme.background}
           onChange={onChange}
+          onInput={onInput}
+        />
+        <StyledTextArea
+          ref={sideTextareaRef}
+          style={{ visibility: 'hidden', top: 0, left: 0, position: 'absolute' }}
         />
       </StyledTextFieldWrapper>
     </div>
