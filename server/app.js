@@ -23,6 +23,7 @@ const corsOptions = {
   // preflightContinue: preflight응답을 다음 next 핸들러로 전달
 };
 
+app.use(express.json());
 app.use(logger('dev'));
 app.use(cors(corsOptions));
 // app.use(express.urlencoded({ extended: false }));
