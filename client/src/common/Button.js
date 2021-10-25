@@ -23,6 +23,7 @@ const StyledButton = styled.button`
 
   border: none;
   cursor: pointer;
+  font-weight: 600;
   font-size: var(--button-font-size, 2rem);
   padding: var(--button-padding, 1.5% 3%);
   border-radius: var(--button-border-radius, 16px);

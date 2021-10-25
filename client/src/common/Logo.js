@@ -1,14 +1,24 @@
 import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
-const StyledLogo = styled.h1`
+const StyledLink = styled(Link)`
   color: ${(props) => props.color};
-  font-size: 6rem;
+  font-size: inherit;
+  font-weight: 700;
   text-align: center;
+  &:link {
+    color: ${(props) => props.color};
+    text-decoration: none;
+  }
 `;
 
 export default function Logo() {
   const theme = useContext(ThemeContext);
-  return <StyledLogo color={theme.main}>ALOG</StyledLogo>;
+  return (
+    <StyledLink to="/" color={theme.main}>
+      ALOG
+    </StyledLink>
+  );
 }

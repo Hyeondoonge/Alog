@@ -3,6 +3,7 @@ import ThemeContext from '../contexts/ThemeContext';
 import Form from '../common/Form';
 import Button from '../common/Button';
 import Template from '../Template';
+import StickyHeader from '../common/StickyHeader';
 
 export default function WritePost() {
   const theme = useContext(ThemeContext);
@@ -11,20 +12,30 @@ export default function WritePost() {
     platform: '',
     subtitle: '',
     language: '',
-    content: ''
+    content: '',
+    writerId: 'jsi06138'
   });
-
   const onClick = () => {
-    console.log('fetch...');
-    console.log(post);
+    // 데이터 유효성 검사
+    fetch('/api/posts', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(post)
+    });
   };
 
-  const writeButton = () => (
-    <Button label="등록" color={theme.main} size="medium" onClick={onClick} />
-  );
   return (
-    <Template>
-      <Form post={post} setPost={setPost} Button={writeButton} />
-    </Template>
+    <>
+      <StickyHeader>
+        <div style={{ textAlign: 'right' }}>
+          <Button label="작성" color={theme.main} size="small" onClick={onClick} />
+        </div>
+      </StickyHeader>
+      <Template>
+        <Form post={post} setPost={setPost} />
+      </Template>
+    </>
   );
 }

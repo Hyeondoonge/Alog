@@ -23,10 +23,10 @@ const corsOptions = {
   // preflightContinue: preflight응답을 다음 next 핸들러로 전달
 };
 
+app.use(express.json());
 app.use(logger('dev'));
 app.use(cors(corsOptions));
 // app.use(express.urlencoded({ extended: false }));
-
 app.use('/posts', postsRouter);
 app.use('/languages', languagesRouter);
 app.use((req, res, next) => { // 매핑되는 경로 없을 때

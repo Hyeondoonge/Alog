@@ -1,19 +1,6 @@
-import { useContext, useRef } from 'react';
-import styled, { css } from 'styled-components';
+import { useContext, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
-
-const styleWithWidth = {
-  wrapper: {
-    true: css`
-      --wrapper-width: 100%;
-    `
-  },
-  field: {
-    true: css`
-      --textfield-margin: 2%;
-    `
-  }
-};
 
 const TypographyWrapper = styled.div`
   width: fit-content;
@@ -31,25 +18,30 @@ const StyledHighlight = styled.div`
 `;
 
 const StyledTextFieldWrapper = styled.div`
-  ${(props) => props.styleWithWidth};
-  width: var(--wrapper-width, 15%);
+  width: var(--wrapper-width, 100%);
   border: 1.5px solid white;
   border-radius: var(--wrapper-border-radius, 5px);
   font-size: 2rem;
   display: flex;
   flex-direction: row;
+  position: relative;
 `;
 
-const StyledTextField = styled.input`
-  ${(props) => props.styleWithWidth};
-  width: 100%;
-  margin: var(--textfield-margin, 11%);
+const StyledTextArea = styled.textarea`
+  padding: 0;
+  font: inherit;
   font-size: inherit;
+  width: 100%;
+  margin: var(--textarea-margin, 2%);
+  resize: none;
   background-color: ${(props) => props.backgroundColor};
+  color: white;
   border: 0px;
   &:focus {
     outline: none;
   }
+  height: auto;
+  min-height: 50rem;
 `;
 
 function Typography({ highlightRef, children, option }) {
@@ -70,20 +62,12 @@ function Typography({ highlightRef, children, option }) {
   );
 }
 
-export default function TextField({
-  label,
-  name,
-  value,
-  maxLength,
-  placeholder,
-  fullWidth,
-  onChange
-}) {
+export default function TextArea({ label, name, value, placeholder, rows, onChange }) {
   const inputRef = useRef(null);
+  const textareaRef = useRef(null);
+  const sideTextareaRef = useRef(null);
   const highlightRef = useRef(null);
   const theme = useContext(ThemeContext);
-  const wrapperStyleWithWidth = fullWidth && styleWithWidth.wrapper[fullWidth];
-  const fieldStyleWithWidth = fullWidth && styleWithWidth.field[fullWidth];
 
   const onFocus = () => {
     if (highlightRef.current) {
@@ -103,26 +87,37 @@ export default function TextField({
     inputRef.current.style.boxShadow = `none`;
   };
 
+  const resizeTextarea = (value) => {
+    const textarea = textareaRef.current;
+    sideTextareaRef.current.value = value;
+    sideTextareaRef.current.style.height = 'auto';
+    textarea.style.height = `${sideTextareaRef.current.scrollHeight}px`;
+  };
+
+  useEffect(() => {
+    resizeTextarea(value);
+  }, [value]);
+
   return (
     <div>
       {label && <Typography highlightRef={highlightRef}>{label}</Typography>}
       <StyledTextFieldWrapper
         ref={inputRef}
         backgroundColor={theme.background}
-        styleWithWidth={wrapperStyleWithWidth}
         onFocus={onFocus}
         onBlur={onBlur}
       >
-        <StyledTextField
-          type="text"
+        <StyledTextArea
+          ref={textareaRef}
           name={name}
           value={value}
-          maxLength={maxLength}
           placeholder={placeholder}
-          autoComplete="off"
           backgroundColor={theme.background}
-          styleWithWidth={fieldStyleWithWidth}
           onChange={onChange}
+        />
+        <StyledTextArea
+          ref={sideTextareaRef}
+          style={{ visibility: 'hidden', position: 'absolute' }}
         />
       </StyledTextFieldWrapper>
     </div>

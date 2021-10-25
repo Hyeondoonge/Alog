@@ -4,10 +4,19 @@ import Post from '../models/Post.js';
 const getFilter = () => { // 필터 조건을 받아 쿼리를 위한 필터를 생성
 };
 
-const insertPosts = async (data) => {
+const insertPost = async (data) => {
   try {
-    await Post.insertMany(data);
+    await Post.create(data);
     console.log('succefully save post');
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updatePost = async (data) => {
+  try {
+    await Post.create(data);
+    console.log('succefully update post');
   } catch (err) {
     console.log(err);
   }
@@ -60,4 +69,4 @@ const updatePosts = async () => {
   }
 };
 
-export { insertPosts, findPost, countPosts, updatePosts };
+export { insertPost, updatePost, findPost, countPosts, updatePosts };

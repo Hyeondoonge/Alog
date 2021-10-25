@@ -15,7 +15,7 @@ export default mongoose.model('Post', new mongoose.Schema({
   content: {
     type: String,
     required: true,
-    minLength: [10, 'Too short content'],
+    // minLength: [10, 'Too short content'],
   },
   writerId: { type: String, ref: User, required: true }, 
   writeDate: { type: Date, default: Date.now, required: true },
