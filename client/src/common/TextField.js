@@ -1,11 +1,6 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
-
-// SearchField와 통합할 수 있을 것 같다 -> TextField에서 endorment 하나 더 붙은 것
-// 비슷한 코드인데도 통합하지 않으면 따로 관리해야므로 시간 x2배
-
-// field의 width나 height에 대한 %가 margin에 적용됨.
 
 const styleWithWidth = {
   wrapper: {
@@ -27,9 +22,9 @@ const TypographyWrapper = styled.div`
 
 const StyledHighlight = styled.div`
   width: 0%;
-  height: 1rem;
+  height: 1.5rem;
   position: relative;
-  top: -1rem;
+  top: -1.5rem;
   z-index: -999;
   background-color: #5f939a;
   opacity: 0.8;

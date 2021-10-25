@@ -12,13 +12,18 @@ export default function WritePost() {
     platform: '',
     subtitle: '',
     language: '',
-    content: ''
+    content: '',
+    writerId: 'jsi06138'
   });
-
   const onClick = () => {
     // 데이터 유효성 검사
-    console.log('fetch...');
-    console.log(post);
+    fetch('/api/posts', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(post)
+    });
   };
 
   return (

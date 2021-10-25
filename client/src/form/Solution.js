@@ -1,10 +1,6 @@
 import MarkdownPreview from '@uiw/react-markdown-preview';
-import TextField from '../common/TextField';
 import styled from 'styled-components';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { RiImage2Fill, RiPencilFill, RiEyeFill } from 'react-icons/ri';
-import ThemeContext from '../contexts/ThemeContext';
-import useDebounce from '../hooks/useDebounce';
+import { useRef, useState } from 'react';
 import TextArea from '../common/TextArea';
 
 const StyledPreviewWrapper = styled.div`
@@ -16,7 +12,6 @@ const StyledPreviewWrapper = styled.div`
   display: flex;
   flex-direction: row;
   margin: 10px 0;
-  min-height: 50rem;
 `;
 
 const StyledPreview = styled(MarkdownPreview)`
@@ -28,13 +23,15 @@ const StyledPreview = styled(MarkdownPreview)`
   background-color: ${(props) => props.backgroundColor};
   color: white;
   border: 0px;
+  min-height: 50rem;
+  & code {
+    color: black;
+  }
 `;
 
 export default function Solution({ content, setContent }) {
-  const theme = useContext(ThemeContext);
   const selectBoxRef = useRef(null);
   const [toggle, setToggle] = useState(0);
-  const debounce = useDebounce();
 
   // 짧은 텀으로 toggle할 경우 throttle or debounce 적용
 
@@ -76,7 +73,8 @@ export default function Solution({ content, setContent }) {
               ref={selectBoxRef}
               style={{
                 position: 'absolute',
-                backgroundColor: theme.main,
+                backgroundColor: 'black',
+                opacity: 0.7,
                 transition: '1s',
                 width: '4rem',
                 height: '4rem',
@@ -132,7 +130,7 @@ export default function Solution({ content, setContent }) {
           </div>
         </div>
       </div>
-      {!toggle ? (
+      <div style={{ fontSize: 'inherit', display: `${!toggle ? 'block' : 'none'}` }}>
         <TextArea
           name="content"
           label="풀이"
@@ -142,14 +140,14 @@ export default function Solution({ content, setContent }) {
           onChange={onChange}
           fullWidth
         />
-      ) : (
-        <div style={{ fontSize: 'inherit' }}>
-          <span style={{ opacity: 0.7 }}>{`프리뷰입니다 ᵔࡇᵔ`}</span>
-          <StyledPreviewWrapper>
-            <StyledPreview source={content} />
-          </StyledPreviewWrapper>
-        </div>
-      )}
+      </div>
+      <div style={{ fontSize: 'inherit', display: `${toggle ? 'block' : 'none'}` }}>
+        <span style={{ opacity: 0.7 }}>{`프리뷰입니다 ᵔࡇᵔ`}</span>
+        <StyledPreviewWrapper>
+          <StyledPreview source={content} />
+          {/* 아무 언어 지정하지 않았을때 내부 코드 color 희게 보임. */}
+        </StyledPreviewWrapper>
+      </div>
     </div>
   );
 }

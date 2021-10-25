@@ -9,9 +9,9 @@ const TypographyWrapper = styled.div`
 
 const StyledHighlight = styled.div`
   width: 0%;
-  height: 1rem;
+  height: 1.5rem;
   position: relative;
-  top: -1rem;
+  top: -1.5rem;
   z-index: -999;
   background-color: #5f939a;
   opacity: 0.8;
@@ -41,6 +41,7 @@ const StyledTextArea = styled.textarea`
     outline: none;
   }
   height: auto;
+  min-height: 50rem;
 `;
 
 function Typography({ highlightRef, children, option }) {
@@ -86,11 +87,6 @@ export default function TextArea({ label, name, value, placeholder, rows, onChan
     inputRef.current.style.boxShadow = `none`;
   };
 
-  const onInput = (event) => {
-    // autoresize height
-    resizeTextarea(event.target.value);
-  };
-
   const resizeTextarea = (value) => {
     const textarea = textareaRef.current;
     sideTextareaRef.current.value = value;
@@ -99,8 +95,8 @@ export default function TextArea({ label, name, value, placeholder, rows, onChan
   };
 
   useEffect(() => {
-    resizeTextarea(textareaRef.current.value);
-  }, []);
+    resizeTextarea(value);
+  }, [value]);
 
   return (
     <div>
@@ -118,11 +114,10 @@ export default function TextArea({ label, name, value, placeholder, rows, onChan
           placeholder={placeholder}
           backgroundColor={theme.background}
           onChange={onChange}
-          onInput={onInput}
         />
         <StyledTextArea
           ref={sideTextareaRef}
-          style={{ visibility: 'hidden', top: 0, left: 0, position: 'absolute' }}
+          style={{ visibility: 'hidden', position: 'absolute' }}
         />
       </StyledTextFieldWrapper>
     </div>

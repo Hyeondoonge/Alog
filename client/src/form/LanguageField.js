@@ -14,17 +14,17 @@ const StyledList = styled.ul`
   margin: 0;
   padding: 0;
   cursor: pointer;
-  display: none;
+  border-radius: 5px;
+  border: 1px solid #ebebeb;
 `;
 
 const StyledItem = styled.li`
   padding: 1rem 2rem;
   &:hover {
-    font-weight: 600;
     color: ${(props) => props.color};
   }
   &:not(:last-child) {
-    border-bottom: 1px solid #cbcbcb;
+    border-bottom: 1px solid #ebebeb;
   }
 `;
 
@@ -48,13 +48,14 @@ export default function LanguageField({ language, setLanguage }) {
     fetchLanguagesByKeword(keyword, (res) => {
       const { languages } = res;
       if (languages.length) listRef.current.style.display = 'block';
+      else listRef.current.style.display = 'none';
       setLanguageItems(languages);
     });
     // 키워드에 대응하는 언어 리스트를 받아와서 렌더링. => 어떻게 효율적으로 렌더링할 수 있을까?
   };
 
   const onFocus = () => {
-    listRef.current.style.display = 'block';
+    if (languageItems.length) listRef.current.style.display = 'block';
   };
 
   const onBlur = () => {
@@ -102,17 +103,20 @@ export default function LanguageField({ language, setLanguage }) {
         입력할 수 없는 언어입니다
       </span>
       <div
+        ref={listRef}
         style={{
-          width: '15rem',
-          backgroundColor: 'white',
-          color: 'black',
+          width: '15%',
+          backgroundColor: theme.background,
+          color: '#ABABAB',
           borderRadius: 5,
           fontSize: 'inherit',
           position: 'absolute',
-          zIndex: 1
+          zIndex: 1,
+          boxShadow: '5px 5px 10px 1px black',
+          display: 'none'
         }}
       >
-        <StyledList ref={listRef} onMouseDown={onMouseDown}>
+        <StyledList onMouseDown={onMouseDown}>
           {languageItems.map(({ _id, name }) => (
             <StyledItem key={_id} color={theme.main}>
               {name}
