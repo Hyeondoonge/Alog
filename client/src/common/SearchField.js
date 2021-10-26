@@ -1,27 +1,32 @@
 import { useContext, useRef } from 'react';
+import { RiCloseFill } from 'react-icons/ri';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
 const StyledTextFieldWrapper = styled.div`
   width: 100%;
-  border: 1.5px solid ${(props) => props.color};
   border-radius: 25px;
-  box-shadow: 0 0 3px 1px ${(props) => props.color};
-  font-size: 3rem;
+  box-shadow: 0 0 3px 2px #black;
+  font-size: 2.5rem;
   display: flex;
   flex-direction: row;
   align-items: center;
+  background-color: ${(props) => props.background};
+  color: white;
+
+  & :first-child {
+    width: 90%;
+    margin: 2% 3%;
+  }
 `;
 
 const StyledTextField = styled.input`
-  width: 87%;
-  margin: 2% 3%;
   font-size: inherit;
   border: 0px;
-  background-color: ${(props) => props.background};
   &:focus {
     outline: none;
   }
+  color: white;
 `;
 
 // click 및 tab 발생 시 focus 이벤트로 처리
@@ -31,15 +36,17 @@ export default function SearchField({ placeholder, handleFocus, handleChange, ha
 
   return (
     <div>
-      <StyledTextFieldWrapper color={theme.main} onFocus={handleFocus}>
+      <StyledTextFieldWrapper
+        color={theme.main}
+        onFocus={handleFocus}
+        background={theme.background}
+      >
         <StyledTextField
           ref={inputRef}
           type="text"
           placeholder={placeholder}
-          background={theme.background}
           onChange={handleChange}
         />
-        {/* indorment */}
         <span
           style={{ cursor: 'pointer' }}
           onClick={() => {
@@ -47,7 +54,7 @@ export default function SearchField({ placeholder, handleFocus, handleChange, ha
             handleRemove();
           }}
         >
-          ✖️
+          <RiCloseFill size="3rem" />
         </span>
       </StyledTextFieldWrapper>
     </div>

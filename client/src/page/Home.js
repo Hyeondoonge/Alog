@@ -9,6 +9,7 @@ import PostList from '../post/PostList';
 import FilterList from '../post/FilterList';
 import SearchBar from '../post/SearchBar';
 import Template from '../Template';
+import { RiCloseFill } from 'react-icons/ri';
 
 export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
@@ -107,7 +108,7 @@ export default function Home() {
           gap: '2rem'
         }}
       >
-        <div style={{ fontSize: '6rem' }}>
+        <div style={{ fontSize: '8rem', textAlign: 'center', margin: '3%' }}>
           <Logo />
         </div>
         <SearchBar
@@ -123,7 +124,7 @@ export default function Home() {
                 handleRemoveKeyword();
               }}
             >
-              ✖️
+              <RiCloseFill />
             </span>
           }
         />

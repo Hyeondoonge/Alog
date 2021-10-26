@@ -1,27 +1,28 @@
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import styled from 'styled-components';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import TextArea from '../common/TextArea';
+import ThemeContext from '../contexts/ThemeContext';
+import { RiPencilFill, RiEye2Line, RiImage2Fill } from 'react-icons/ri';
 
 const StyledPreviewWrapper = styled.div`
   ${(props) => props.styleWithWidth};
   width: var(--wrapper-width, 100%);
-  border: 1.5px solid white;
-  border-radius: var(--wrapper-border-radius, 5px);
   font-size: inherit;
   display: flex;
   flex-direction: row;
   margin: 10px 0;
+  background-color: ${(props) => props.backgroundColor};
+  color: white;
+  box-shadow: 0px 3px 3px 3px black;
 `;
 
 const StyledPreview = styled(MarkdownPreview)`
-  font-size: inherit;
+  font-size: 2rem;
   width: 100%;
   ${(props) => props.styleWithWidth};
-  margin: var(--textarea-margin, 2%);
+  padding: var(--textarea-margin, 2%);
   resize: none;
-  background-color: ${(props) => props.backgroundColor};
-  color: white;
   border: 0px;
   min-height: 50rem;
   & code {
@@ -30,6 +31,7 @@ const StyledPreview = styled(MarkdownPreview)`
 `;
 
 export default function Solution({ content, setContent }) {
+  const theme = useContext(ThemeContext);
   const selectBoxRef = useRef(null);
   const [toggle, setToggle] = useState(0);
 
@@ -64,8 +66,7 @@ export default function Solution({ content, setContent }) {
               position: 'relative',
               width: '4rem',
               height: '8rem',
-              cursor: 'pointer',
-              boxShadow: `0 0 3px 1px white`
+              cursor: 'pointer'
             }}
             onClick={onClick}
           >
@@ -89,7 +90,7 @@ export default function Solution({ content, setContent }) {
                 textAlign: 'center'
               }}
             >
-              ✏️
+              <RiPencilFill />
             </div>
             <div
               style={{
@@ -99,7 +100,7 @@ export default function Solution({ content, setContent }) {
                 textAlign: 'center'
               }}
             >
-              👁
+              <RiEye2Line />
             </div>
           </div>
           <div
@@ -116,7 +117,6 @@ export default function Solution({ content, setContent }) {
                 height: '4rem',
                 fontSize: '1.5em',
                 textAlign: 'center',
-                boxShadow: `0 0 3px 1px white`,
                 opacity: toggle ? 0.5 : 1
               }}
               onClick={() => {
@@ -125,7 +125,7 @@ export default function Solution({ content, setContent }) {
               }}
             >
               {/* file input과 연결 */}
-              🏞
+              <RiImage2Fill />
             </div>
           </div>
         </div>
@@ -143,7 +143,7 @@ export default function Solution({ content, setContent }) {
       </div>
       <div style={{ fontSize: 'inherit', display: `${toggle ? 'block' : 'none'}` }}>
         <span style={{ opacity: 0.7 }}>{`프리뷰입니다 ᵔࡇᵔ`}</span>
-        <StyledPreviewWrapper>
+        <StyledPreviewWrapper backgroundColor={theme.background}>
           <StyledPreview source={content} />
           {/* 아무 언어 지정하지 않았을때 내부 코드 color 희게 보임. */}
         </StyledPreviewWrapper>

@@ -5,9 +5,11 @@ import Button from '../common/Button';
 import Template from '../Template';
 import StickyHeader from '../common/StickyHeader';
 import { fetchSolution_POST } from '../form/fetchApis';
+import ModalContext from '../contexts/ModalContext';
 
 export default function WritePost() {
   const theme = useContext(ThemeContext);
+  const [setMessage] = useContext(ModalContext);
   const [post, setPost] = useState({
     title: '',
     platform: '',
@@ -21,8 +23,7 @@ export default function WritePost() {
     // 데이터 유효성 검사
     (async () => {
       const res = await fetchSolution_POST(post);
-      alert(res.msg);
-      console.log(res);
+      if (res.msg) setMessage(res.msg);
       // 작성글 바로 볼  수 있게 라우팅
     })();
   };

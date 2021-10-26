@@ -33,11 +33,11 @@ const StyledHighlight = styled.div`
 const StyledTextFieldWrapper = styled.div`
   ${(props) => props.styleWithWidth};
   width: var(--wrapper-width, 15%);
-  border: 1.5px solid white;
-  border-radius: var(--wrapper-border-radius, 5px);
   font-size: 2rem;
   display: flex;
   flex-direction: row;
+  background-color: ${(props) => props.backgroundColor};
+  box-shadow: 0px 2px 2px 3px black;
 `;
 
 const StyledTextField = styled.input`
@@ -45,7 +45,6 @@ const StyledTextField = styled.input`
   width: 100%;
   margin: var(--textfield-margin, 11%);
   font-size: inherit;
-  background-color: ${(props) => props.backgroundColor};
   border: 0px;
   &:focus {
     outline: none;

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
@@ -17,14 +17,14 @@ const StyledHighlight = styled.div`
   opacity: 0.8;
 `;
 
-const StyledTextFieldWrapper = styled.div`
+const StyledTextAreaWrapper = styled.div`
   width: var(--wrapper-width, 100%);
-  border: 1.5px solid white;
-  border-radius: var(--wrapper-border-radius, 5px);
   font-size: 2rem;
   display: flex;
   flex-direction: row;
   position: relative;
+  background-color: ${(props) => props.backgroundColor};
+  box-shadow: 0px 3px 3px 3px black;
 `;
 
 const StyledTextArea = styled.textarea`
@@ -34,14 +34,14 @@ const StyledTextArea = styled.textarea`
   width: 100%;
   margin: var(--textarea-margin, 2%);
   resize: none;
-  background-color: ${(props) => props.backgroundColor};
-  color: white;
   border: 0px;
   &:focus {
     outline: none;
   }
   height: auto;
   min-height: 50rem;
+  color: white;
+  background-color: ${(props) => props.backgroundColor};
 `;
 
 function Typography({ highlightRef, children, option }) {
@@ -101,7 +101,7 @@ export default function TextArea({ label, name, value, placeholder, rows, onChan
   return (
     <div>
       {label && <Typography highlightRef={highlightRef}>{label}</Typography>}
-      <StyledTextFieldWrapper
+      <StyledTextAreaWrapper
         ref={inputRef}
         backgroundColor={theme.background}
         onFocus={onFocus}
@@ -119,7 +119,7 @@ export default function TextArea({ label, name, value, placeholder, rows, onChan
           ref={sideTextareaRef}
           style={{ visibility: 'hidden', position: 'absolute' }}
         />
-      </StyledTextFieldWrapper>
+      </StyledTextAreaWrapper>
     </div>
   );
 }

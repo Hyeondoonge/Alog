@@ -2,7 +2,6 @@ import { useContext, useRef } from 'react';
 import ThemeContext from '../contexts/ThemeContext';
 import useDebounce from '../hooks/useDebounce';
 import Platform from './Platform';
-import { RiCloseFill } from 'react-icons/ri';
 
 // 재사용하기 위해서가 아니라 로직 분리를 위함
 
@@ -64,7 +63,8 @@ export function URLField({ setPlatformAndTitle }) {
           outline: 'none',
           width: '100%',
           fontSize: '2rem',
-          backgroundColor: theme.background
+          color: 'white',
+          backgroundColor: 'transparent'
         }}
         placeholder="문제의 링크를 올려 풀이의 제목을 완성해보세요"
         onChange={onChange}

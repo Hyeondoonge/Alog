@@ -7,10 +7,12 @@ import StickyHeader from '../common/StickyHeader';
 import { fetchSolution_GET, fetchSolution_PUT } from '../form/fetchApis';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
+import ModalContext from '../contexts/ModalContext';
 
 export default function EditPost() {
   const { id } = queryString.parse(useLocation().search);
   const theme = useContext(ThemeContext);
+  const [setMessage] = useContext(ModalContext);
   const [post, setPost] = useState({
     id: '',
     title: '',
@@ -34,7 +36,7 @@ export default function EditPost() {
   const onClick = () => {
     (async () => {
       const res = await fetchSolution_PUT(id, post);
-      console.log(res);
+      if (res.msg) setMessage(res.msg);
     })();
   };
 
