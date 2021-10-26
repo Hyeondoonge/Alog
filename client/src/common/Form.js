@@ -11,7 +11,7 @@ const ResponsiveImage = ({ src }) => (
   </div>
 );
 
-export default function Form({ post, setPost, Button }) {
+export default function Form({ post, setPost }) {
   const { title, platform, subtitle, language, content } = post;
 
   // 기존 TextField의 onBlur 이벤트가 정의되어있는데,

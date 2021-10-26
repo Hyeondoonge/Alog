@@ -89,7 +89,13 @@ export default function LanguageField({ language, setLanguage }) {
   return (
     <div style={{ position: 'relative' }}>
       <div onBlur={onBlur} onFocus={onFocus}>
-        <TextField name="language" label="언어" placeholder="ex) C++" onChange={onChange} />
+        <TextField
+          name="language"
+          label="언어"
+          placeholder="ex) C++"
+          onChange={onChange}
+          value={language}
+        />
       </div>
       <span
         ref={alertRef}

@@ -4,8 +4,8 @@ const ThemeContext = createContext();
 
 function ThemeContextProvider({ children }) {
   const theme = {
-    main: '#5f939a',
-    background: '#131313',
+    main: '#15C4D6',
+    background: '#353535',
     font: '#FFFFFF',
     content: '#FCFDFE'
   };
