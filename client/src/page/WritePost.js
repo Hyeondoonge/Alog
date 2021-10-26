@@ -4,6 +4,7 @@ import Form from '../common/Form';
 import Button from '../common/Button';
 import Template from '../Template';
 import StickyHeader from '../common/StickyHeader';
+import { fetchSolution_POST } from '../form/fetchApis';
 
 export default function WritePost() {
   const theme = useContext(ThemeContext);
@@ -15,15 +16,15 @@ export default function WritePost() {
     content: '',
     writerId: 'jsi06138'
   });
+
   const onClick = () => {
     // 데이터 유효성 검사
-    fetch('/api/posts', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(post)
-    });
+    (async () => {
+      const res = await fetchSolution_POST(post);
+      alert(res.msg);
+      console.log(res);
+      // 작성글 바로 볼  수 있게 라우팅
+    })();
   };
 
   return (

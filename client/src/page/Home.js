@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import useGetPost from '../hooks/useGetPost';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
-import { fetchLanguages } from '../post/fetchApis';
+import { fetchLanguages_GET } from '../post/fetchApis';
 import Loading from '../common/Loading';
 import PostList from '../post/PostList';
 import FilterList from '../post/FilterList';
@@ -74,7 +74,7 @@ export default function Home() {
 
   useEffect(() => {
     (async () => {
-      const { languages: fetchedLanguages } = await fetchLanguages();
+      const { languages: fetchedLanguages } = await fetchLanguages_GET();
       setLanguages(fetchedLanguages);
       const localFilterLanguages = window.localStorage.getItem('filter_languages');
 

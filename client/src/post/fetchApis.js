@@ -11,7 +11,7 @@ const createQuery = (option) => {
     .join('&');
 };
 
-const fetchLanguages = async () => {
+const fetchLanguages_GET = async () => {
   try {
     const response = await fetch('/api/languages');
 
@@ -23,7 +23,7 @@ const fetchLanguages = async () => {
   }
 };
 
-const fetchPosts = async (option) => {
+const fetchPosts_GET = async (option) => {
   // keyword, language, cursor, size
   try {
     const query = createQuery(option);
@@ -36,4 +36,4 @@ const fetchPosts = async (option) => {
   }
 };
 
-export { fetchLanguages, fetchPosts };
+export { fetchLanguages_GET, fetchPosts_GET };

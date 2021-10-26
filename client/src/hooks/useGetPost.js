@@ -4,7 +4,7 @@
 // 서버 데이터들 (상태)를 사용자 hook으로 전달받아 컴포넌트에서 사용하면 된다.
 
 import { useState } from 'react';
-import { fetchPosts } from '../post/fetchApis';
+import { fetchPosts_GET } from '../post/fetchApis';
 
 export default function useGetPost() {
   const [posts, setPosts] = useState([]);
@@ -20,7 +20,7 @@ export default function useGetPost() {
     }
 
     setIsLoading(true);
-    const res = await fetchPosts(option);
+    const res = await fetchPosts_GET(option);
     setTotalCount(res.totalCount);
 
     if (!option.cursor) setPosts(res.posts);

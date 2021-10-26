@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from 'react';
 import ThemeContext from '../contexts/ThemeContext';
 import TextField from '../common/TextField';
-import { fetchLanguagesByKeword } from './fetchApis';
+import { fetchLanguage_GET } from './fetchApis';
 import styled from 'styled-components';
 
 // 내가 정의한 select ..? click이나 blur같은 건 처리했지만
@@ -45,7 +45,7 @@ export default function LanguageField({ language, setLanguage }) {
       return;
     }
 
-    fetchLanguagesByKeword(keyword, (res) => {
+    fetchLanguage_GET(keyword, (res) => {
       const { languages } = res;
       if (languages.length) listRef.current.style.display = 'block';
       else listRef.current.style.display = 'none';
