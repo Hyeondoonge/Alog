@@ -26,7 +26,7 @@ const fetchSolution_POST = async (post) => {
       },
       body: JSON.stringify(post)
     });
-    return res.json();
+    return res;
   } catch (error) {
     console.log(error);
   }

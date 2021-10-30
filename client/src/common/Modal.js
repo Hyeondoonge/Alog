@@ -21,11 +21,6 @@ const StyledModal = styled.div`
   animation: ${slideUp} 1s;
   box-shadow: 0px 2px 5px 1px #656565;
   text-align: center;
-
-  position: absolute;
-  z-index: 1000;
-  top: 50%;
-  left: 33%;
 `;
 
 export default function Modal({ text, onClickConfirm }) {
