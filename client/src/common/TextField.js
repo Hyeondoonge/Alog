@@ -15,6 +15,22 @@ const styleWithWidth = {
   }
 };
 
+const StyledWrapper = styled.div`
+  &:focus-within {
+    & > *:first-child > div {
+      transition: width 1s;
+      width: 100%;
+    }
+    & > *:last-child {
+      box-shadow: 0 0 3px 1px ${(props) => props.color};
+    }
+    & > *:last-child > * {
+      box-shadow: none;
+      outline: none;
+    }
+  }
+`;
+
 const TypographyWrapper = styled.div`
   width: fit-content;
   height: fit-content;
@@ -26,7 +42,7 @@ const StyledHighlight = styled.div`
   position: relative;
   top: -1.5rem;
   z-index: -999;
-  background-color: #5f939a;
+  background-color: ${(props) => props.color};
   opacity: 0.8;
 `;
 
@@ -37,7 +53,7 @@ const StyledTextFieldWrapper = styled.div`
   display: flex;
   flex-direction: row;
   background-color: ${(props) => props.backgroundColor};
-  box-shadow: 0px 2px 2px 3px black;
+  box-shadow: 0 0 0.3rem 0.05rem black;
 `;
 
 const StyledTextField = styled.input`
@@ -46,15 +62,12 @@ const StyledTextField = styled.input`
   margin: var(--textfield-margin, 11%);
   font-size: inherit;
   border: 0px;
-  &:focus {
-    outline: none;
-  }
 `;
 
-function Typography({ highlightRef, children, option }) {
+function Typography({ highlightRef, highlightColor, children, option }) {
   return (
     <>
-      <TypographyWrapper tabIndex={0}>
+      <TypographyWrapper>
         <span
           style={{
             fontSize: option?.fontSize ?? '2rem',
@@ -63,7 +76,7 @@ function Typography({ highlightRef, children, option }) {
         >
           {children}
         </span>
-        <StyledHighlight ref={highlightRef} className="highlight" />
+        <StyledHighlight ref={highlightRef} className="highlight" color={highlightColor} />
       </TypographyWrapper>
     </>
   );
@@ -78,39 +91,16 @@ export default function TextField({
   fullWidth,
   onChange
 }) {
-  const inputRef = useRef(null);
-  const highlightRef = useRef(null);
   const theme = useContext(ThemeContext);
   const wrapperStyleWithWidth = fullWidth && styleWithWidth.wrapper[fullWidth];
   const fieldStyleWithWidth = fullWidth && styleWithWidth.field[fullWidth];
 
-  const onFocus = () => {
-    if (highlightRef.current) {
-      highlightRef.current.style.transition = 'width 1s';
-      highlightRef.current.style.width = '100%';
-    }
-    inputRef.current.style.borderColor = theme.main;
-    inputRef.current.style.boxShadow = `0 0 3px 1px ${theme.main}`;
-  };
-
-  const onBlur = () => {
-    if (highlightRef.current) {
-      highlightRef.current.style.transition = 'width 0s';
-      highlightRef.current.style.width = '0%';
-    }
-    inputRef.current.style.borderColor = 'white';
-    inputRef.current.style.boxShadow = `none`;
-  };
-
   return (
-    <div>
-      {label && <Typography highlightRef={highlightRef}>{label}</Typography>}
+    <StyledWrapper color={theme.main}>
+      {label && <Typography highlightColor={theme.main}>{label}</Typography>}
       <StyledTextFieldWrapper
-        ref={inputRef}
         backgroundColor={theme.background}
         styleWithWidth={wrapperStyleWithWidth}
-        onFocus={onFocus}
-        onBlur={onBlur}
       >
         <StyledTextField
           type="text"
@@ -124,6 +114,6 @@ export default function TextField({
           onChange={onChange}
         />
       </StyledTextFieldWrapper>
-    </div>
+    </StyledWrapper>
   );
 }
