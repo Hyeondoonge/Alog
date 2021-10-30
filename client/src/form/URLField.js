@@ -66,7 +66,7 @@ export function URLField({ setPlatformAndTitle }) {
           color: 'white',
           backgroundColor: 'transparent'
         }}
-        placeholder="문제의 링크를 올려 풀이의 제목을 완성해보세요"
+        placeholder="문제의 링크를 입력해주세요"
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}

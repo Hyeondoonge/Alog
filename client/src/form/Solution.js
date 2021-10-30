@@ -6,15 +6,12 @@ import ThemeContext from '../contexts/ThemeContext';
 import { RiPencilFill, RiEye2Line, RiImage2Fill } from 'react-icons/ri';
 
 const StyledPreviewWrapper = styled.div`
-  ${(props) => props.styleWithWidth};
-  width: var(--wrapper-width, 100%);
   font-size: inherit;
   display: flex;
   flex-direction: row;
-  margin: 10px 0;
   background-color: ${(props) => props.backgroundColor};
   color: white;
-  box-shadow: 0px 3px 3px 3px black;
+  box-shadow: 0px 2px 3px 3px black;
 `;
 
 const StyledPreview = styled(MarkdownPreview)`
@@ -25,8 +22,19 @@ const StyledPreview = styled(MarkdownPreview)`
   resize: none;
   border: 0px;
   min-height: 50rem;
+
   & code {
     color: black;
+  }
+
+  & blockquote {
+    color: #d0d0d0;
+  }
+
+  & h1,
+  h2,
+  h3 {
+    border-bottom: none;
   }
 `;
 
@@ -142,10 +150,11 @@ export default function Solution({ content, setContent }) {
         />
       </div>
       <div style={{ fontSize: 'inherit', display: `${toggle ? 'block' : 'none'}` }}>
-        <span style={{ opacity: 0.7 }}>{`프리뷰입니다 ᵔࡇᵔ`}</span>
+        <div style={{ height: '4rem' }}>
+          <span style={{ opacity: 0.7 }}>{`프리뷰입니다 ᵔࡇᵔ`}</span>
+        </div>
         <StyledPreviewWrapper backgroundColor={theme.background}>
           <StyledPreview source={content} />
-          {/* 아무 언어 지정하지 않았을때 내부 코드 color 희게 보임. */}
         </StyledPreviewWrapper>
       </div>
     </div>

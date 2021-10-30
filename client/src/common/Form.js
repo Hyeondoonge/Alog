@@ -47,7 +47,7 @@ export default function Form({ post, setPost }) {
       <TextField
         name="subtitle"
         label="한 줄 요약"
-        placeholder="풀이를 간단하게 요약해보세요"
+        placeholder=""
         value={subtitle}
         onChange={(event) => {
           setPost({ ...post, subtitle: event.target.value });

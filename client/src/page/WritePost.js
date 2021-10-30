@@ -3,7 +3,7 @@ import ThemeContext from '../contexts/ThemeContext';
 import Form from '../common/Form';
 import Button from '../common/Button';
 import Template from '../Template';
-import StickyHeader from '../common/StickyHeader';
+import StickyFooter from '../common/StickyFooter';
 import { fetchSolution_POST } from '../form/fetchApis';
 import ModalContext from '../contexts/ModalContext';
 
@@ -23,20 +23,26 @@ export default function WritePost() {
     // 데이터 유효성 검사
     (async () => {
       const res = await fetchSolution_POST(post);
-      if (res.msg) setMessage(res.msg);
+      const json = await res.json();
+      if (json.msg) {
+        setMessage(`${json.msg} ${res.status === 201 ? ' ^ࡇ^ ' : ' ㅠࡇㅠ '}`);
+      }
       // 작성글 바로 볼  수 있게 라우팅
     })();
   };
 
   return (
     <>
-      <StickyHeader>
+      {/* <StickyFooter>
         <div style={{ textAlign: 'right' }}>
           <Button label="작성" color={theme.main} size="small" onClick={onClick} />
         </div>
-      </StickyHeader>
+      </StickyFooter> */}
       <Template>
         <Form post={post} setPost={setPost} />
+        <div style={{ textAlign: 'right' }}>
+          <Button label="작성" color={theme.main} size="small" onClick={onClick} />
+        </div>
       </Template>
     </>
   );

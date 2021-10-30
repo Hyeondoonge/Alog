@@ -33,7 +33,7 @@ export default function Post({ post }) {
           >
             <ResponsiveImage src={`/images/${platform}-symbol.png`} />
             <strong>{title}</strong>
-            <Tag label={language} size="1.5" />
+            {language && <Tag label={language} size="1.5" />}
           </div>
           <div>
             <span>{subtitle}</span>
