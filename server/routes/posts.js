@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
     return;
   }
   const post = await insertPost(req.body);
-  res.status(200).json({});
+  res.status(201).json({ msg: '정상적으로 글이 등록됐습니다' });
 });
 
 router.put('/', async (req, res) => {
