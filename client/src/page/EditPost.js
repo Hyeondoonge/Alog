@@ -3,7 +3,6 @@ import ThemeContext from '../contexts/ThemeContext';
 import Button from '../common/Button';
 import Form from '../common/Form';
 import Template from '../Template';
-import StickyHeader from '../common/StickyHeader';
 import { fetchSolution_GET, fetchSolution_PUT } from '../form/fetchApis';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
@@ -40,15 +39,15 @@ export default function EditPost() {
     })();
   };
 
+  const EditButton = () => (
+    <Button label="작성" size="small" color={theme.main} onClick={onClick} />
+  );
+
   return (
     <>
-      <StickyHeader>
-        <div style={{ textAlign: 'right' }}>
-          <Button label="작성" size="small" color={theme.main} onClick={onClick} />
-        </div>
-      </StickyHeader>
+      <Button label="작성" size="small" color={theme.main} onClick={onClick} />
       <Template>
-        <Form post={post} setPost={setPost} />
+        <Form post={post} setPost={setPost} Button={EditButton} />
       </Template>
     </>
   );

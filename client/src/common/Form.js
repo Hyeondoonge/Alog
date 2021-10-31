@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import TextField from './TextField';
 import { URLField } from '../form/URLField';
 import LanguageField from '../form/LanguageField';
 import Solution from '../form/Solution';
 import { RiCloseFill } from 'react-icons/ri';
+import { RiPencilFill, RiEye2Line, RiImage2Fill } from 'react-icons/ri';
+import Footer from './Footer';
+import ThemeContext from '../contexts/ThemeContext';
 
 const ResponsiveImage = ({ src }) => (
   <div>
@@ -11,8 +14,22 @@ const ResponsiveImage = ({ src }) => (
   </div>
 );
 
-export default function Form({ post, setPost }) {
+export default function Form({ post, setPost, WriteButton }) {
   const { title, platform, subtitle, language, content } = post;
+  const [toggle, setToggle] = useState(0);
+  const togglerRef = useRef(null);
+  const theme = useContext(ThemeContext);
+
+  const onClick = () => {
+    if (!toggle) {
+      togglerRef.current.children[1].style.color = theme.main;
+      togglerRef.current.children[0].style.color = 'unset';
+    } else {
+      togglerRef.current.children[0].style.color = theme.main;
+      togglerRef.current.children[1].style.color = 'unset';
+    }
+    setToggle(!toggle);
+  };
 
   // 기존 TextField의 onBlur 이벤트가 정의되어있는데,
   // 추가로 클라이언트가 정의하려는 경우에 어떻게 처리하는 것이 좋을까?
@@ -60,12 +77,120 @@ export default function Form({ post, setPost }) {
           setPost({ ...post, language });
         }}
       />
+      <div style={{ position: 'sticky' }}>
+        <div style={{ position: 'absolute', left: -50, top: 60 }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'relative',
+              width: 40,
+              height: 75,
+              cursor: 'pointer',
+              gap: 5
+            }}
+            onClick={onClick}
+          >
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                fontSize: 30,
+                padding: 5,
+                textAlign: 'center'
+              }}
+            >
+              <RiPencilFill />
+            </div>
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                fontSize: 30,
+                padding: 5,
+                textAlign: 'center'
+              }}
+            >
+              <RiEye2Line />
+            </div>
+          </div>
+          <div
+            style={{
+              margin: '20px 0',
+              cursor: 'pointer',
+              borderRadius: '15px'
+            }}
+          >
+            {' '}
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                fontSize: 30,
+                padding: 5,
+                textAlign: 'center',
+                opacity: toggle ? 0.5 : 1
+              }}
+              onClick={() => {
+                if (toggle) return;
+                // 이미지 load
+              }}
+            >
+              {/* file input과 연결 */}
+              <RiImage2Fill />
+            </div>
+          </div>
+        </div>
+      </div>
       <Solution
         content={content}
         setContent={(content) => {
           setPost({ ...post, content });
         }}
+        toggle={toggle}
       />
+      <div style={{ textAlign: 'right' }}>
+        <WriteButton />
+      </div>
+      <Footer>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            position: 'relative',
+            cursor: 'pointer'
+          }}
+          onClick={onClick}
+          ref={togglerRef}
+        >
+          <div
+            style={{
+              width: 30,
+              height: 30,
+              fontSize: 30,
+              padding: 5,
+              textAlign: 'center',
+              color: theme.main
+            }}
+          >
+            <RiPencilFill />
+          </div>
+          <div
+            style={{
+              width: 30,
+              height: 30,
+              fontSize: 30,
+              padding: 5,
+              textAlign: 'center'
+            }}
+          >
+            <RiEye2Line />
+          </div>
+          <div style={{ textAlign: 'right', width: '100%' }}>
+            <WriteButton />
+          </div>
+        </div>
+      </Footer>
     </>
   );
 }

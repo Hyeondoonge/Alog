@@ -3,7 +3,6 @@ import ThemeContext from '../contexts/ThemeContext';
 import Form from '../common/Form';
 import Button from '../common/Button';
 import Template from '../Template';
-import StickyFooter from '../common/StickyFooter';
 import { fetchSolution_POST } from '../form/fetchApis';
 import ModalContext from '../contexts/ModalContext';
 
@@ -31,18 +30,20 @@ export default function WritePost() {
     })();
   };
 
+  const WriteButton = () => (
+    <Button
+      label="작성"
+      color={theme.main}
+      size="large
+    "
+      onClick={onClick}
+    />
+  );
+
   return (
     <>
-      {/* <StickyFooter>
-        <div style={{ textAlign: 'right' }}>
-          <Button label="작성" color={theme.main} size="small" onClick={onClick} />
-        </div>
-      </StickyFooter> */}
       <Template>
-        <Form post={post} setPost={setPost} />
-        <div style={{ textAlign: 'right' }}>
-          <Button label="작성" color={theme.main} size="small" onClick={onClick} />
-        </div>
+        <Form post={post} setPost={setPost} WriteButton={WriteButton} />
       </Template>
     </>
   );
