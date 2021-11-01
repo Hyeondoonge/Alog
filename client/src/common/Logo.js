@@ -6,7 +6,7 @@ import ThemeContext from '../contexts/ThemeContext';
 const StyledLink = styled(Link)`
   color: ${(props) => props.color};
   font-size: inherit;
-  font-weight: 700;
+  font-weight: 900;
   text-align: center;
   &:link {
     color: ${(props) => props.color};

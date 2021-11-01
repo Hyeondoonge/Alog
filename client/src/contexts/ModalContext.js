@@ -27,7 +27,6 @@ function ModalContextProvider({ children }) {
               setMessage('');
             }}
           />
-          \
         </div>
       )}
       <div style={{ opacity: message ? 0.5 : 1 }}>{children}</div>

@@ -6,6 +6,7 @@ import ThemeContext from '../contexts/ThemeContext';
 // 말 그대로 스타일을 확장해서 재사용할 수 있다. (=> 코드 중복 감소)
 
 const StyledTag = styled.span`
+  color: black;
   background-color: ${(props) => props.color};
   font-size: ${(props) => (props.size ? `${props.size}rem` : 'inherit')};
   padding: 0.1rem 1rem;
@@ -18,6 +19,7 @@ const StyledClickableTag = styled(StyledTag)`
     !props.selected &&
     css`
       background-color: ${(props) => props.backgroundColor} !important;
+      color: white;
     `}
   transition: 0.4s;
   padding: 1rem 1.5rem !important;
