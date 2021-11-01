@@ -7,6 +7,7 @@ import { RiCloseFill } from 'react-icons/ri';
 import { RiPencilFill, RiEye2Line, RiImage2Fill } from 'react-icons/ri';
 import Footer from './Footer';
 import ThemeContext from '../contexts/ThemeContext';
+import MediaQuery from 'react-responsive';
 
 const ResponsiveImage = ({ src }) => (
   <div>
@@ -77,71 +78,75 @@ export default function Form({ post, setPost, WriteButton }) {
           setPost({ ...post, language });
         }}
       />
-      <div style={{ position: 'sticky' }}>
-        <div style={{ position: 'absolute', left: -50, top: 60 }}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              position: 'relative',
-              width: 40,
-              height: 75,
-              cursor: 'pointer',
-              gap: 5
-            }}
-            onClick={onClick}
-          >
+      <MediaQuery minWidth={780}>
+        <div style={{ position: 'sticky', top: 0 }}>
+          <div style={{ position: 'absolute', left: -50, top: 60 }}>
             <div
+              ref={togglerRef}
               style={{
-                width: 30,
-                height: 30,
-                fontSize: 30,
-                padding: 5,
-                textAlign: 'center'
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+                width: 40,
+                height: 75,
+                cursor: 'pointer',
+                gap: 5
               }}
+              onClick={onClick}
             >
-              <RiPencilFill />
+              <div
+                style={{
+                  width: 30,
+                  height: 30,
+                  fontSize: 30,
+                  padding: 5,
+                  color: theme.main,
+                  textAlign: 'center'
+                }}
+              >
+                <RiPencilFill />
+              </div>
+              <div
+                style={{
+                  width: 30,
+                  height: 30,
+                  fontSize: 30,
+                  padding: 5,
+                  textAlign: 'center'
+                }}
+              >
+                <RiEye2Line />
+              </div>
             </div>
             <div
               style={{
-                width: 30,
-                height: 30,
-                fontSize: 30,
-                padding: 5,
-                textAlign: 'center'
+                margin: '20px 0',
+                cursor: 'pointer',
+                borderRadius: '15px'
               }}
             >
-              <RiEye2Line />
-            </div>
-          </div>
-          <div
-            style={{
-              margin: '20px 0',
-              cursor: 'pointer',
-              borderRadius: '15px'
-            }}
-          >
-            {' '}
-            <div
-              style={{
-                width: 30,
-                height: 30,
-                fontSize: 30,
-                padding: 5,
-                textAlign: 'center',
-                opacity: toggle ? 0.5 : 1
-              }}
-              onClick={() => {
-                if (toggle) return;
-                // 이미지 load
-              }}
-            >
-              {/* file input과 연결 */}
-              <RiImage2Fill />
+              {' '}
+              <div
+                style={{
+                  width: 30,
+                  height: 30,
+                  fontSize: 30,
+                  padding: 5,
+                  textAlign: 'center',
+                  opacity: toggle ? 0.5 : 1
+                }}
+                onClick={() => {
+                  if (toggle) return;
+                  // 이미지 load
+                }}
+              >
+                {/* file input과 연결 */}
+                <RiImage2Fill />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </MediaQuery>
       <Solution
         content={content}
         setContent={(content) => {
@@ -149,48 +154,62 @@ export default function Form({ post, setPost, WriteButton }) {
         }}
         toggle={toggle}
       />
-      <div style={{ textAlign: 'right' }}>
-        <WriteButton />
-      </div>
-      <Footer>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            position: 'relative',
-            cursor: 'pointer'
-          }}
-          onClick={onClick}
-          ref={togglerRef}
-        >
-          <div
-            style={{
-              width: 30,
-              height: 30,
-              fontSize: 30,
-              padding: 5,
-              textAlign: 'center',
-              color: theme.main
-            }}
-          >
-            <RiPencilFill />
-          </div>
-          <div
-            style={{
-              width: 30,
-              height: 30,
-              fontSize: 30,
-              padding: 5,
-              textAlign: 'center'
-            }}
-          >
-            <RiEye2Line />
-          </div>
-          <div style={{ textAlign: 'right', width: '100%' }}>
-            <WriteButton />
-          </div>
+      <MediaQuery minWidth={780}>
+        <div style={{ textAlign: 'right' }}>
+          <WriteButton />
         </div>
-      </Footer>
+      </MediaQuery>
+      <MediaQuery minWidth={0} maxWidth={750}>
+        <div>
+          <Footer>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: 5
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  position: 'relative',
+                  cursor: 'pointer'
+                }}
+                onClick={onClick}
+                ref={togglerRef}
+              >
+                <div
+                  style={{
+                    width: 30,
+                    height: 30,
+                    fontSize: 30,
+                    padding: 5,
+                    textAlign: 'center',
+                    color: theme.main
+                  }}
+                >
+                  <RiPencilFill />
+                </div>
+                <div
+                  style={{
+                    width: 30,
+                    height: 30,
+                    fontSize: 30,
+                    padding: 5,
+                    textAlign: 'center'
+                  }}
+                >
+                  <RiEye2Line />
+                </div>
+              </div>
+              <WriteButton />
+            </div>
+          </Footer>
+        </div>
+      </MediaQuery>
     </>
   );
 }

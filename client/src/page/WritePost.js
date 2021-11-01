@@ -31,13 +31,7 @@ export default function WritePost() {
   };
 
   const WriteButton = () => (
-    <Button
-      label="작성"
-      color={theme.main}
-      size="large
-    "
-      onClick={onClick}
-    />
+    <Button label="작성" color={theme.main} size="small" onClick={onClick} />
   );
 
   return (
