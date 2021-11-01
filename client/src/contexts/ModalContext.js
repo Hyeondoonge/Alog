@@ -8,15 +8,28 @@ function ModalContextProvider({ children }) {
 
   return (
     <ModalContext.Provider value={[setMessage]}>
-      <div style={{ opacity: message ? 0.5 : 1 }}>{children}</div>
       {message && (
-        <Modal
-          text={message + ' ㅠࡇㅠ '}
-          onClickConfirm={() => {
-            setMessage('');
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100vw',
+            height: '100vh',
+            position: 'fixed',
+            zIndex: 1000
           }}
-        />
+        >
+          <Modal
+            text={message}
+            onClickConfirm={() => {
+              setMessage('');
+            }}
+          />
+        </div>
       )}
+      <div style={{ opacity: message ? 0.5 : 1 }}>{children}</div>
     </ModalContext.Provider>
   );
 }

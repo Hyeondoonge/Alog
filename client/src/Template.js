@@ -8,7 +8,7 @@ const StyledTemplate = styled.div`
   @media screen and (min-width: 600px) {
     padding: 5% 10%;
   }
-  padding: 5% 5%;
+  padding: 10% 5%;
 `;
 
 export default function Template({ children }) {

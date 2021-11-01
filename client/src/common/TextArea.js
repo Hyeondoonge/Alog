@@ -2,6 +2,22 @@ import { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
+const StyledWrapper = styled.div`
+  &:focus-within {
+    & > *:first-child > div {
+      transition: width 1s;
+      width: 100%;
+    }
+    & > *:last-child {
+      box-shadow: 0 0 3px 1px ${(props) => props.color};
+    }
+    & > *:last-child > * {
+      box-shadow: none;
+      outline: none;
+    }
+  }
+`;
+
 const TypographyWrapper = styled.div`
   width: fit-content;
   height: fit-content;
@@ -13,7 +29,7 @@ const StyledHighlight = styled.div`
   position: relative;
   top: -1.5rem;
   z-index: -999;
-  background-color: #5f939a;
+  background-color: ${(props) => props.color};
   opacity: 0.8;
 `;
 
@@ -24,7 +40,7 @@ const StyledTextAreaWrapper = styled.div`
   flex-direction: row;
   position: relative;
   background-color: ${(props) => props.backgroundColor};
-  box-shadow: 0px 3px 3px 3px black;
+  box-shadow: 0 0 0.3rem 0.05rem black;
 `;
 
 const StyledTextArea = styled.textarea`
@@ -35,19 +51,16 @@ const StyledTextArea = styled.textarea`
   margin: var(--textarea-margin, 2%);
   resize: none;
   border: 0px;
-  &:focus {
-    outline: none;
-  }
   height: auto;
   min-height: 50rem;
   color: white;
   background-color: ${(props) => props.backgroundColor};
 `;
 
-function Typography({ highlightRef, children, option }) {
+function Typography({ highlightRef, highlightColor, children, option }) {
   return (
     <>
-      <TypographyWrapper tabIndex={0}>
+      <TypographyWrapper>
         <span
           style={{
             fontSize: option?.fontSize ?? '2rem',
@@ -56,36 +69,16 @@ function Typography({ highlightRef, children, option }) {
         >
           {children}
         </span>
-        <StyledHighlight ref={highlightRef} className="highlight" />
+        <StyledHighlight ref={highlightRef} color={highlightColor} />
       </TypographyWrapper>
     </>
   );
 }
 
-export default function TextArea({ label, name, value, placeholder, rows, onChange }) {
-  const inputRef = useRef(null);
+export default function TextArea({ label, name, value, placeholder, onChange }) {
   const textareaRef = useRef(null);
   const sideTextareaRef = useRef(null);
-  const highlightRef = useRef(null);
   const theme = useContext(ThemeContext);
-
-  const onFocus = () => {
-    if (highlightRef.current) {
-      highlightRef.current.style.transition = 'width 1s';
-      highlightRef.current.style.width = '100%';
-    }
-    inputRef.current.style.borderColor = theme.main;
-    inputRef.current.style.boxShadow = `0 0 3px 1px ${theme.main}`;
-  };
-
-  const onBlur = () => {
-    if (highlightRef.current) {
-      highlightRef.current.style.transition = 'width 0s';
-      highlightRef.current.style.width = '0%';
-    }
-    inputRef.current.style.borderColor = 'white';
-    inputRef.current.style.boxShadow = `none`;
-  };
 
   const resizeTextarea = (value) => {
     const textarea = textareaRef.current;
@@ -99,14 +92,9 @@ export default function TextArea({ label, name, value, placeholder, rows, onChan
   }, [value]);
 
   return (
-    <div>
-      {label && <Typography highlightRef={highlightRef}>{label}</Typography>}
-      <StyledTextAreaWrapper
-        ref={inputRef}
-        backgroundColor={theme.background}
-        onFocus={onFocus}
-        onBlur={onBlur}
-      >
+    <StyledWrapper color={theme.main}>
+      {label && <Typography highlightColor={theme.main}>{label}</Typography>}
+      <StyledTextAreaWrapper className="textarea-wrapper" backgroundColor={theme.background}>
         <StyledTextArea
           ref={textareaRef}
           name={name}
@@ -114,12 +102,13 @@ export default function TextArea({ label, name, value, placeholder, rows, onChan
           placeholder={placeholder}
           backgroundColor={theme.background}
           onChange={onChange}
+          color={theme.main}
         />
         <StyledTextArea
           ref={sideTextareaRef}
           style={{ visibility: 'hidden', position: 'absolute' }}
         />
       </StyledTextAreaWrapper>
-    </div>
+    </StyledWrapper>
   );
 }

@@ -14,17 +14,13 @@ const StyledList = styled.ul`
   margin: 0;
   padding: 0;
   cursor: pointer;
-  border-radius: 5px;
-  border: 1px solid #ebebeb;
 `;
 
 const StyledItem = styled.li`
   padding: 1rem 2rem;
   &:hover {
-    color: ${(props) => props.color};
-  }
-  &:not(:last-child) {
-    border-bottom: 1px solid #ebebeb;
+    background-color: ${(props) => props.color};
+    color: white;
   }
 `;
 
@@ -92,7 +88,7 @@ export default function LanguageField({ language, setLanguage }) {
         <TextField
           name="language"
           label="언어"
-          placeholder="ex) C++"
+          placeholder="ex. C++"
           onChange={onChange}
           value={language}
         />
@@ -111,15 +107,14 @@ export default function LanguageField({ language, setLanguage }) {
       <div
         ref={listRef}
         style={{
-          width: '15%',
-          backgroundColor: theme.background,
+          width: 'fit-content',
+          backgroundColor: `#2C2D2D`,
           color: '#ABABAB',
-          borderRadius: 5,
           fontSize: 'inherit',
           position: 'absolute',
           zIndex: 1,
-          boxShadow: '5px 5px 10px 1px black',
-          display: 'none'
+          boxShadow: '5px 5px 5px 0px black',
+          opacity: 0.95
         }}
       >
         <StyledList onMouseDown={onMouseDown}>
