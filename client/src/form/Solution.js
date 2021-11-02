@@ -10,7 +10,7 @@ const StyledPreviewWrapper = styled.div`
   flex-direction: row;
   background-color: ${(props) => props.backgroundColor};
   color: white;
-  box-shadow: 0px 2px 3px 3px black;
+  box-shadow: 0 0 0.3rem 0.05rem black;
 `;
 
 const StyledPreview = styled(MarkdownPreview)`

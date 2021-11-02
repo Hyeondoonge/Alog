@@ -39,7 +39,13 @@ export default function Form({ post, setPost, WriteButton }) {
   // 2. 이벤트 버블링을 이용해 TextField를 감싸는 div에서 onBlur를 핸들링하도록한다.
 
   return (
-    <>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '2rem'
+      }}
+    >
       <div style={{ height: 50 }}>
         {!(title && platform) ? (
           <URLField
@@ -210,6 +216,6 @@ export default function Form({ post, setPost, WriteButton }) {
           </Footer>
         </div>
       </MediaQuery>
-    </>
+    </div>
   );
 }

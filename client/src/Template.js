@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 
 const StyledTemplate = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  justify-content: center;
+  width: 100%;
   @media screen and (min-width: 600px) {
-    padding: 5% 10%;
+    & > * {
+      margin: 5% 10% !important;
+    }
   }
-  padding: 10% 5%;
+  & > * {
+    margin: 7% 5%;
+  }
 `;
 
 export default function Template({ children }) {
