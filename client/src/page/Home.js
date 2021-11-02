@@ -132,7 +132,7 @@ export default function Home() {
           <i style={{ fontSize: '20px', color: '#9bc9b1', margin: 10 }}>{value}</i>
         </div>
         <SearchBar
-          placeholder="찾고자하는 문제의 제목을 입력하세요."
+          placeholder="찾는 풀이의 문제제목을 입력하세요."
           handleChange={handleChangeKeyword}
           handleRemove={handleRemoveKeyword}
           handleFocus={handleFocusBar}

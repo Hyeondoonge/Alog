@@ -25,9 +25,9 @@ const TypographyWrapper = styled.div`
 
 const StyledHighlight = styled.div`
   width: 0%;
-  height: 1.5rem;
+  height: 1rem;
   position: relative;
-  top: -1.5rem;
+  top: -1rem;
   z-index: -999;
   background-color: ${(props) => props.color};
   opacity: 0.8;
@@ -48,7 +48,7 @@ const StyledTextArea = styled.textarea`
   font: inherit;
   font-size: inherit;
   width: 100%;
-  margin: var(--textarea-margin, 2%);
+  margin: 1.5rem;
   resize: none;
   border: 0px;
   height: auto;

@@ -7,11 +7,6 @@ const styleWithWidth = {
     true: css`
       --wrapper-width: 100%;
     `
-  },
-  field: {
-    true: css`
-      --textfield-margin: 2%;
-    `
   }
 };
 
@@ -38,9 +33,9 @@ const TypographyWrapper = styled.div`
 
 const StyledHighlight = styled.div`
   width: 0%;
-  height: 1.5rem;
+  height: 1rem;
   position: relative;
-  top: -1.5rem;
+  top: -1rem;
   z-index: -999;
   background-color: ${(props) => props.color};
   opacity: 0.8;
@@ -48,7 +43,7 @@ const StyledHighlight = styled.div`
 
 const StyledTextFieldWrapper = styled.div`
   ${(props) => props.styleWithWidth};
-  width: var(--wrapper-width, 15%);
+  width: var(--wrapper-width, 15rem);
   font-size: 2rem;
   display: flex;
   flex-direction: row;
@@ -59,7 +54,7 @@ const StyledTextFieldWrapper = styled.div`
 const StyledTextField = styled.input`
   ${(props) => props.styleWithWidth};
   width: 100%;
-  margin: var(--textfield-margin, 11%);
+  margin: 1.5rem;
   font-size: inherit;
   border: 0px;
 `;
@@ -93,7 +88,6 @@ export default function TextField({
 }) {
   const theme = useContext(ThemeContext);
   const wrapperStyleWithWidth = fullWidth && styleWithWidth.wrapper[fullWidth];
-  const fieldStyleWithWidth = fullWidth && styleWithWidth.field[fullWidth];
 
   return (
     <StyledWrapper color={theme.main}>
@@ -110,7 +104,6 @@ export default function TextField({
           placeholder={placeholder}
           autoComplete="off"
           backgroundColor={theme.background}
-          styleWithWidth={fieldStyleWithWidth}
           onChange={onChange}
         />
       </StyledTextFieldWrapper>
