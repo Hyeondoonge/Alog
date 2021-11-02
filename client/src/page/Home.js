@@ -23,6 +23,9 @@ export default function Home() {
   const wrapperRef = useRef(null);
   const filterRef = useRef(null);
   const [createObserver, registerTargets] = useIntersectionObserver();
+  const [value, setValue] = useState('');
+  const txt = '원하는 문제의 풀이를 찾거나 알고리즘을 기록해보세요! ᵔࡇᵔ';
+  var i = 0;
 
   const handleIntersect = async () => {
     updatePost({
@@ -73,6 +76,18 @@ export default function Home() {
     filterRef.current.style.opacity = '1';
   };
 
+  const typeWriter = () => {
+    if (i <= txt.length) {
+      setValue(txt.substring(0, i));
+      i++;
+      setTimeout(typeWriter, 50);
+    }
+  };
+
+  useEffect(() => {
+    typeWriter();
+  }, []);
+
   useEffect(() => {
     (async () => {
       const { languages: fetchedLanguages } = await fetchLanguages_GET();
@@ -105,11 +120,16 @@ export default function Home() {
           transition: '1s',
           display: 'flex',
           flexDirection: 'column',
-          gap: '2rem'
+          gap: '20px'
         }}
       >
-        <div style={{ fontSize: '8rem', textAlign: 'center', margin: '3%' }}>
-          <Logo />
+        <div
+          style={{ textAlign: 'center', margin: '50px', height: '100px', wordBreak: 'keep-all' }}
+        >
+          <div style={{ fontSize: '80px' }}>
+            <Logo />
+          </div>
+          <i style={{ fontSize: '20px', color: '#9bc9b1', margin: 10 }}>{value}</i>
         </div>
         <SearchBar
           placeholder="찾고자하는 문제의 제목을 입력하세요."

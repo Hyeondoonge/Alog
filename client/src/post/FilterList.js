@@ -9,7 +9,7 @@ export default function FilterList({ elements, state, handleClick }) {
       {elements.map(({ _id: id, name }, index) => (
         <Tag // List Item
           key={id}
-          size={2.0}
+          size={2}
           label={name}
           selected={state[index]}
           clickable

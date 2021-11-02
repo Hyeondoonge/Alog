@@ -4,23 +4,18 @@ import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
 const StyledTextFieldWrapper = styled.div`
-  width: 100%;
   border-radius: 25px;
-  box-shadow: 0 0 3px 2px #black;
-  font-size: 2.5rem;
+  font-size: 20px;
   display: flex;
   flex-direction: row;
   align-items: center;
   background-color: ${(props) => props.background};
   color: white;
-
-  & :first-child {
-    width: 90%;
-    margin: 2% 3%;
-  }
+  padding: 20px 25px;
 `;
 
 const StyledTextField = styled.input`
+  width: 100%;
   font-size: inherit;
   border: 0px;
   &:focus {
@@ -47,15 +42,15 @@ export default function SearchField({ placeholder, handleFocus, handleChange, ha
           placeholder={placeholder}
           onChange={handleChange}
         />
-        <span
+        {/* <span
           style={{ cursor: 'pointer' }}
           onClick={() => {
             inputRef.current.value = '';
             handleRemove();
           }}
         >
-          <RiCloseFill size="3rem" />
-        </span>
+          <RiCloseFill size="25px" />
+        </span> */}
       </StyledTextFieldWrapper>
     </div>
   );

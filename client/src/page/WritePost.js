@@ -35,10 +35,8 @@ export default function WritePost() {
   );
 
   return (
-    <>
-      <Template>
-        <Form post={post} setPost={setPost} WriteButton={WriteButton} />
-      </Template>
-    </>
+    <Template>
+      <Form post={post} setPost={setPost} WriteButton={WriteButton} />
+    </Template>
   );
 }
