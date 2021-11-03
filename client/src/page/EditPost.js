@@ -21,21 +21,23 @@ export default function EditPost() {
     content: '',
     writerId: ''
   });
-  // post 자주 바뀌지 않는 상태인데, 한 번 받고 말 상태,, useState말고 다른 방법이 없나 생각했으나
-  // 수정이 일어나면 post상태도 변경되구나 ~
 
   useEffect(() => {
     (async () => {
       const post = await fetchSolution_GET(id);
-      console.log(post);
       setPost(post);
     })();
   }, []); // 필드 초기값 설정
 
   const onClick = () => {
+    // 데이터 유효성 검사
     (async () => {
       const res = await fetchSolution_PUT(id, post);
-      if (res.msg) setMessage(res.msg);
+      const json = await res.json();
+      if (json.msg) {
+        setMessage(`${json.msg} ${res.status === 201 ? ' ^ࡇ^ ' : ' ㅠࡇㅠ '}`);
+      }
+      // 작성글 바로 볼  수 있게 라우팅
     })();
   };
 
@@ -45,9 +47,8 @@ export default function EditPost() {
 
   return (
     <>
-      <Button label="작성" size="small" color={theme.main} onClick={onClick} />
       <Template>
-        <Form post={post} setPost={setPost} Button={EditButton} />
+        <Form post={post} setPost={setPost} WriteButton={EditButton} />
       </Template>
     </>
   );
