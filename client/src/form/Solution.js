@@ -21,6 +21,15 @@ const StyledPreview = styled(MarkdownPreview)`
   resize: none;
   border: 0px;
   min-height: 50rem;
+  overflow: auto;
+
+  & pre {
+    background-color: #f4f4f4;
+  }
+
+  & pre * {
+    background: transparent;
+  }
 
   & code {
     color: black;

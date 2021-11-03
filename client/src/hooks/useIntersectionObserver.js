@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // hook을 재사용할 수 있게 빼내고 메인 컴포넌트로 부터 observer관련 처리 로직을 빼내어
 // 컴포넌트와 옵저버에 일을 분담
@@ -6,9 +6,19 @@ import { useEffect, useRef } from 'react';
 
 export default function useIntersectionObserver() {
   const observerRef = useRef(null);
+  const targets = useRef([]);
+
+  const unobserve = () => {
+    targets.current.forEach((target) => {
+      observerRef.current.unobserve(target);
+    });
+  };
 
   const createObserver = (callback) => {
-    if (observerRef.current) observerRef.current.disconnect();
+    if (observerRef.current) {
+      unobserve();
+      targets.current = [];
+    }
     observerRef.current = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach((entry) => {
@@ -24,16 +34,18 @@ export default function useIntersectionObserver() {
     );
   };
 
-  const registerTargets = (targets) => {
-    if (observerRef.current)
-      targets.forEach((target) => {
+  const registerTargets = (targetElements) => {
+    if (observerRef.current) {
+      targets.current = targetElements;
+      targetElements.forEach((target) => {
         observerRef.current.observe(target);
       });
+    }
   };
 
   useEffect(() => {
     return () => {
-      if (observerRef.current) observerRef.current.disconnect();
+      if (observerRef.current) unobserve();
     };
   }, []);
 

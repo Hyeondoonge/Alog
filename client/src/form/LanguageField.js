@@ -3,10 +3,9 @@ import ThemeContext from '../contexts/ThemeContext';
 import TextField from '../common/TextField';
 import { fetchLanguage_GET } from './fetchApis';
 import styled from 'styled-components';
+import Tag from '../common/Tag';
 
-// 내가 정의한 select ..? click이나 blur같은 건 처리했지만
-// 아래 방향키 눌렀을 때 값이 입력되는 것 처리 못함. ㅠ^ㅠ
-// select 태그 커스텀
+// 아래 방향키 눌렀을 때 값이 입력되는 것 미구현상태
 
 const StyledList = styled.ul`
   list-style: none;
@@ -33,7 +32,6 @@ export default function LanguageField({ language, setLanguage }) {
   const onChange = async (event) => {
     alertRef.current.style.opacity = 0;
     const keyword = event.target.value;
-    setLanguage(keyword);
 
     if (!keyword) {
       listRef.current.style.display = 'none';
@@ -47,25 +45,28 @@ export default function LanguageField({ language, setLanguage }) {
       else listRef.current.style.display = 'none';
       setLanguageItems(languages);
     });
-    // 키워드에 대응하는 언어 리스트를 받아와서 렌더링. => 어떻게 효율적으로 렌더링할 수 있을까?
   };
 
   const onFocus = () => {
     if (languageItems.length) listRef.current.style.display = 'block';
   };
 
-  const onBlur = () => {
+  const onBlur = (event) => {
     // 대소문자 구별없이 효율성 검사해야하고
     // 서버로 부터 받은 정확한 데이터 값으로 변경
     listRef.current.style.display = 'none';
 
-    if (!language) return;
+    const value = event.target.value;
+    if (!value) {
+      setLanguage('');
+      return;
+    }
 
     let newLanguage = '';
     if (
       languageItems.some(({ name }) => {
         newLanguage = name;
-        return name.toUpperCase() === language.toUpperCase();
+        return name.toUpperCase() === value.toUpperCase();
       })
     ) {
       // dom직접 제어... 음...
@@ -73,6 +74,7 @@ export default function LanguageField({ language, setLanguage }) {
       setLanguage(newLanguage);
     } else {
       alertRef.current.style.opacity = 1;
+      setLanguage('');
     }
   };
 
@@ -84,14 +86,15 @@ export default function LanguageField({ language, setLanguage }) {
 
   return (
     <div style={{ position: 'relative' }}>
-      <div onBlur={onBlur} onFocus={onFocus}>
-        <TextField
-          name="language"
-          label="언어"
-          placeholder="ex. C++"
-          onChange={onChange}
-          value={language}
-        />
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end' }}>
+        <div onBlur={onBlur} onFocus={onFocus}>
+          <TextField name="language" label="언어" placeholder="ex. C++" onChange={onChange} />
+        </div>
+        {language && (
+          <div style={{ margin: 15 }}>
+            <Tag label={language} size="2" />
+          </div>
+        )}
       </div>
       <span
         ref={alertRef}

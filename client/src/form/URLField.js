@@ -15,11 +15,11 @@ export function URLField({ setPlatformAndTitle }) {
   const debounce = useDebounce();
 
   const onFocus = () => {
-    hrRef.current.style.border = `1px solid ${theme.main}`;
+    hrRef.current.style.backgroundColor = theme.main;
   };
 
   const onBlur = () => {
-    hrRef.current.style.border = `1px solid white`;
+    hrRef.current.style.backgroundColor = `white`;
   };
 
   const fetchPlatformAndTitle = async (url) => {
@@ -71,7 +71,14 @@ export function URLField({ setPlatformAndTitle }) {
         onFocus={onFocus}
         onBlur={onBlur}
       />
-      <hr ref={hrRef} style={{ border: '1px solid white', marginBottom: 0 }} />
+      <div
+        ref={hrRef}
+        style={{
+          height: '1.5px',
+          backgroundColor: 'white',
+          marginTop: 1
+        }}
+      />
       <span
         ref={alertRef}
         style={{

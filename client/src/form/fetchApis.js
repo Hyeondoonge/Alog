@@ -43,7 +43,7 @@ const fetchSolution_PUT = async (id, post) => {
       },
       body: JSON.stringify(post)
     });
-    return res.json();
+    return res;
   } catch (error) {
     console.log(error);
   }

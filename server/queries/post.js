@@ -24,7 +24,6 @@ const findPost = async (id) => {
 
 const updatePost = async (id, data) => {
   try {
-    console.log(id, data);
     await Post.updateOne({ _id: id }, data);
     console.log('succefully update post');
     return await findPost(id);
@@ -57,13 +56,14 @@ const findPosts = async (keyword, language, cursor, size, writerId) => {
 /**
  * 키워드의 연관된 전체 포스트를 카운팅
  */
-const countPosts = async (keyword, language, writerId) => { 
+const countPosts = async (keyword, language, writerId) => {
  try {
   if (!keyword) return [];
   const filter = { title: { $regex: '.*' + keyword + '.*' }};
   if (language) filter.language = { $in: language };
   if (writerId) filter.writerId = writerId;
 
+  console.log(filter);
   const doc = await Post.find(filter).exec();
   return doc.length;
  } catch (err) {
@@ -71,4 +71,23 @@ const countPosts = async (keyword, language, writerId) => {
  }
 }
 
-export { insertPost, updatePost, findPost, findPosts, countPosts };
+
+/**
+ * 키워드의 연관된 전체 포스트를 카운팅
+ */
+ const leftPosts = async (keyword, language, cursor, writerId) => { 
+  try {
+    if (!keyword) return [];
+    const filter = { title: { $regex: '.*' + keyword + '.*' }};
+    if (cursor) filter._id = { $lt: cursor };
+    if (language) filter.language = { $in: language };
+    if (writerId) filter.writerId = writerId;
+
+    const doc = await Post.find(filter).sort('field -_id').exec();
+    return doc.length;
+  } catch (err) {
+    console.log(err);
+  }
+ }
+
+export { insertPost, updatePost, findPost, findPosts, countPosts, leftPosts };
