@@ -9,9 +9,11 @@ import { fetchPosts_GET } from '../post/fetchApis';
 export default function useGetPost() {
   const [posts, setPosts] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [leftCount, setLeftCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   const updatePost = async (option) => {
+    console.log(option);
     // queryObject는 Home에서 전달
     if (!option.keyword) {
       setTotalCount(0);
@@ -22,11 +24,12 @@ export default function useGetPost() {
     setIsLoading(true);
     const res = await fetchPosts_GET(option);
     setTotalCount(res.totalCount);
+    setLeftCount(res.leftCount);
 
     if (!option.cursor) setPosts(res.posts);
     else setPosts([...posts, ...res.posts]);
     setIsLoading(false);
   };
 
-  return [posts, totalCount, isLoading, updatePost];
+  return [posts, totalCount, leftCount, isLoading, updatePost];
 }

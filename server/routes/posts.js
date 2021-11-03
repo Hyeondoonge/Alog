@@ -1,5 +1,5 @@
 import express from 'express';
-import { insertPost, updatePost, findPost, findPosts, countPosts } from '../queries/post.js';
+import { insertPost, updatePost, findPost, findPosts, countPosts, leftPosts } from '../queries/post.js';
 import { findLanguage } from '../queries/language.js';
 import { docsMap, formatDate } from '../utils.js';
 const router = express.Router();
@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
     return;
   }
   const post = await insertPost(req.body);
-  res.status(201).json({ msg: '정상적으로 글이 등록됐습니다' });
+  res.status(201).json({ post, msg: '정상적으로 글이 등록됐습니다' });
 });
 
 router.put('/', async (req, res) => {
@@ -48,7 +48,7 @@ router.put('/', async (req, res) => {
     return;
   }
   const post = await updatePost(id, req.body);
-  res.status(200).json(post);
+  res.status(201).json({ post, msg: '정상적으로 글이 수정됐습니다' });
 });
 
 // posts search
@@ -57,7 +57,10 @@ router.put('/', async (req, res) => {
 router.get('/search', async (req, res) => {
   const { keyword, languages, cursor, size, writerId } = req.query;
 
+  console.log(languages);
+
   const totalCount = await countPosts(keyword, languages ? languages.split(',') : null, writerId);
+  const leftCount = await leftPosts(keyword, languages ? languages.split(',') : null, cursor, writerId);
   let posts = await findPosts(keyword, languages ? languages.split(',') : null, cursor, size, writerId);
 
   // doc 데이터들 변형
@@ -68,6 +71,7 @@ router.get('/search', async (req, res) => {
 
   res.status(200).json({
       totalCount,
+      leftCount: leftCount - posts.length,
       posts,
     });
 });

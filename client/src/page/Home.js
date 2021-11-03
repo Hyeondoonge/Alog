@@ -15,7 +15,7 @@ export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
   const size = 3;
   const debounce = useDebounce();
-  const [posts, totalCount, isLoading, updatePost] = useGetPost();
+  const [posts, totalCount, leftCount, isLoading, updatePost] = useGetPost();
   const [keyword, setKeyword] = useState('');
   const [languages, setLanguages] = useState([]);
   const [isSelected, setIsSelected] = useState([]);
@@ -28,9 +28,10 @@ export default function Home() {
   var i = 0;
 
   const handleIntersect = async () => {
+    if (leftCount === 0) return;
     updatePost({
       keyword,
-      language: languages.filter((e, index) => isSelected[index]).map(({ name }) => name),
+      languages: languages.filter((e, index) => isSelected[index]).map(({ name }) => name),
       size,
       cursor: posts[posts.length - 1]._id
     });
@@ -53,6 +54,7 @@ export default function Home() {
     }, 550);
   };
 
+  // 언어 변경 시 post 리셋.
   const handleChangeLanguage = (index) => () => {
     const newIsSelected = [...isSelected];
     newIsSelected[index] = !isSelected[index] ? true : false;
@@ -103,7 +105,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (totalCount <= posts.length) return;
+    if (posts.length === 0) return;
     const postItems = postListRef.current.children;
     const targetElement = postItems[postItems.length - 1];
 
