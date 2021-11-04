@@ -4,7 +4,7 @@ const StyledCard = styled.div`
   background-color: ${(props) => props.color ?? 'white'};
   color: black;
   border-radius: 10px;
-  padding: 5rem;
+  padding: 5rem 3.5rem;
   transition: 0.5s;
   cursor: pointer;
   &:hover {
