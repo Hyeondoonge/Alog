@@ -1,13 +1,7 @@
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
   from = "/api/*"
   to = "http://39.116.153.159:4500/:splat"
   status = 200
-  force = true
 
 [[redirects]]
   from = "/baekjoon/*"
@@ -18,3 +12,9 @@
   from = "/goorm/*"
   to = "https://level.goorm.io/:splat"
   status = 200
+ 
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
