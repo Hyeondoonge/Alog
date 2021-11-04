@@ -22,6 +22,7 @@ export default function Home() {
   const postListRef = useRef(null);
   const wrapperRef = useRef(null);
   const filterRef = useRef(null);
+  const logoRef = useRef(null);
   const [createObserver, registerTargets] = useIntersectionObserver();
   const [value, setValue] = useState('');
   const txt = '원하는 문제의 풀이를 찾거나 알고리즘을 기록해보세요! ᵔࡇᵔ';
@@ -76,6 +77,7 @@ export default function Home() {
   const handleFocusBar = () => {
     wrapperRef.current.style.transform = 'translateY(0%)';
     filterRef.current.style.opacity = '1';
+    logoRef.current.style.fontSize = '70px';
   };
 
   const typeWriter = () => {
@@ -128,7 +130,7 @@ export default function Home() {
         <div
           style={{ textAlign: 'center', margin: '50px', height: '100px', wordBreak: 'keep-all' }}
         >
-          <div style={{ fontSize: '80px' }}>
+          <div ref={logoRef} style={{ fontSize: '80px', transition: '1s' }}>
             <Logo />
           </div>
           <i style={{ fontSize: '20px', color: '#9bc9b1', margin: 10 }}>{value}</i>
