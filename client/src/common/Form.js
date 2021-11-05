@@ -10,8 +10,8 @@ import ThemeContext from '../contexts/ThemeContext';
 import MediaQuery from 'react-responsive';
 
 const ResponsiveImage = ({ src }) => (
-  <div>
-    <img src={src} />
+  <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
+    <img src={src} width={20} />
   </div>
 );
 
@@ -46,7 +46,7 @@ export default function Form({ post, setPost, WriteButton }) {
         gap: '2rem'
       }}
     >
-      <div style={{ height: 50 }}>
+      <div style={{ height: 50, fontSize: '1rem' }}>
         {!(title && platform) ? (
           <URLField
             setPlatformAndTitle={(platform, title) => {

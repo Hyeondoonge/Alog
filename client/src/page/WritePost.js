@@ -23,10 +23,11 @@ export default function WritePost() {
     (async () => {
       const res = await fetchSolution_POST(post);
       const json = await res.json();
-      if (json.msg) {
-        setMessage(`${json.msg} ${res.status === 201 ? ' ^ࡇ^ ' : ' ㅠࡇㅠ '}`);
+      if (res.status === 201) {
+        window.location.href = `/post?id=${json.post._id}`;
+        return;
       }
-      // 작성글 바로 볼  수 있게 라우팅
+      setMessage(`${json.msg} ${res.status === 201 ? ' ^ࡇ^ ' : ' ㅠࡇㅠ '}`);
     })();
   };
 

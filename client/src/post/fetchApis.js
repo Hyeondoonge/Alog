@@ -23,8 +23,18 @@ const fetchLanguages_GET = async () => {
   }
 };
 
+const fetchPost_GET = async (id) => {
+  try {
+    const response = await fetch(`/api/post?id=${id}`);
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+};
+
 const fetchPosts_GET = async (option) => {
-  // keyword, language, cursor, size
   try {
     const query = createQuery(option);
     const response = await fetch(`/api/posts/search?${query}`);
@@ -36,4 +46,38 @@ const fetchPosts_GET = async (option) => {
   }
 };
 
-export { fetchLanguages_GET, fetchPosts_GET };
+const fetchLike_POST = async (id, userId) => {
+  try {
+    const response = await fetch(`/api/like`, {
+      method: 'post',
+      body: JSON.stringify({ postId: id, userId }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+};
+
+const fetchLike_DELETE = async (id, userId) => {
+  try {
+    const response = await fetch(`/api/like`, {
+      method: 'delete',
+      body: JSON.stringify({ postId: id, userId }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+};
+
+export { fetchLanguages_GET, fetchPosts_GET, fetchPost_GET, fetchLike_POST, fetchLike_DELETE };
