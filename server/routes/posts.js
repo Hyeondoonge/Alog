@@ -57,8 +57,6 @@ router.put('/', async (req, res) => {
 router.get('/search', async (req, res) => {
   const { keyword, languages, cursor, size, writerId } = req.query;
 
-  console.log(languages);
-
   const totalCount = await countPosts(keyword, languages ? languages.split(',') : null, writerId);
   const leftCount = await leftPosts(keyword, languages ? languages.split(',') : null, cursor, writerId);
   let posts = await findPosts(keyword, languages ? languages.split(',') : null, cursor, size, writerId);
