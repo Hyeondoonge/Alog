@@ -1,50 +1,7 @@
-import MarkdownPreview from '@uiw/react-markdown-preview';
-import styled from 'styled-components';
 import { useContext, useRef, useState } from 'react';
 import TextArea from '../common/TextArea';
 import ThemeContext from '../contexts/ThemeContext';
-
-const StyledPreviewWrapper = styled.div`
-  font-size: inherit;
-  display: flex;
-  flex-direction: row;
-  background-color: ${(props) => props.backgroundColor};
-  color: white;
-  box-shadow: 0 0 0.3rem 0.05rem black;
-`;
-
-const StyledPreview = styled(MarkdownPreview)`
-  font-size: 2rem;
-  width: 100%;
-  ${(props) => props.styleWithWidth};
-  padding: var(--textarea-margin, 2%);
-  resize: none;
-  border: 0px;
-  min-height: 50rem;
-  overflow: auto;
-
-  & pre {
-    background-color: #f4f4f4;
-  }
-
-  & pre * {
-    background: transparent;
-  }
-
-  & code {
-    color: black;
-  }
-
-  & blockquote {
-    color: #d0d0d0;
-  }
-
-  & h1,
-  h2,
-  h3 {
-    border-bottom: none;
-  }
-`;
+import { MarkDownPreview } from '../common/MarkDownPreview';
 
 export default function Solution({ content, setContent, toggle }) {
   const theme = useContext(ThemeContext);
@@ -77,9 +34,7 @@ export default function Solution({ content, setContent, toggle }) {
         <div style={{ height: '4rem' }}>
           <span style={{ opacity: 0.7 }}>{`프리뷰입니다 ᵔࡇᵔ`}</span>
         </div>
-        <StyledPreviewWrapper backgroundColor={theme.background}>
-          <StyledPreview source={content} />
-        </StyledPreviewWrapper>
+        <MarkDownPreview source={content} />
       </div>
     </div>
   );

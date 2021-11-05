@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import Tag from '../common/Tag';
 import Card from '../common/Card';
 import ThemeContext from '../contexts/ThemeContext';
+import { RiThumbUpFill } from 'react-icons/ri';
 
 const ResponsiveImage = ({ src }) => (
   <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
-    <img src={src} width="100%" height="100%" />
+    <img src={src} width={16} />
   </div>
 );
 
@@ -51,11 +52,23 @@ export default function Post({ post }) {
             {writerId} ・ {writeDate}
           </div>
         </div>
-        <div style={{ fontSize: '1.8rem', wordBreak: 'keep-all', textAlign: 'center' }}>
+        <div
+          style={{
+            fontSize: '1.8rem',
+            wordBreak: 'keep-all',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
+        >
           <div>
             <span style={{ color: 'grey' }}>좋은 솔루션이에요</span>
           </div>
-          💚 8
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <RiThumbUpFill color={theme.main} size="2rem" />
+            <strong>8</strong>
+          </div>
         </div>
       </StyledPost>
     </Card>
