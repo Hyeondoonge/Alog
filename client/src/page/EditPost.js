@@ -34,9 +34,11 @@ export default function EditPost() {
     (async () => {
       const res = await fetchSolution_PUT(id, post);
       const json = await res.json();
-      if (json.msg) {
-        setMessage(`${json.msg} ${res.status === 201 ? ' ^ࡇ^ ' : ' ㅠࡇㅠ '}`);
+      if (res.status === 201) {
+        window.location.href = `/post?id=${id}`;
+        return;
       }
+      setMessage(`${json.msg} ${res.status === 201 ? ' ^ࡇ^ ' : ' ㅠࡇㅠ '}`);
       // 작성글 바로 볼  수 있게 라우팅
     })();
   };
