@@ -22,7 +22,7 @@ const StyledPost = styled.div`
 
 // StyledPost를 젤 바깥으로 빼기
 export default function Post({ post }) {
-  const { id, title, subtitle, platform, language, writerId, writeDate } = post;
+  const { id, title, subtitle, platform, language, writerId, writeDate, likeCount } = post;
 
   const theme = useContext(ThemeContext);
 
@@ -67,7 +67,7 @@ export default function Post({ post }) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <RiThumbUpFill color={theme.main} size="2rem" />
-            <strong>8</strong>
+            <strong>{likeCount}</strong>
           </div>
         </div>
       </StyledPost>
