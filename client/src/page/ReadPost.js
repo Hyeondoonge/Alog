@@ -39,6 +39,7 @@ const StyledThumbsUpText = styled.span`
   color: white;
   top: -30px;
   left: 0px;
+  text-shadow: 0px 0px 3px black;
 `;
 
 export default function Post() {
@@ -46,9 +47,10 @@ export default function Post() {
   const userId = 'jsi06138';
   const [post, setPost] = useState({});
   const { title, platform, subtitle, language, content, writeDate, writerId } = post;
-  const [liker, setLiker] = useState([]);
-  const [like, setLike] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [isLiker, setIsLiker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [clickLike, setClickLike] = useState(false);
 
   const theme = useContext(ThemeContext);
 
@@ -57,23 +59,26 @@ export default function Post() {
       setIsLoading(true);
       const res = await fetchPost_GET(id);
       setPost(res.post);
-      setLiker(res.liker);
+      setLikeCount(res.liker.length);
+      setIsLiker(res.liker.some(({ userId: id }) => userId === id));
       setIsLoading(false);
     })();
   }, []);
 
   const onClickLike = () => {
-    if (liker.some(({ userId }) => userId === 'jsi06138')) {
+    if (isLiker) {
       (async () => {
+        setIsLiker(false);
+        setLikeCount(likeCount - 1);
+        setClickLike(false);
         const res = await fetchLike_DELETE(id, userId);
-        setLiker(res);
-        setLike(0);
       })();
     } else {
       (async () => {
+        setIsLiker(true);
+        setLikeCount(likeCount + 1);
+        setClickLike(true);
         const res = await fetchLike_POST(id, userId);
-        setLiker(res);
-        setLike(1);
       })();
     }
   };
@@ -111,17 +116,17 @@ export default function Post() {
         <MarkDownPreview source={content} />
         <div style={{ fontSize: '2.5rem', position: 'relative' }}>
           {' '}
-          {like === 1 && (
+          {clickLike && (
             <StyledThumbsUpText>
               <RiThumbUpFill color={theme.main} /> 좋은 솔루션이에요
             </StyledThumbsUpText>
           )}
           <RiThumbUpFill
             onClick={onClickLike}
-            color={liker.some(({ userId }) => userId === 'jsi06138') ? theme.main : 'white'}
+            color={isLiker ? theme.main : 'white'}
             style={{ cursor: 'pointer' }}
           />{' '}
-          {liker.length}
+          {likeCount}
           <RiChat1Fill color={theme.main} /> 0{' '}
         </div>
       </div>

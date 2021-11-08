@@ -9,6 +9,46 @@ import Footer from './Footer';
 import ThemeContext from '../contexts/ThemeContext';
 import MediaQuery from 'react-responsive';
 
+const Toggler = ({ togglerRef, onClick }) => (
+  <div
+    ref={togglerRef}
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'relative',
+      width: 40,
+      height: 75,
+      cursor: 'pointer',
+      gap: 5
+    }}
+    onClick={onClick}
+  >
+    <div
+      style={{
+        width: 30,
+        height: 30,
+        fontSize: 30,
+        padding: 5,
+        // color: theme.main,
+        textAlign: 'center'
+      }}
+    >
+      <RiPencilFill />
+    </div>
+    <div
+      style={{
+        width: 30,
+        height: 30,
+        fontSize: 30,
+        padding: 5,
+        textAlign: 'center'
+      }}
+    >
+      <RiEye2Line />
+    </div>
+  </div>
+);
+
 const ResponsiveImage = ({ src }) => (
   <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
     <img src={src} width={20} />
@@ -87,43 +127,7 @@ export default function Form({ post, setPost, WriteButton }) {
       <MediaQuery minWidth={780}>
         <div style={{ position: 'sticky', top: 0 }}>
           <div style={{ position: 'absolute', left: -50, top: 60 }}>
-            <div
-              ref={togglerRef}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                position: 'relative',
-                width: 40,
-                height: 75,
-                cursor: 'pointer',
-                gap: 5
-              }}
-              onClick={onClick}
-            >
-              <div
-                style={{
-                  width: 30,
-                  height: 30,
-                  fontSize: 30,
-                  padding: 5,
-                  color: theme.main,
-                  textAlign: 'center'
-                }}
-              >
-                <RiPencilFill />
-              </div>
-              <div
-                style={{
-                  width: 30,
-                  height: 30,
-                  fontSize: 30,
-                  padding: 5,
-                  textAlign: 'center'
-                }}
-              >
-                <RiEye2Line />
-              </div>
-            </div>
+            <Toggler togglerRef={togglerRef} />
             <div
               style={{
                 margin: '20px 0',

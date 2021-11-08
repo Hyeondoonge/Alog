@@ -2,6 +2,7 @@ import express from 'express';
 import { insertPost, updatePost, findPost, findPosts, countPosts, leftPosts } from '../queries/post.js';
 import { findLanguage } from '../queries/language.js';
 import { docsMap, formatDate } from '../utils.js';
+import { findLiker } from '../queries/like.js';
 const router = express.Router();
 
 // use함수를 이용해 사용자 권한을 체크하는 기능을 구현할 수 있다.
@@ -60,12 +61,13 @@ router.get('/search', async (req, res) => {
   const totalCount = await countPosts(keyword, languages ? languages.split(',') : null, writerId);
   const leftCount = await leftPosts(keyword, languages ? languages.split(',') : null, cursor, writerId);
   let posts = await findPosts(keyword, languages ? languages.split(',') : null, cursor, size, writerId);
-
   // doc 데이터들 변형
-  posts = docsMap(posts, (post) => {
+  posts = posts.map((post) => post.toObject());
+
+  for(const post of posts) {
+    post.likeCount = (await findLiker(post._id)).length;
     post.writeDate = formatDate(post.writeDate);
-    return post;
-  });
+  }
 
   res.status(200).json({
       totalCount,
