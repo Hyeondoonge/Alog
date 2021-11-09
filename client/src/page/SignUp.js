@@ -7,7 +7,7 @@ import { useContext } from 'react';
 import UserContext from '../contexts/UserContext';
 import ModalContext from '../contexts/ModalContext';
 import { useEffect } from 'react';
-import { fetchToken_POST, fetchUserNumber_GET } from '../api/kakaoApi';
+// import { fetchToken_POST, fetchUserNumber_GET } from '../api/kakaoApi';
 import { fetchSignin_POST, fetchSignup_POST } from '../api/authAPI';
 import TextField from '../common/TextField';
 import Template from '../Template';
@@ -76,8 +76,10 @@ export default function SignUp() {
     if (!code) return;
     (async () => {
       try {
-        const [api_accessToken, api_refreshToken] = await fetchToken_POST(code);
-        const userNumber = await fetchUserNumber_GET(api_accessToken);
+        const [api_accessToken, api_refreshToken] = '';
+        const userNumber = '';
+        // const [api_accessToken, api_refreshToken] = await fetchToken_POST(code);
+        // const userNumber = await fetchUserNumber_GET(api_accessToken);
 
         setTokens({
           api_accessToken,
