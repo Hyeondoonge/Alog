@@ -18,7 +18,8 @@ router.get('/', async (req, res, next) => {
 
 router.get('/search', async (req, res, next) => {
   try {
-    const { keyword } = req.query;
+    let { keyword } = req.query;
+    keyword = keyword.replace(/\+/g, '\\+');
     const languages = await findLanguagesByKeyword(keyword);
   
     res.set({
