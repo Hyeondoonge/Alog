@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useMemo, useRef, useState } from 'react';
 import TextField from './TextField';
 import { URLField } from '../form/URLField';
 import LanguageField from '../form/LanguageField';
@@ -9,45 +9,78 @@ import Footer from './Footer';
 import ThemeContext from '../contexts/ThemeContext';
 import MediaQuery from 'react-responsive';
 
-const Toggler = ({ togglerRef, onClick }) => (
-  <div
-    ref={togglerRef}
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      position: 'relative',
-      width: 40,
-      height: 75,
-      cursor: 'pointer',
-      gap: 5
-    }}
-    onClick={onClick}
-  >
-    <div
-      style={{
-        width: 30,
-        height: 30,
-        fontSize: 30,
-        padding: 5,
-        // color: theme.main,
-        textAlign: 'center'
-      }}
-    >
-      <RiPencilFill />
-    </div>
-    <div
-      style={{
-        width: 30,
-        height: 30,
-        fontSize: 30,
-        padding: 5,
-        textAlign: 'center'
-      }}
-    >
-      <RiEye2Line />
-    </div>
-  </div>
-);
+// toggler 중복되는 영역 묶고,
+// media query 사용 코드도 다시 보기
+
+// 개선된 점이 있다면 기록하기 !!
+
+const Toggler = ({ toggle, onClick }) => {
+  const theme = useContext(ThemeContext);
+  const icons = useMemo(
+    () => (
+      <>
+        <div
+          style={{
+            width: 30,
+            height: 30,
+            fontSize: 30,
+            padding: 5,
+            color: toggle ? 'white' : theme.main,
+            textAlign: 'center'
+          }}
+        >
+          <RiPencilFill />
+        </div>
+        <div
+          style={{
+            width: 30,
+            height: 30,
+            fontSize: 30,
+            padding: 5,
+            textAlign: 'center',
+            color: toggle ? theme.main : 'white'
+          }}
+        >
+          <RiEye2Line />
+        </div>
+      </>
+    ),
+    [toggle]
+  );
+  return (
+    <>
+      <MediaQuery minWidth={780}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+            width: 40,
+            height: 75,
+            cursor: 'pointer',
+            gap: 5
+          }}
+          onClick={onClick}
+        >
+          {icons}
+        </div>
+      </MediaQuery>
+      <MediaQuery minWidth={0} maxWidth={750}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            position: 'relative',
+            cursor: 'pointer'
+          }}
+          onClick={onClick}
+        >
+          {icons}
+        </div>
+      </MediaQuery>
+    </>
+  );
+};
 
 const ResponsiveImage = ({ src }) => (
   <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
@@ -59,16 +92,8 @@ export default function Form({ post, setPost, WriteButton }) {
   const { title, platform, subtitle, language, content } = post;
   const [toggle, setToggle] = useState(0);
   const togglerRef = useRef(null);
-  const theme = useContext(ThemeContext);
 
   const onClick = () => {
-    if (!toggle) {
-      togglerRef.current.children[1].style.color = theme.main;
-      togglerRef.current.children[0].style.color = 'unset';
-    } else {
-      togglerRef.current.children[0].style.color = theme.main;
-      togglerRef.current.children[1].style.color = 'unset';
-    }
     setToggle(!toggle);
   };
 
@@ -127,8 +152,8 @@ export default function Form({ post, setPost, WriteButton }) {
       <MediaQuery minWidth={780}>
         <div style={{ position: 'sticky', top: 0 }}>
           <div style={{ position: 'absolute', left: -50, top: 60 }}>
-            <Toggler togglerRef={togglerRef} />
-            <div
+            <Toggler toggle={toggle} onClick={onClick} />
+            {/* <div
               style={{
                 margin: '20px 0',
                 cursor: 'pointer',
@@ -150,10 +175,9 @@ export default function Form({ post, setPost, WriteButton }) {
                   // 이미지 load
                 }}
               >
-                {/* file input과 연결 */}
                 <RiImage2Fill />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </MediaQuery>
@@ -181,40 +205,7 @@ export default function Form({ post, setPost, WriteButton }) {
                 padding: 5
               }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  position: 'relative',
-                  cursor: 'pointer'
-                }}
-                onClick={onClick}
-                ref={togglerRef}
-              >
-                <div
-                  style={{
-                    width: 30,
-                    height: 30,
-                    fontSize: 30,
-                    padding: 5,
-                    textAlign: 'center',
-                    color: theme.main
-                  }}
-                >
-                  <RiPencilFill />
-                </div>
-                <div
-                  style={{
-                    width: 30,
-                    height: 30,
-                    fontSize: 30,
-                    padding: 5,
-                    textAlign: 'center'
-                  }}
-                >
-                  <RiEye2Line />
-                </div>
-              </div>
+              <Toggler toggle={toggle} onClick={onClick} />
               <WriteButton />
             </div>
           </Footer>
