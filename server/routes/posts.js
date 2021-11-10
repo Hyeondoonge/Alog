@@ -56,7 +56,10 @@ router.put('/', async (req, res) => {
 // writerId, language, cursor는 undefined로 전달될 수도 있는 값.
 // 클라이언트 단에서 부터 요청 전 이를 처리해주도록 해야한다.
 router.get('/search', async (req, res) => {
-  const { keyword, languages, cursor, size, writerId } = req.query;
+  // keyword uri encode 하개ㅣ
+
+  let { keyword, languages, cursor, size, writerId } = req.query;
+  keyword = keyword.replace(/\+/g, '\\+');
 
   const totalCount = await countPosts(keyword, languages ? languages.split(',') : null, writerId);
   const leftCount = await leftPosts(keyword, languages ? languages.split(',') : null, cursor, writerId);

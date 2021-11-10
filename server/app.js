@@ -9,6 +9,7 @@ import postsRouter from './routes/posts.js';
 import postRouter from './routes/post.js';
 import languageRouter from './routes/language.js';
 import likeRouter from './routes/like.js';
+import authRouter from './routes/auth.js';
 import { connectDB } from './queries/mongo.js'
 
 const { PORT, MONGO_URI, USER_ID, USER_PASSWORD } = process.env;
@@ -32,6 +33,8 @@ app.use('/posts', postsRouter);
 app.use('/post', postRouter);
 app.use('/languages', languageRouter);
 app.use('/like', likeRouter);
+app.use('/auth', authRouter);
+
 app.use((req, res, next) => { // 매핑되는 경로 없을 때
   res.status(404).send('not found page');
 });

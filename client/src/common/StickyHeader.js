@@ -17,7 +17,9 @@ export default function StickyHeader({ children }) {
       <div style={{ fontSize: '3rem', width: '20%' }}>
         <Logo />
       </div>
-      <div style={{ width: '80%', height: '100%' }}>{children}</div>
+      <div style={{ width: '80%', height: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+        {children}
+      </div>
     </StyledStickyHeader>
   );
 }
