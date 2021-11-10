@@ -5,7 +5,7 @@ const fetchAutoSignin_POST = async (accessToken) => {
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({ accessToken })
     });
-    return await res.json();
+    return res.json();
   } catch (error) {
     console.log(error);
     return null;
@@ -19,7 +19,7 @@ const fetchSignin_POST = async (userNumber, platform) => {
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({ userNumber, platform })
     });
-    return await res.json();
+    return res.json();
   } catch (error) {
     console.log(error);
     return null;
