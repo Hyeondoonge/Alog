@@ -116,7 +116,7 @@ export default function Home() {
   }, [posts]);
 
   return (
-    <Template>
+    <Template header>
       <div
         ref={wrapperRef}
         style={{
