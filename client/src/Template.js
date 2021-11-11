@@ -48,7 +48,7 @@ const StyledButton = styled.button`
 
 const KakaoLogin_API = () => {
   const onClick = () => {
-    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_CLIENT_KEY}&redirect_uri=http://localhost:3000/signup`;
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_CLIENT_KEY}&redirect_uri=https://alog.netlify.app/signup`;
   };
 
   return (
