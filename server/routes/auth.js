@@ -1,4 +1,4 @@
-gimport express from 'express';
+import express from 'express';
 import jwt from 'jsonwebtoken';
 import { createUser, findUser, hasDuplicatedUserId } from '../queries/user.js';
 const router = express.Router();
