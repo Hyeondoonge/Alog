@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import moment from 'moment';
 
 /**
@@ -28,4 +29,34 @@ const docsMap = (docs, callback) => (
   docs.map((doc) => callback({ ...doc.toObject() })
 ));
 
-export { formatDate, docsMap };
+const generateAccessToken = (userId, userNumber, platform) => {
+  try {
+    const token = jwt.sign({ userId, userNumber, platform }, process.env.SECRET_KEY, {
+      expiresIn: '10s'
+    });
+    return token;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const generateRefreshToken = (userId, userNumber, platform) => {
+  try {
+    const token = jwt.sign({ userId, userNumber, platform }, process.env.SECRET_KEY, {
+      expiresIn: '7d'
+    });
+    return token;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const verifyToken = async (token) => {
+  try {
+    return jwt.verify(token, process.env.SECRET_KEY); // getAccessToken 해준다.
+  } catch (error) {
+    return null; // access token 다시발급해야함.
+  }
+}
+
+export { formatDate, docsMap, generateAccessToken, generateRefreshToken, verifyToken };

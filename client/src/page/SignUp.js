@@ -2,18 +2,17 @@
 
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string';
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import { useContext } from 'react';
 import UserContext from '../contexts/UserContext';
 import ModalContext from '../contexts/ModalContext';
+import ThemeContext from '../contexts/ThemeContext';
 import { useEffect } from 'react';
 import { fetchToken_POST, fetchUserNumber_GET } from '../api/kakaoApi';
-import { fetchSignin_POST, fetchSignup_POST } from '../api/authAPI';
+import { fetchSignin_POST, fetchSignup_POST } from '../api/authApi';
 import TextField from '../common/TextField';
 import Template from '../Template';
-import { RiUserSmileFill } from 'react-icons/ri';
 import Button from '../common/Button';
-import ThemeContext from '../contexts/ThemeContext';
 import Loading from '../common/Loading';
 import styled, { keyframes } from 'styled-components';
 
@@ -59,10 +58,11 @@ export default function SignUp() {
     (async () => {
       const res = await fetchSignup_POST(userNumber, 'kakao', nickname, description, '');
       if (res.status === 201) {
-        const { userId, accessToken } = await res.json();
-        setUserData({ api_accessToken: tokens.api_accessToken, userId, accessToken });
+        const { userId, accessToken, refreshToken } = await res.json();
+        setUserData({ api_accessToken: tokens.api_accessToken, accessToken, refreshToken, userId });
         setIsLoggedIn(true);
         window.localStorage.setItem('access_token', accessToken);
+        window.localStorage.setItem('refresh_token', refreshToken);
         history.replace('/'); // 리다이렉트
       } else {
         const { msg } = await res.json();
@@ -85,14 +85,18 @@ export default function SignUp() {
         });
         setUserNumber(userNumber);
 
-        const { isMember, userId, accessToken } = await fetchSignin_POST(userNumber, 'kakao');
+        const { accessToken, refreshToken, isMember, userId } = await fetchSignin_POST(
+          userNumber,
+          'kakao'
+        );
         if (!isMember) {
           isChecking(false);
           return;
         }
-        setUserData({ api_accessToken, userId: userId, accessToken });
+        setUserData({ api_accessToken, accessToken, refreshToken, userId: userId });
         setIsLoggedIn(true);
         window.localStorage.setItem('access_token', accessToken);
+        window.localStorage.setItem('refresh_token', refreshToken);
         history.replace('/');
       } catch (error) {
         console.log(error);
