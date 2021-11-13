@@ -31,4 +31,14 @@ module.exports = function (app) {
       }
     })
   );
+  app.use(
+    '/kakao',
+    proxy({
+      target: 'https://kapi.kakao.com',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/kakao': ''
+      }
+    })
+  );
 };
