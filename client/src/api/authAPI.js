@@ -2,8 +2,13 @@ const fetchAutoSignin_POST = async (accessToken) => {
   try {
     const res = await fetch('/api/auth/autoSignin', {
       method: 'post',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({ accessToken })
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        accessToken: true
+      })
     });
     return res.json();
   } catch (error) {
