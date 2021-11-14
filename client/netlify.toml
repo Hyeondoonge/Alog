@@ -12,6 +12,11 @@
   from = "/goorm/*"
   to = "https://level.goorm.io/:splat"
   status = 200
+
+[[redirects]]
+  from = "/kakao/*"
+  to = "https://kapi.kakao.com/:splat"
+  status = 200
  
 [[redirects]]
   from = "/*"
