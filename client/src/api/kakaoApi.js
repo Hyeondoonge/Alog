@@ -3,7 +3,7 @@ const fetchToken_POST = async (code) => {
     const res = await fetch('https://kauth.kakao.com/oauth/token', {
       method: 'post',
       headers: { 'Content-type': 'application/x-www-form-urlencoded;charset=utf-8' },
-      body: `grant_type=authorization_code&client_id=${process.env.REACT_APP_CLIENT_KEY}&redirect_uri=https://alog.netlify.app/signup&code=${code}`
+      body: `grant_type=authorization_code&client_id=${process.env.REACT_APP_CLIENT_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&code=${code}`
     });
     const response = await res.json();
     return [response.access_token, response.refresh_token];
