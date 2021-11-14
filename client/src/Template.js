@@ -123,14 +123,15 @@ export default function Template({ header, children }) {
                   size="small"
                   onClick={() => {
                     (async () => {
-                      await fetch('/kakao/v1/user/unlink', {
+                      await fetch('/kakao/v1/user/logout', {
                         method: 'post',
                         headers: { Authorization: `Bearer ${userData.api_accessToken}` }
                       });
                     })();
                     setIsLoggedIn(false);
-                    setUserData({ userId: null, accessToken: null });
+                    setUserData({ userId: null, accessToken: null, refreshToke: null });
                     window.localStorage.removeItem('access_token');
+                    window.localStorage.removeItem('refresh_token');
                   }}
                 />
               </div>

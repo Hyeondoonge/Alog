@@ -1,11 +1,11 @@
-const fetchAutoSignin_POST = async (accessToken) => {
+const fetchAutoSignin_GET = async (accessToken) => {
   try {
     const res = await fetch('/api/auth/autoSignin', {
-      method: 'post',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({ accessToken })
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
     });
-    return res.json();
+    return res;
   } catch (error) {
     console.log(error);
     return null;
@@ -42,4 +42,18 @@ const fetchSignup_POST = async (userNumber, platform, nickname, description, pro
   }
 };
 
-export { fetchAutoSignin_POST, fetchSignin_POST, fetchSignup_POST };
+const fetchRefreshToken_GET = async (refreshToken) => {
+  try {
+    const res = await fetch('/api/auth/refreshToken', {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`
+      }
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+export { fetchAutoSignin_GET, fetchSignin_POST, fetchSignup_POST, fetchRefreshToken_GET };

@@ -16,36 +16,33 @@ import MediaQuery from 'react-responsive';
 
 const Toggler = ({ toggle, onClick }) => {
   const theme = useContext(ThemeContext);
-  const icons = useMemo(
-    () => (
-      <>
-        <div
-          style={{
-            width: 30,
-            height: 30,
-            fontSize: 30,
-            padding: 5,
-            color: toggle ? 'white' : theme.main,
-            textAlign: 'center'
-          }}
-        >
-          <RiPencilFill />
-        </div>
-        <div
-          style={{
-            width: 30,
-            height: 30,
-            fontSize: 30,
-            padding: 5,
-            textAlign: 'center',
-            color: toggle ? theme.main : 'white'
-          }}
-        >
-          <RiEye2Line />
-        </div>
-      </>
-    ),
-    [toggle]
+  const icons = (
+    <>
+      <div
+        style={{
+          width: 30,
+          height: 30,
+          fontSize: 30,
+          padding: 5,
+          color: toggle ? 'white' : theme.main,
+          textAlign: 'center'
+        }}
+      >
+        <RiPencilFill />
+      </div>
+      <div
+        style={{
+          width: 30,
+          height: 30,
+          fontSize: 30,
+          padding: 5,
+          textAlign: 'center',
+          color: toggle ? theme.main : 'white'
+        }}
+      >
+        <RiEye2Line />
+      </div>
+    </>
   );
   return (
     <>

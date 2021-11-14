@@ -17,14 +17,14 @@ const fetchSolution_GET = async (id) => {
   }
 };
 
-const fetchSolution_POST = async (post) => {
+const fetchSolution_POST = async (post, userId) => {
   try {
     const res = await fetch('/api/posts', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(post)
+      body: JSON.stringify({ ...post, writerId: userId })
     });
     return res;
   } catch (error) {

@@ -1,28 +1,10 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { createUser, findUser, hasDuplicatedUserId } from '../queries/user.js';
+import { generateAccessToken, generateRefreshToken } from '../utils.js';
 const router = express.Router();
 
-const generateAccessToken = (userId, userNumber, platform) => {
-  try {
-    const token = jwt.sign({ userId, userNumber, platform }, process.env.SECRET_KEY);
-    return token;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-// 동일 경로에 여러 메소드를 사용하는 경우,
-// 체인 형식으로 코드 작성 가능
-
-  router.post('/signup', async (req, res, next) => {
-    // userNumber는 server측에서 설정할 수 있도록 한다.
-    
-    // 만약, api 서버가 가입 정보를 받은 후 가입이 이루어지도록하면
-    // 올바르지 않은 가입자가 등록될 수 있다. => 플랫폼에서 로그인 확인된 사용자만 회원가입하는 것을 보장해야한다.
-
-    // 카카오 로그인 -> 회원O 
-    //            -> 회원X 회원가입 view
+router.post('/signup', async (req, res, next) => {
     const { userId, platform, userNumber, description } = req.body;
 
     // 아이디 중복 확인
@@ -41,47 +23,78 @@ const generateAccessToken = (userId, userNumber, platform) => {
     try {
       const { userId, platform, userNumber } = req.body;
 
-      const accessToken = generateAccessToken(userId, userNumber, platform);
+      const accessToken = generateAccessToken(uesrId, userNumber, platform);
+      const refreshToken = generateRefreshToken(uesrId, userNumber, platform);
 
-      res.status(201).json({ accessToken, userId });
+      res.status(201).json({ accessToken, refreshToken, userId });
   
     } catch (error) {
       res.json({msg: 'END WITH ERROR'});
       console.log(error);
     }
-  });
+});
 
-  router.post('/signin', async (req, res) => {
-    // 새로운 access token 발급
-    try {
+router.post('/signin', async (req, res) => {
+    // 새로운 access token과 refresh token 발급
+  try {
       const { platform, userNumber } = req.body;
-      console.log(platform, userNumber);
       const { userId } = await findUser(req.body);
+
       const accessToken = generateAccessToken(userId, userNumber, platform);
+      const refreshToken = generateRefreshToken(userId, userNumber, platform);
 
-      res.json({ isMember: true, accessToken, userId });
+      res.json({ accessToken, refreshToken, isMember: true, userId });
     } catch (error) {
-      res.json({ isMember: false, msg: '로그인 할 수 없습니다'});
-    }
-  });
+      res.status(401).json({ isMember: false, msg: '로그인 할 수 없습니다'});
+  }
+});
 
-  router.post('/autoSignin', async (req, res) => {
+router.get('/autoSignin', async (req, res, next) => {
     // 새로운 access token 발급
+    const accessToken = req.headers['authorization'].split(' ')[1];
+
     try {
-      const { accessToken } = req.body;
+      const { userId } = await jwt.verify(accessToken, process.env.SECRET_KEY); // 증명
 
-      const { userId, platform, userNumber } = await jwt.verify(accessToken, process.env.SECRET_KEY);
-
+      // 증명에 성공
       res.json({ userId });
     } catch (error) {
+      console.log(accessToken);
       console.log(error);
-      res.json({ msg: 'CAN NOT AUTO LOGIN'});
+      if (error.name === 'TokenExpiredError') {
+        const { userId } = jwt.decode(accessToken);
+        res.json({ userId, msg: "토큰 만료" });
+      } else {
+        res.status(401).json({ msg: '로그인 할 수 없습니다'});
     }
-  });
+  }
+});
 
-  router.post('/signout', async (req ,res) => {
-    // client 단에서 access token을 만료시킨다.
-    const token = req.headers['authorization'];
-  })
+router.get('/refreshToken', async(req, res) => {
+  let refreshToken = req.headers['authorization'].split(' ')[1];
+
+  try {
+    const { userId, userNumber, platform } = await jwt.verify(refreshToken, process.env.SECRET_KEY); // 증명
+
+    // refresh token이 유효함이 증명
+    const accessToken = generateAccessToken(userId, userNumber, platform);
+    res.json({ accessToken });
+  } catch ({ name }) {
+      if (name === 'TokenExpiredError') {
+        const payload = jwt.decode(refreshToken);
+        // access token, refresh token 갱신
+        const accessToken = generateAccessToken(...payload);
+        refreshToken = generateRefreshToken(...payload);
+        res.json({ accessToken, refreshToken });
+      } else {
+        res.status(400).json({ msg: '요청을 처리할 수 없습니다'});
+    }
+  }
+})
+
+router.post('/signout', async (req ,res) => {
+  // client 단에서 access token을 만료시킨다.
+  const token = req.headers['authorization'];
+})
 
 export default router;
