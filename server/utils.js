@@ -31,8 +31,8 @@ const docsMap = (docs, callback) => (
 
 const generateAccessToken = (userId, userNumber, platform) => {
   try {
-    const token = jwt.sign({ userId, userNumber, platform }, process.env.SECRET_KEY, {
-      expiresIn: '10s'
+    const token = jwt.sign({ userId, userNumber, platform }, process.env.ACCESS_SECRET_KEY, {
+      expiresIn: '5s'
     });
     return token;
   } catch (error) {
@@ -42,9 +42,7 @@ const generateAccessToken = (userId, userNumber, platform) => {
 
 const generateRefreshToken = (userId, userNumber, platform) => {
   try {
-    const token = jwt.sign({ userId, userNumber, platform }, process.env.SECRET_KEY, {
-      expiresIn: '7d'
-    });
+    const token = jwt.sign({ userId, userNumber, platform }, process.env.REFRESH_SECRET_KEY);
     return token;
   } catch (error) {
     throw new Error(error);
