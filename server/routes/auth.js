@@ -4,6 +4,41 @@ import { createUser, findUser, hasDuplicatedUserId } from '../queries/user.js';
 import { generateAccessToken, generateRefreshToken } from '../utils.js';
 const router = express.Router();
 
+// router.use(async (req, res, next) => {
+//   const accessToken = req.headers['authorization'].split(' ')[1];
+//   try {
+//     jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
+//     next();
+//   } catch (error) {
+//     console.log(error)
+//   }
+// });
+
+router.get('/verifyToken', async (req, res) => {
+  const accessToken = req.headers['authorization'].split(' ')[1]; 
+  console.log(accessToken);
+
+  try {
+    await jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY); // 증명
+    res.status(200).end();
+  } catch ({ name }) {
+    if (name === "TokenExpiredError") res.status(401).json({ error: 'expired token'});
+    else res.status(401).json({ error: 'token error'});
+  }
+})
+
+router.get('/refreshToken', async (req, res) => {
+  const refreshToken = req.headers['authorization'].split(' ')[1]; 
+
+  try {
+    const { userId, userNumber, platform } = await jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY); // 증명
+    const accessToken = generateAccessToken(userId, userNumber, platform);
+    res.json({ accessToken });
+  } catch (error) {
+    res.status(401).json({ error: 'invalid token'});
+  }
+})
+
 router.post('/signup', async (req, res, next) => {
     const { userId, platform, userNumber, description } = req.body;
 
@@ -23,8 +58,8 @@ router.post('/signup', async (req, res, next) => {
     try {
       const { userId, platform, userNumber } = req.body;
 
-      const accessToken = generateAccessToken(uesrId, userNumber, platform);
-      const refreshToken = generateRefreshToken(uesrId, userNumber, platform);
+      const accessToken = generateAccessToken(userId, userNumber, platform);
+      const refreshToken = generateRefreshToken(userId, userNumber, platform);
 
       res.status(201).json({ accessToken, refreshToken, userId });
   
@@ -37,7 +72,7 @@ router.post('/signup', async (req, res, next) => {
 router.post('/signin', async (req, res) => {
     // 새로운 access token과 refresh token 발급
   try {
-      const { platform, userNumber } = req.body;
+      const { userNumber, platform } = req.body;
       const { userId } = await findUser(req.body);
 
       const accessToken = generateAccessToken(userId, userNumber, platform);
@@ -50,47 +85,16 @@ router.post('/signin', async (req, res) => {
 });
 
 router.get('/autoSignin', async (req, res, next) => {
-    // 새로운 access token 발급
     const accessToken = req.headers['authorization'].split(' ')[1];
-
     try {
-      const { userId } = await jwt.verify(accessToken, process.env.SECRET_KEY); // 증명
-
+      const { userId } = await jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY); // 증명
       // 증명에 성공
       res.json({ userId });
-    } catch (error) {
-      console.log(accessToken);
-      console.log(error);
-      if (error.name === 'TokenExpiredError') {
-        const { userId } = jwt.decode(accessToken);
-        res.json({ userId, msg: "토큰 만료" });
-      } else {
-        res.status(401).json({ msg: '로그인 할 수 없습니다'});
+    } catch ({ name }) {
+      if (name === "TokenExpiredError") res.status(401).json({ error: 'expired token'});
+      else res.status(401).json({ error: 'token error'});
     }
-  }
 });
-
-router.get('/refreshToken', async(req, res) => {
-  let refreshToken = req.headers['authorization'].split(' ')[1];
-
-  try {
-    const { userId, userNumber, platform } = await jwt.verify(refreshToken, process.env.SECRET_KEY); // 증명
-
-    // refresh token이 유효함이 증명
-    const accessToken = generateAccessToken(userId, userNumber, platform);
-    res.json({ accessToken });
-  } catch ({ name }) {
-      if (name === 'TokenExpiredError') {
-        const payload = jwt.decode(refreshToken);
-        // access token, refresh token 갱신
-        const accessToken = generateAccessToken(...payload);
-        refreshToken = generateRefreshToken(...payload);
-        res.json({ accessToken, refreshToken });
-      } else {
-        res.status(400).json({ msg: '요청을 처리할 수 없습니다'});
-    }
-  }
-})
 
 router.post('/signout', async (req ,res) => {
   // client 단에서 access token을 만료시킨다.

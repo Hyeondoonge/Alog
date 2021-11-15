@@ -44,7 +44,7 @@ const fetchSignup_POST = async (userNumber, platform, nickname, description, pro
 
 const fetchRefreshToken_GET = async (refreshToken) => {
   try {
-    const res = await fetch('/api/auth/refreshToken', {
+    const res = await fetch('/api/auth/updateToken', {
       headers: {
         Authorization: `Bearer ${refreshToken}`
       }
