@@ -6,6 +6,8 @@ import StickyHeader from './common/StickyHeader';
 import ThemeContext from './contexts/ThemeContext';
 import UserContext from './contexts/UserContext';
 import { RiCloseFill } from 'react-icons/ri';
+import { useHistory } from 'react-router';
+import { fetchRefreshToken_POST } from './api/kakaoApi';
 
 const StyledBody = styled.div`
   width: 100%;
@@ -67,6 +69,7 @@ export default function Template({ header, children }) {
   const [isLoggedIn, setIsLoggedIn, userData, setUserData] = useContext(UserContext);
   const loginModalRef = useRef(null);
   const bodyRef = useRef(null);
+  const history = useHistory();
 
   return (
     <>
@@ -122,16 +125,32 @@ export default function Template({ header, children }) {
                   color={theme.main}
                   size="small"
                   onClick={() => {
-                    (async () => {
-                      await fetch('/kakao/v1/user/logout', {
-                        method: 'post',
-                        headers: { Authorization: `Bearer ${userData.api_accessToken}` }
-                      });
-                    })();
-                    setIsLoggedIn(false);
-                    setUserData({ userId: null, accessToken: null, refreshToke: null });
-                    window.localStorage.removeItem('access_token');
-                    window.localStorage.removeItem('refresh_token');
+                    try {
+                      (async () => {
+                        const api_accessToken = await fetchRefreshToken_POST(
+                          userData.api_refreshToken
+                        );
+                        await fetch('/kapi/v1/user/logout', {
+                          headers: { authorization: `Bearer ${api_accessToken}` }
+                        });
+
+                        setIsLoggedIn(false);
+                        setUserData({
+                          userId: null,
+                          api_accessToken: null,
+                          api_refreshToken: null,
+                          accessToken: null,
+                          refreshToken: null
+                        });
+                        window.localStorage.removeItem('api_access_token');
+                        window.localStorage.removeItem('api_refresh_token');
+                        window.localStorage.removeItem('access_token');
+                        window.localStorage.removeItem('refresh_token');
+                        history.replace('/');
+                      })();
+                    } catch (error) {
+                      console.log(error);
+                    }
                   }}
                 />
               </div>

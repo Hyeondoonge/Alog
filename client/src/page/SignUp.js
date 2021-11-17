@@ -61,6 +61,7 @@ export default function SignUp() {
         const { userId, accessToken, refreshToken } = await res.json();
         setUserData({ api_accessToken: tokens.api_accessToken, accessToken, refreshToken, userId });
         setIsLoggedIn(true);
+        window.localStorage.setItem('api_access_token', tokens.api_accessToken);
         window.localStorage.setItem('access_token', accessToken);
         window.localStorage.setItem('refresh_token', refreshToken);
         history.replace('/'); // 리다이렉트
@@ -93,8 +94,16 @@ export default function SignUp() {
           isChecking(false);
           return;
         }
-        setUserData({ api_accessToken, accessToken, refreshToken, userId: userId });
+        setUserData({
+          api_accessToken,
+          api_refreshToken,
+          accessToken,
+          refreshToken,
+          userId: userId
+        });
         setIsLoggedIn(true);
+        window.localStorage.setItem('api_access_token', api_accessToken);
+        window.localStorage.setItem('api_refresh_token', api_refreshToken);
         window.localStorage.setItem('access_token', accessToken);
         window.localStorage.setItem('refresh_token', refreshToken);
         history.replace('/');

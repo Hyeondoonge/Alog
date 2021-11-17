@@ -14,8 +14,13 @@
   status = 200
 
 [[redirects]]
-  from = "/kakao/*"
+  from = "/kapi/*"
   to = "https://kapi.kakao.com/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/kauth/*"
+  to = "https://kauth.kakao.com/:splat"
   status = 200
  
 [[redirects]]
