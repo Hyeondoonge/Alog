@@ -46,12 +46,13 @@ const fetchPosts_GET = async (option) => {
   }
 };
 
-const fetchLike_POST = async (id, userId) => {
+const fetchLike_POST = async (id, accessToken) => {
   try {
     const response = await fetch(`/api/like`, {
       method: 'post',
-      body: JSON.stringify({ postId: id, userId }),
+      body: JSON.stringify({ postId: id }),
       headers: {
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       }
     });
@@ -63,12 +64,13 @@ const fetchLike_POST = async (id, userId) => {
   }
 };
 
-const fetchLike_DELETE = async (id, userId) => {
+const fetchLike_DELETE = async (id, accessToken) => {
   try {
     const response = await fetch(`/api/like`, {
       method: 'delete',
-      body: JSON.stringify({ postId: id, userId }),
+      body: JSON.stringify({ postId: id }),
       headers: {
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       }
     });

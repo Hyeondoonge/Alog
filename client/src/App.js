@@ -2,26 +2,30 @@ import Home from './page/Home';
 import WritePost from './page/WritePost';
 import EditPost from './page/EditPost';
 import ReadPost from './page/ReadPost';
+import Error from './page/Error';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { ThemeContextProvider } from './contexts/ThemeContext';
 import { ModalContextProvider } from './contexts/ModalContext';
 import UserContext, { UserContextProvider } from './contexts/UserContext';
 import SignUp from './page/SignUp';
 import { useContext, useEffect } from 'react';
-import useAuthorization from './hooks/useAuthorizaiton';
+import useToken from './hooks/useToken';
 import { fetchAutoSignin_GET } from './api/authApi';
 
 const MyComponent = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn, userData, setUserData] = useContext(UserContext);
-  const authorization = useAuthorization();
+  const getValidToken = useToken();
 
   useEffect(() => {
     (async () => {
       try {
-        const accessToken = await authorization();
+        // 자동로그인
+        const accessToken = await getValidToken();
         if (!accessToken) return;
-        const res = await fetchAutoSignin_GET(accessToken);
-        const { userId, msg } = await res.json();
+        // const res = await fetchAutoSignin_GET(accessToken);
+        // authorization 호출을 통해 토큰이 인증된 상태이며 유효한 access_token을 가지고 있음.
+        // 유저 정보 업데이트를 위해 client 단에서 token을 읽어내 유저 정보를 얻는다
+        const { userId } = JSON.parse(atob(accessToken.split('.')[1]));
         setUserData({ ...userData, userId: userId });
         setIsLoggedIn(true);
       } catch (error) {
@@ -46,6 +50,7 @@ export default function App() {
                 <Route path="/edit" exact component={EditPost} />
                 <Route path="/post" exact component={ReadPost} />
                 <Route path="/signup" exact component={SignUp} />
+                <Route path="/*" exact component={Error} />
                 {/* edit/:postsId */}
               </Switch>
             </Router>
