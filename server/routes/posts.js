@@ -45,17 +45,27 @@ router.get('/search', async (req, res) => {
 router.use((req, res, next) => {
   try {
     const accessToken = req.headers['authorization'].split(' ')[1]; 
-    jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
+    const { userId } = jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
+    req.userId = userId;
     next();
   } catch (error) {
     console.log(error);
-    res.status(401).end();
+    res.status(401).json({ msg: "서비스를 이용하려면 로그인 또는 회원가입이 필요합니다" });
   }
 });
 
 
 router.post('/', async (req, res) => {
-  const { title, platform, language, content } = req.body;
+  const { userId } = req;
+  const { title, platform, language, content, subtitle } = req.body;
+  const data = {
+    title,
+    platform,
+    language,
+    content,
+    subtitle,
+    writerId: userId, 
+  }
 
   if (!title || !platform) {
     res.json({ msg: '문제 링크를 올려주세요' });
@@ -69,13 +79,22 @@ router.post('/', async (req, res) => {
     res.json({ msg: '풀이를 작성해주세요' });
     return;
   }
-  const post = await insertPost(req.body);
+  const post = await insertPost(data);
   res.status(201).json({ post, msg: '정상적으로 글이 등록됐습니다' });
 });
 
 router.put('/', async (req, res) => {
   const { id } = req.query;
-  const { title, platform, language, content } = req.body;
+  const { userId } = req;
+  const { title, platform, language, content, subtitle } = req.body;
+  const data = {
+    title,
+    platform,
+    language,
+    content,
+    subtitle,
+    writerId: userId, 
+  }
 
   if (!title || !platform) {
     res.json({ msg: '문제 링크를 올려주세요' });
@@ -89,7 +108,7 @@ router.put('/', async (req, res) => {
     res.json({ msg: '풀이를 작성해주세요' });
     return;
   }
-  const post = await updatePost(id, req.body);
+  const post = await updatePost(id, data);
   res.status(201).json({ post, msg: '정상적으로 글이 수정됐습니다' });
 });
 

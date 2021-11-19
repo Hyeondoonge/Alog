@@ -32,7 +32,7 @@ const docsMap = (docs, callback) => (
 const generateAccessToken = (userId, userNumber, platform) => {
   try {
     const token = jwt.sign({ userId, userNumber, platform }, process.env.ACCESS_SECRET_KEY, {
-      expiresIn: '5s'
+      expiresIn: '1h'
     });
     return token;
   } catch (error) {

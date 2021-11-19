@@ -6,17 +6,19 @@ const router = express.Router();
 router.use((req, res, next) => {
   try {
     const accessToken = req.headers['authorization'].split(' ')[1]; 
-    jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
+    const { userId } = jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
+    req.userId = userId;
     next();
   } catch (error) {
-    res.status(401).end();
+    res.status(401).json({ msg: "서비스를 이용하려면 로그인 또는 회원가입이 필요합니다" });
   }
 });
 
 // 현재 body는 쉽게 조작이 가능하다.
 router.post('/', async (req, res, next) => {
   try {
-    const { userId, postId } = req.body;
+    const { userId } = req;
+    const { postId } = req.body;
 
     await createLike(postId, userId);
     const liker = await findLiker(postId);
@@ -30,7 +32,8 @@ router.post('/', async (req, res, next) => {
 
 router.delete('/', async (req, res, next) => {
   try {
-    const { userId, postId } = req.body;
+    const { userId } = req;
+    const { postId } = req.body;
 
     await deleteLike(postId, userId);
     const liker = await findLiker(postId);
