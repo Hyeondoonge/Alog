@@ -4,19 +4,8 @@ import { createUser, findUser, hasDuplicatedUserId } from '../queries/user.js';
 import { generateAccessToken, generateRefreshToken } from '../utils.js';
 const router = express.Router();
 
-// router.use(async (req, res, next) => {
-//   const accessToken = req.headers['authorization'].split(' ')[1];
-//   try {
-//     jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
-//     next();
-//   } catch (error) {
-//     console.log(error)
-//   }
-// });
-
 router.get('/verifyToken', async (req, res) => {
-  const accessToken = req.headers['authorization'].split(' ')[1]; 
-  console.log(accessToken);
+  const accessToken = req.headers['authorization'].split(' ')[1];
 
   try {
     await jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY); // 증명

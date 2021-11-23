@@ -17,14 +17,15 @@ const fetchSolution_GET = async (id) => {
   }
 };
 
-const fetchSolution_POST = async (post, userId) => {
+const fetchSolution_POST = (post) => async (accessToken) => {
   try {
     const res = await fetch('/api/posts', {
       method: 'post',
       headers: {
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ ...post, writerId: userId })
+      body: JSON.stringify({ ...post })
     });
     return res;
   } catch (error) {
@@ -32,13 +33,14 @@ const fetchSolution_POST = async (post, userId) => {
   }
 };
 
-const fetchSolution_PUT = async (id, post) => {
+const fetchSolution_PUT = (id, post) => async (accessToken) => {
   try {
     delete post._id;
 
     const res = await fetch(`/api/posts?id=${id}`, {
       method: 'put',
       headers: {
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(post)

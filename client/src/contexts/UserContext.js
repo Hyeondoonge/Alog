@@ -1,12 +1,12 @@
-import { createContext, useDebugValue, useEffect, useState } from 'react';
-import { fetchAutoSignin_GET } from '../api/authApi';
+import { createContext, useState } from 'react';
 const UserContext = createContext();
 
 function UserContextProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({
-    api_accessToken: null,
     userId: null,
+    api_accessToken: window.localStorage.getItem('api_access_token') || null,
+    api_refreshToken: window.localStorage.getItem('api_refresh_token') || null,
     accessToken: window.localStorage.getItem('access_token') || null,
     refreshToken: window.localStorage.getItem('refresh_token') || null
   });

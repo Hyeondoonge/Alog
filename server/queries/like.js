@@ -5,27 +5,26 @@ const findLiker = async (postId) => {
     const doc = await Like.find({ postId }, 'userId');
     return doc;
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
 };
 
-const createLike = async ({postId, userId}) => {
+const createLike = async (postId, userId) => {
   try {
-    console.log(postId, userId);
     await Like.create({ postId, userId });
     console.log('successfully liked!')
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
 };
 
 
-const deleteLike = async ({postId, userId}) => {
+const deleteLike = async (postId, userId) => {
   try {
     await Like.deleteOne({ postId, userId });
     console.log('successfully unliked!')
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
 };
 

@@ -13,14 +13,25 @@ const fetchToken_POST = async (code) => {
 };
 
 const fetchUserNumber_GET = async (accessToken) => {
-  const res = await fetch('/kakao/v1/user/access_token_info', {
+  const res = await fetch('/kapi/v1/user/access_token_info', {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      Authorization: `Bearer ${accessToken}`
     }
   });
   const response = await res.json();
   return response.id;
 };
 
-export { fetchToken_POST, fetchUserNumber_GET };
+const fetchRefreshToken_POST = async (refreshToken) => {
+  const res = await fetch('/kauth/oauth/token', {
+    method: 'post',
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+    },
+    body: `grant_type=refresh_token&client_id=${process.env.REACT_APP_CLIENT_KEY}&refresh_token=${refreshToken}`
+  });
+  const response = await res.json();
+  return response.access_token;
+};
+
+export { fetchToken_POST, fetchUserNumber_GET, fetchRefreshToken_POST };

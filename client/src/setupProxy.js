@@ -32,12 +32,22 @@ module.exports = function (app) {
     })
   );
   app.use(
-    '/kakao',
+    '/kapi',
     proxy({
       target: 'https://kapi.kakao.com',
       changeOrigin: true,
       pathRewrite: {
-        '^/kakao': ''
+        '^/kapi': ''
+      }
+    })
+  );
+  app.use(
+    '/kauth',
+    proxy({
+      target: 'https://kauth.kakao.com',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/kauth': ''
       }
     })
   );

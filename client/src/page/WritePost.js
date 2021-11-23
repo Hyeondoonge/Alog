@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ThemeContext from '../contexts/ThemeContext';
 import ModalContext from '../contexts/ModalContext';
 import UserContext from '../contexts/UserContext';
@@ -6,12 +6,12 @@ import Form from '../common/Form';
 import Button from '../common/Button';
 import Template from '../Template';
 import { fetchSolution_POST } from '../form/fetchApis';
+import useToken from '../hooks/useToken';
 
 export default function WritePost() {
   const theme = useContext(ThemeContext);
   const [setMessage] = useContext(ModalContext);
-  const [_, ___, userData] = useContext(UserContext);
-
+  const [isLoggedIn] = useContext(UserContext);
   const [post, setPost] = useState({
     title: '',
     platform: '',
@@ -19,11 +19,12 @@ export default function WritePost() {
     language: '',
     content: ''
   });
+  const [_, requestService] = useToken();
 
   const onClick = () => {
     // 데이터 유효성 검사
     (async () => {
-      const res = await fetchSolution_POST(post, userData.userId);
+      const res = await requestService(() => fetchSolution_POST(post));
       const json = await res.json();
       if (res.status === 201) {
         window.location.href = `/post?id=${json.post._id}`;
@@ -39,7 +40,11 @@ export default function WritePost() {
 
   return (
     <Template>
-      <Form post={post} setPost={setPost} WriteButton={WriteButton} />
+      {isLoggedIn ? (
+        <Form post={post} setPost={setPost} Button={WriteButton} />
+      ) : (
+        '접근할 수 없는 권한입니다!!!'
+      )}
     </Template>
   );
 }
