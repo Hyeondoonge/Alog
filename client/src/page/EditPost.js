@@ -25,7 +25,7 @@ export default function EditPost() {
     writerId: ''
   });
   const [error, setError] = useState(null);
-  const getValidToken = useToken();
+  const [__, requestService] = useToken();
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -43,8 +43,7 @@ export default function EditPost() {
   const onClick = () => {
     // 데이터 유효성 검사
     (async () => {
-      const accessToken = await getValidToken();
-      const res = await fetchSolution_PUT(id, post, accessToken);
+      const res = await requestService(() => fetchSolution_PUT(id, post));
       const json = await res.json();
       if (res.status === 201) {
         window.location.href = `/post?id=${id}`;

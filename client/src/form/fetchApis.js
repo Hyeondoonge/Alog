@@ -17,7 +17,7 @@ const fetchSolution_GET = async (id) => {
   }
 };
 
-const fetchSolution_POST = async (post, accessToken) => {
+const fetchSolution_POST = (post) => async (accessToken) => {
   try {
     const res = await fetch('/api/posts', {
       method: 'post',
@@ -33,7 +33,7 @@ const fetchSolution_POST = async (post, accessToken) => {
   }
 };
 
-const fetchSolution_PUT = async (id, post, accessToken) => {
+const fetchSolution_PUT = (id, post) => async (accessToken) => {
   try {
     delete post._id;
 

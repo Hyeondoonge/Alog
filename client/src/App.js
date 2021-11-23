@@ -14,7 +14,7 @@ import { fetchAutoSignin_GET } from './api/authApi';
 
 const MyComponent = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn, userData, setUserData] = useContext(UserContext);
-  const getValidToken = useToken();
+  const [getValidToken] = useToken();
 
   useEffect(() => {
     (async () => {

@@ -46,7 +46,7 @@ const fetchPosts_GET = async (option) => {
   }
 };
 
-const fetchLike_POST = async (id, accessToken) => {
+const fetchLike_POST = (id) => async (accessToken) => {
   try {
     const response = await fetch(`/api/like`, {
       method: 'post',
@@ -64,7 +64,7 @@ const fetchLike_POST = async (id, accessToken) => {
   }
 };
 
-const fetchLike_DELETE = async (id, accessToken) => {
+const fetchLike_DELETE = (id) => async (accessToken) => {
   try {
     const response = await fetch(`/api/like`, {
       method: 'delete',

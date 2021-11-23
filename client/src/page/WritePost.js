@@ -19,13 +19,12 @@ export default function WritePost() {
     language: '',
     content: ''
   });
-  const getValidToken = useToken();
+  const [_, requestService] = useToken();
 
   const onClick = () => {
     // 데이터 유효성 검사
     (async () => {
-      const accessToken = await getValidToken();
-      const res = await fetchSolution_POST(post, accessToken);
+      const res = await requestService(() => fetchSolution_POST(post));
       const json = await res.json();
       if (res.status === 201) {
         window.location.href = `/post?id=${json.post._id}`;

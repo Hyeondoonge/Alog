@@ -66,7 +66,7 @@ export default function Post() {
   const [isLiker, setIsLiker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [clickLike, setClickLike] = useState(false);
-  const getValidToken = useToken();
+  const [__, requestService] = useToken();
 
   const theme = useContext(ThemeContext);
 
@@ -93,9 +93,7 @@ export default function Post() {
         setLikeCount(likeCount - 1);
         setClickLike(false);
 
-        const accesToken = await getValidToken();
-        if (!accesToken) return;
-        const res = await fetchLike_DELETE(id, accesToken);
+        const res = await requestService(() => fetchLike_DELETE(id));
       })();
     } else {
       (async () => {
@@ -103,9 +101,7 @@ export default function Post() {
         setLikeCount(likeCount + 1);
         setClickLike(true);
 
-        const accesToken = await getValidToken();
-        if (!accesToken) return;
-        const res = await fetchLike_POST(id, accesToken);
+        const res = await requestService(() => fetchLike_POST(id));
       })();
     }
   };
@@ -136,7 +132,7 @@ export default function Post() {
           )}
         </div>
         <StyledMenu>
-          <Link to={`/edit?id=${post.id}`}>수정</Link>
+          <Link to={`/edit?id=${post._id}`}>수정</Link>
         </StyledMenu>
         <div>{subtitle}</div>
         <div>
