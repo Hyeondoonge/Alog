@@ -49,7 +49,10 @@ router.use((req, res, next) => {
     req.userId = userId;
     next();
   } catch (error) {
-    console.log(error);
+    if (name === 'TokenExpiredError') {
+      res.status(401).json({ error: 'expired token' });
+      return;
+    }
     res.status(401).json({ msg: "서비스를 이용하려면 로그인 또는 회원가입이 필요합니다" });
   }
 });
