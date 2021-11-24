@@ -32,6 +32,15 @@ const updatePost = async (id, data) => {
   }
 };
 
+const deletePost = async (id, writerId) => {
+  try {
+    await Post.deleteOne({ _id: id, writerId });
+    console.log('succefully delete post');
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 /**
  * 해당 키워드 그리고 작성자에 해당하는 포스트 반환
  */
@@ -90,4 +99,4 @@ const countPosts = async (keyword, language, writerId) => {
   }
  }
 
-export { insertPost, updatePost, findPost, findPosts, countPosts, leftPosts };
+export { insertPost, updatePost, deletePost, findPost, findPosts, countPosts, leftPosts };

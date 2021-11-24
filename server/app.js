@@ -40,7 +40,7 @@ app.use((req, res, next) => { // 매핑되는 경로 없을 때
 });
 
 app.listen(PORT, () => {
-w  console.log(`app listening at http://localhost:${PORT}`)
+    console.log(`app listening at http://localhost:${PORT}`)
 });
 
 export default app;
