@@ -85,7 +85,7 @@ const ResponsiveImage = ({ src }) => (
   </div>
 );
 
-export default function Form({ post, setPost, WriteButton }) {
+export default function Form({ post, setPost, Button }) {
   const { title, platform, subtitle, language, content } = post;
   const [toggle, setToggle] = useState(0);
   const togglerRef = useRef(null);
@@ -187,7 +187,7 @@ export default function Form({ post, setPost, WriteButton }) {
       />
       <MediaQuery minWidth={780}>
         <div style={{ textAlign: 'right' }}>
-          <WriteButton />
+          <Button />
         </div>
       </MediaQuery>
       <MediaQuery minWidth={0} maxWidth={750}>
@@ -203,7 +203,7 @@ export default function Form({ post, setPost, WriteButton }) {
               }}
             >
               <Toggler toggle={toggle} onClick={onClick} />
-              <WriteButton />
+              <Button />
             </div>
           </Footer>
         </div>
