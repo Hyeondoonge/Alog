@@ -31,8 +31,8 @@ export default function Solution({ content, setContent, toggle }) {
         />
       </div>
       <div style={{ fontSize: 'inherit', display: `${toggle ? 'block' : 'none'}` }}>
-        <div style={{ height: '4rem' }}>
-          <span style={{ opacity: 0.7 }}>{`프리뷰입니다 ᵔࡇᵔ`}</span>
+        <div style={{ height: '3.5rem' }}>
+          <span style={{ fontSize: '2rem', opacity: 0.7 }}>{`프리뷰입니다 ᵔࡇᵔ`}</span>
         </div>
         <MarkDownPreview source={content} />
       </div>

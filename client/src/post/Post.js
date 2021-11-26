@@ -27,7 +27,7 @@ export default function Post({ post }) {
   const theme = useContext(ThemeContext);
 
   return (
-    <Card color={theme.content}>
+    <Card color="transparent">
       <StyledPost>
         <div style={{ width: '85%' }}>
           <div
@@ -36,19 +36,20 @@ export default function Post({ post }) {
               flexDirection: 'row',
               justifyContent: 'flex-start',
               gap: '0.5rem',
-              alignItems: 'center'
+              alignItems: 'center',
+              color: 'white'
             }}
           >
             <ResponsiveImage src={`/images/${platform}-symbol.png`} />
             <div>
-              <strong>{title}</strong>
+              <strong style={{ color: 'white' }}>{title}</strong>
             </div>
             {language && <Tag label={language} size="1.6" />}
           </div>
-          <div>
+          <div style={{ color: 'white' }}>
             <span>{subtitle}</span>
           </div>
-          <div>
+          <div style={{ color: 'white' }}>
             {writerId} ・ {writeDate}
           </div>
         </div>
@@ -65,7 +66,7 @@ export default function Post({ post }) {
           <div>
             <span style={{ color: 'grey' }}>좋은 솔루션이에요</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', color: 'white' }}>
             <RiThumbUpFill color={theme.main} size="2rem" />
             <strong>{likeCount}</strong>
           </div>

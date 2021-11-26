@@ -9,6 +9,7 @@ const StyledCard = styled.div`
   cursor: pointer;
   &:hover {
     transform: translateY(-5%);
+    box-shadow: 0px 0px 1px 1px #9bc9b1;
   }
 `;
 

@@ -14,7 +14,7 @@ const StyledPreview = styled(MarkdownPreview)`
   font-size: 2rem;
   width: 100%;
   ${(props) => props.styleWithWidth};
-  padding: var(--textarea-margin, 2%);
+  margin: var(--textarea-margin, 1.5rem);
   resize: none;
   border: 0px;
   min-height: 50rem;
