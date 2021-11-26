@@ -1,18 +1,18 @@
 import { useContext, useEffect, useState } from 'react';
 import Template from '../Template';
-import { MarkDownPreview } from '../common/MarkDownPreview';
 import { fetchLike_DELETE, fetchLike_POST, fetchPost_GET } from '../post/fetchApis';
 import { fetchSolution_DELETE } from '../form/fetchApis';
 import Tag from '../common/Tag';
 import { RiThumbUpFill, RiChat1Fill } from 'react-icons/ri';
-import ThemeContext from '../contexts/ThemeContext';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router';
+import MarkdownPreview from '@uiw/react-markdown-preview';
 import styled, { keyframes } from 'styled-components';
+import ThemeContext from '../contexts/ThemeContext';
 import UserContext from '../contexts/UserContext';
-import useToken from '../hooks/useToken';
 import ModalContext from '../contexts/ModalContext';
+import useToken from '../hooks/useToken';
 import Link from '../common/Link';
 
 const ResponsiveImage = ({ src }) => (
@@ -67,6 +67,53 @@ const StyledMenu = styled.div`
     border: none;
   }
 `;
+
+const StyledPreviewWrapper = styled.div`
+  font-size: inherit;
+  display: flex;
+  flex-direction: row;
+  background-color: ${(props) => props.backgroundColor};
+  color: white;
+`;
+
+const StyledPreview = styled(MarkdownPreview)`
+  font-size: 2rem;
+  width: 100%;
+  ${(props) => props.styleWithWidth};
+  resize: none;
+  border: 0px;
+  overflow: auto;
+
+  & pre {
+    background-color: #f4f4f4;
+  }
+
+  & pre * {
+    background: transparent;
+  }
+
+  & code {
+    color: black;
+  }
+
+  & blockquote {
+    color: #d0d0d0;
+  }
+
+  & h1,
+  h2,
+  h3 {
+    border-bottom: none;
+  }
+`;
+
+const MarkDownPreview = ({ source }) => {
+  return (
+    <StyledPreviewWrapper>
+      <StyledPreview source={source} />
+    </StyledPreviewWrapper>
+  );
+};
 
 export default function Post() {
   const { id } = queryString.parse(useLocation().search);
@@ -124,12 +171,14 @@ export default function Post() {
   };
 
   const onClickDelete = () => {
-    alert('정말 삭제하시겠습니까?');
+    const confirm = window.confirm('정말 삭제하시겠습니까?');
     (async () => {
-      const res = await requestService(() => fetchSolution_DELETE(id));
       // replace?
-      alert('삭제 됐습니다.');
-      history.goBack();
+      if (confirm) {
+        const res = await requestService(() => fetchSolution_DELETE(id));
+        alert('삭제 됐습니다.');
+        history.goBack();
+      }
     })();
   };
 
@@ -140,57 +189,65 @@ export default function Post() {
 
   if (isLoading) return <div>로딩 중</div>;
 
-  console.log(post);
-
   if (post === null) return <Template>존재하지 않는 게시물!!!</Template>;
   const { title, platform, subtitle, language, content, writeDate, writerId } = post;
 
   return (
     <Template header>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 10
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '16px' }}>
-          <ResponsiveImage src={`/images/${platform}-symbol.png`} />
-          <h1>{title}</h1>
-          {language && (
-            <div>
-              <Tag label={language} />
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 30,
+            backgroundColor: theme.background,
+            width: 700,
+            borderRadius: 30,
+            padding: '5%'
+          }}
+        >
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '16px' }}>
+              <ResponsiveImage src={`/images/${platform}-symbol.png`} />
+              <h1 style={{ padding: 0, margin: 5 }}>{title}</h1>
+              {language && (
+                <div>
+                  <Tag label={language} />
+                </div>
+              )}
             </div>
+            <div>{subtitle}</div>
+          </div>
+          {userData.userId === writerId && (
+            <StyledMenu underlineColor={theme.main}>
+              <Link to={`/edit?id=${post._id}`}>수정</Link>
+              <button type="button" onClick={onClickDelete}>
+                <span>삭제</span>
+              </button>
+            </StyledMenu>
           )}
-        </div>
-        {userData.userId === writerId && (
-          <StyledMenu underlineColor={theme.main}>
-            <Link to={`/edit?id=${post._id}`}>수정</Link>
-            <button type="button" onClick={onClickDelete}>
-              <span>삭제</span>
-            </button>
-          </StyledMenu>
-        )}
-        <div>{subtitle}</div>
-        <div>
-          {writerId} ・ {writeDate}
-        </div>
-        {/* user profile component */}
-        <MarkDownPreview source={content} />
-        <div style={{ fontSize: '2.5rem', position: 'relative' }}>
-          {' '}
-          {clickLike && (
-            <StyledThumbsUpText>
-              <RiThumbUpFill color={theme.main} /> 좋은 솔루션이에요
-            </StyledThumbsUpText>
-          )}
-          <RiThumbUpFill
-            onClick={onClickLike}
-            color={isLiker ? theme.main : 'white'}
-            style={{ cursor: 'pointer' }}
-          />{' '}
-          {likeCount}
-          <RiChat1Fill color={theme.main} /> 0{' '}
+          <div>
+            <div>
+              {writerId} ・ {writeDate}
+            </div>
+          </div>
+          {/* user profile component */}
+          <MarkDownPreview source={content} />
+          <div style={{ fontSize: '2.5rem', position: 'relative' }}>
+            {' '}
+            {clickLike && (
+              <StyledThumbsUpText>
+                <RiThumbUpFill color={theme.main} /> 좋은 솔루션이에요
+              </StyledThumbsUpText>
+            )}
+            <RiThumbUpFill
+              onClick={onClickLike}
+              color={isLiker ? theme.main : 'white'}
+              style={{ cursor: 'pointer' }}
+            />{' '}
+            {likeCount}
+            <RiChat1Fill color={theme.main} /> 0{' '}
+          </div>
         </div>
       </div>
     </Template>
