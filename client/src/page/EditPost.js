@@ -15,24 +15,16 @@ export default function EditPost() {
   const theme = useContext(ThemeContext);
   const [isLoggedIn, _, userData] = useContext(UserContext);
   const [setMessage] = useContext(ModalContext);
-  const [post, setPost] = useState({
-    id: '',
-    title: '',
-    platform: '',
-    subtitle: '',
-    language: '',
-    content: '',
-    writerId: ''
-  });
+  const [post, setPost] = useState(null);
   const [error, setError] = useState(null);
   const [__, requestService] = useToken();
 
   useEffect(() => {
     if (!isLoggedIn) return;
     (async () => {
-      const post = await fetchSolution_GET(id);
+      const { post, liker } = await fetchSolution_GET(id);
       // 게시물 id에 따라 error page 렌더링
-      if (userData.userId !== post.writerId) {
+      if (userData.userId !== post?.writerId ?? null) {
         setError('접근할 수 없는 권한입니다!'); // redirect
         return;
       }
@@ -59,6 +51,8 @@ export default function EditPost() {
   );
 
   if (!id) return <Template>잘못된 접근입니다!!</Template>;
+
+  if (!post) return <Template>존재하지않는 게시물!!</Template>;
 
   if (error) return <Template>{error}</Template>;
 
