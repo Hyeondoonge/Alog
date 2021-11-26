@@ -9,9 +9,11 @@ import { useLocation } from 'react-router-dom';
 import ModalContext from '../contexts/ModalContext';
 import UserContext from '../contexts/UserContext';
 import useToken from '../hooks/useToken';
+import { useHistory } from 'react-router';
 
 export default function EditPost() {
   const { id } = queryString.parse(useLocation().search);
+  const history = useHistory();
   const theme = useContext(ThemeContext);
   const [isLoggedIn, _, userData] = useContext(UserContext);
   const [setMessage] = useContext(ModalContext);
@@ -38,7 +40,7 @@ export default function EditPost() {
       const res = await requestService(() => fetchSolution_PUT(id, post));
       const json = await res.json();
       if (res.status === 201) {
-        window.location.href = `/post?id=${id}`;
+        history.replace(`/post?id=${json.post._id}`);
         return;
       }
       setMessage(`${json.msg} ${res.status === 201 ? ' ^ࡇ^ ' : ' ㅠࡇㅠ '}`);
