@@ -62,6 +62,7 @@ export default function SignUp() {
         setUserData({ api_accessToken: tokens.api_accessToken, accessToken, refreshToken, userId });
         setIsLoggedIn(true);
         window.localStorage.setItem('api_access_token', tokens.api_accessToken);
+        window.localStorage.setItem('api_refresh_token', tokens.api_refreshToken);
         window.localStorage.setItem('access_token', accessToken);
         window.localStorage.setItem('refresh_token', refreshToken);
         history.replace('/'); // 리다이렉트
@@ -78,7 +79,11 @@ export default function SignUp() {
     (async () => {
       try {
         const [api_accessToken, api_refreshToken] = await fetchToken_POST(code);
+
+        // if (!api_accessToken) return;
         const userNumber = await fetchUserNumber_GET(api_accessToken);
+
+        // if (!userNumber) return;
 
         setTokens({
           api_accessToken,
