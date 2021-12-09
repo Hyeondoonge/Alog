@@ -14,7 +14,7 @@ export default function WritePost() {
   const history = useHistory();
   const [setMessage] = useContext(ModalContext);
   const [isLoggedIn] = useContext(UserContext);
-ㅎ  const [post, setPost] = useState({
+  const [post, setPost] = useState({
     subtitle: '',
     language: '',
     content: ''
