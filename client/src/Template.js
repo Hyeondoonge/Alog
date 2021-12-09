@@ -5,9 +5,10 @@ import Button from './common/Button';
 import StickyHeader from './common/StickyHeader';
 import ThemeContext from './contexts/ThemeContext';
 import UserContext from './contexts/UserContext';
-import { RiCloseFill } from 'react-icons/ri';
+import { RiCloseFill, RiPencilFill } from 'react-icons/ri';
 import { useHistory } from 'react-router';
 import { fetchRefreshToken_POST } from './api/kakaoApi';
+import Link from './common/Link';
 
 const StyledBody = styled.div`
   width: 100%;
@@ -118,11 +119,19 @@ export default function Template({ header, children }) {
                 }}
               />
             ) : (
-              <div>
-                {userData.userId}
+              <div style={{ display: 'flex', alignItems: 'center', fontSize: '2rem' }}>
+                {userData.userId}님, 안녕하세요!
+                <Button
+                  label="작성하기"
+                  color="transparent"
+                  size="small"
+                  onClick={() => {
+                    history.push('/write');
+                  }}
+                />
                 <Button
                   label="로그아웃"
-                  color={theme.main}
+                  color="transparent"
                   size="small"
                   onClick={() => {
                     try {

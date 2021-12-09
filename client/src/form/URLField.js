@@ -8,7 +8,7 @@ import Platform from './Platform';
 // platform 클래스를 이용하는 client는 내부 타입에 대해서 알지않게함.
 // 새로운 플랫폼에 신경쓰지 않고 유연한 처리 가능해짐.
 
-export function URLField({ setPlatformAndTitle }) {
+export function URLField({ setPostTitle }) {
   const theme = useContext(ThemeContext);
   const alertRef = useRef(null);
   const hrRef = useRef(null);
@@ -47,7 +47,7 @@ export function URLField({ setPlatformAndTitle }) {
       if (!url) return;
       try {
         const [name, title] = await fetchPlatformAndTitle(url);
-        setPlatformAndTitle(name, title);
+        setPostTitle(name, title);
       } catch (error) {
         alertRef.current.style.opacity = 1;
         return;

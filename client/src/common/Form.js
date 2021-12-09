@@ -85,10 +85,10 @@ const ResponsiveImage = ({ src }) => (
   </div>
 );
 
-export default function Form({ post, setPost, Button }) {
-  const { title, platform, subtitle, language, content } = post;
+export default function Form({ post, postTitle, setPost, setPostTitle, Button }) {
+  const { subtitle, language, content } = post;
+  const { title, platform } = postTitle;
   const [toggle, setToggle] = useState(0);
-  const togglerRef = useRef(null);
 
   const onClick = () => {
     setToggle(!toggle);
@@ -111,8 +111,8 @@ export default function Form({ post, setPost, Button }) {
       <div style={{ height: 50, fontSize: '1rem' }}>
         {!(title && platform) ? (
           <URLField
-            setPlatformAndTitle={(platform, title) => {
-              setPost({ ...post, platform, title });
+            setPostTitle={(platform, title) => {
+              setPostTitle({ platform, title });
             }}
           />
         ) : (
@@ -122,7 +122,7 @@ export default function Form({ post, setPost, Button }) {
             <h1
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                setPost({ ...post, title: '', platform: '' });
+                setPostTitle({ platform: '', title: '' });
               }}
             >
               <RiCloseFill size="3rem" />
