@@ -18,6 +18,7 @@ export default function EditPost() {
   const [isLoggedIn, _, userData] = useContext(UserContext);
   const [setMessage] = useContext(ModalContext);
   const [post, setPost] = useState(null);
+  const [postTitle, setPostTitle] = useState(null);
   const [error, setError] = useState(null);
   const [__, requestService] = useToken();
 
@@ -30,14 +31,16 @@ export default function EditPost() {
         setError('접근할 수 없는 권한입니다!'); // redirect
         return;
       }
-      setPost(post);
+      const { title, platform, subtitle, language, content } = post;
+      setPost({ subtitle, language, content });
+      setPostTitle({ title, platform });
     })();
   }, [userData, isLoggedIn]); // 필드 초기값 설정
 
   const onClick = () => {
     // 데이터 유효성 검사
     (async () => {
-      const res = await requestService(() => fetchSolution_PUT(id, post));
+      const res = await requestService(() => fetchSolution_PUT(id, { ...post, ...postTitle }));
       const json = await res.json();
       if (res.status === 201) {
         history.replace(`/post?id=${json.post._id}`);
@@ -61,8 +64,14 @@ export default function EditPost() {
   return (
     <>
       <Template>
-        {isLoggedIn ? (
-          <Form post={post} setPost={setPost} Button={EditButton} />
+        {isLoggedIn && post && postTitle ? (
+          <Form
+            post={post}
+            postTitle={postTitle}
+            setPost={setPost}
+            setPostTitle={setPostTitle}
+            Button={EditButton}
+          />
         ) : (
           '서비스를 이용하려면 alog 서비스에 가입해주세요!'
         )}

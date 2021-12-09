@@ -14,19 +14,21 @@ export default function WritePost() {
   const history = useHistory();
   const [setMessage] = useContext(ModalContext);
   const [isLoggedIn] = useContext(UserContext);
-  const [post, setPost] = useState({
-    title: '',
-    platform: '',
+ㅎ  const [post, setPost] = useState({
     subtitle: '',
     language: '',
     content: ''
+  });
+  const [postTitle, setPostTitle] = useState({
+    platform: '',
+    title: ''
   });
   const [_, requestService] = useToken();
 
   const onClick = () => {
     // 데이터 유효성 검사
     (async () => {
-      const res = await requestService(() => fetchSolution_POST(post));
+      const res = await requestService(() => fetchSolution_POST({ ...post, ...postTitle }));
       const json = await res.json();
       if (res.status === 201) {
         history.replace(`/post?id=${json.post._id}`);
@@ -43,7 +45,13 @@ export default function WritePost() {
   return (
     <Template>
       {isLoggedIn ? (
-        <Form post={post} setPost={setPost} Button={WriteButton} />
+        <Form
+          post={post}
+          postTitle={postTitle}
+          setPost={setPost}
+          setPostTitle={setPostTitle}
+          Button={WriteButton}
+        />
       ) : (
         '접근할 수 없는 권한입니다!!!'
       )}
