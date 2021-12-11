@@ -5,21 +5,20 @@ import Button from './common/Button';
 import StickyHeader from './common/StickyHeader';
 import ThemeContext from './contexts/ThemeContext';
 import UserContext from './contexts/UserContext';
-import { RiCloseFill, RiPencilFill } from 'react-icons/ri';
 import { useHistory } from 'react-router';
+import { RiCloseFill } from 'react-icons/ri';
 import { fetchRefreshToken_POST } from './api/kakaoApi';
-import Link from './common/Link';
 
 const StyledBody = styled.div`
   width: 100%;
   font-size: 2rem;
   @media screen and (min-width: 600px) {
     & > * {
-      margin: 5% 10% !important;
+      padding: 5% 10% !important;
     }
   }
   & > * {
-    margin: 7% 5%;
+    padding: 5% 10% !important;
   }
 `;
 
@@ -110,7 +109,7 @@ export default function Template({ header, children }) {
             {!isLoggedIn ? (
               <Button
                 label="로그인"
-                color={theme.main}
+                color="transparent"
                 size="small"
                 onClick={() => {
                   loginModalRef.current.style.visibility = 'visible';

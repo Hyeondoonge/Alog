@@ -6,7 +6,7 @@ import styled, { css } from 'styled-components';
 
 const styleWithSize = {
   small: css`
-    --button-font-size: 20px;
+    --button-font-size: 2rem;
     --button-padding: 5px 20px;
     --button-border-radius: 8px;
   `,
@@ -24,7 +24,7 @@ const StyledButton = styled.button`
   border: none;
   cursor: pointer;
   font-weight: 600;
-  font-size: var(--button-font-size, 25px);
+  font-size: var(--button-font-size, 2.5rem);
   padding: var(--button-padding, 10px 20px);
   border-radius: var(--button-border-radius, 16px);
   background: ${(props) => props.color || 'default'};

@@ -20,9 +20,7 @@ export default function Home() {
   const [languages, setLanguages] = useState([]);
   const [isSelected, setIsSelected] = useState([]);
   const postListRef = useRef(null);
-  const wrapperRef = useRef(null);
   const filterRef = useRef(null);
-  const logoRef = useRef(null);
   const [createObserver, registerTargets] = useIntersectionObserver();
   const [value, setValue] = useState('');
   const txt = '원하는 문제의 풀이를 찾거나 알고리즘을 기록해보세요! ᵔࡇᵔ';
@@ -74,12 +72,6 @@ export default function Home() {
     });
   };
 
-  const handleFocusBar = () => {
-    wrapperRef.current.style.transform = 'translateY(0%)';
-    filterRef.current.style.opacity = '1';
-    logoRef.current.style.fontSize = '70px';
-  };
-
   const typeWriter = () => {
     if (i <= txt.length) {
       setValue(txt.substring(0, i));
@@ -118,28 +110,21 @@ export default function Home() {
   return (
     <Template header>
       <div
-        ref={wrapperRef}
+        className="target"
         style={{
-          transform: 'translateY(30%)',
           transition: '1s',
           display: 'flex',
           flexDirection: 'column',
           gap: '20px'
         }}
       >
-        <div
-          style={{ textAlign: 'center', margin: '50px', height: '100px', wordBreak: 'keep-all' }}
-        >
-          <div ref={logoRef} style={{ fontSize: '80px', transition: '1s' }}>
-            <Logo />
-          </div>
-          <i style={{ fontSize: '20px', color: '#9bc9b1', margin: 10 }}>{value}</i>
+        <div style={{ textAlign: 'center', margin: '30px', height: '20px', wordBreak: 'keep-all' }}>
+          <i style={{ fontSize: '20px', color: '#9bc9b1' }}>{value}</i>
         </div>
         <SearchBar
-          placeholder="찾는 풀이의 문제제목을 입력하세요."
+          placeholder="찾는 풀이의 문제제목을 입력해보세요."
           handleChange={handleChangeKeyword}
           handleRemove={handleRemoveKeyword}
-          handleFocus={handleFocusBar}
           value={keyword}
           endorment={
             <span
@@ -152,7 +137,7 @@ export default function Home() {
             </span>
           }
         />
-        <div ref={filterRef} style={{ transition: '1s', opacity: 0 }}>
+        <div>
           <FilterList elements={languages} state={isSelected} handleClick={handleChangeLanguage} />
         </div>
         {keyword && (
