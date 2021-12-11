@@ -20,11 +20,11 @@ export default function Home() {
   const [languages, setLanguages] = useState([]);
   const [isSelected, setIsSelected] = useState([]);
   const postListRef = useRef(null);
-  const filterRef = useRef(null);
   const [createObserver, registerTargets] = useIntersectionObserver();
   const [value, setValue] = useState('');
   const txt = '원하는 문제의 풀이를 찾거나 알고리즘을 기록해보세요! ᵔࡇᵔ';
   var i = 0;
+  const [isLanguageLoading, setIsLanguageLoading] = useState(true);
 
   const handleIntersect = async () => {
     if (leftCount === 0) return;
@@ -88,13 +88,14 @@ export default function Home() {
     (async () => {
       const { languages: fetchedLanguages } = await fetchLanguages_GET();
       setLanguages(fetchedLanguages);
-      const localFilterLanguages = window.localStorage.getItem('filter_languages');
+      const localFilterLanguages = window.localStorage.getItem('filter_languages').split(',');
 
       setIsSelected(
         localFilterLanguages
           ? fetchedLanguages.map(({ name }) => localFilterLanguages.includes(name))
           : new Array(fetchedLanguages.length).fill(false)
       );
+      setIsLanguageLoading(false);
     })();
   }, []);
 
@@ -108,46 +109,54 @@ export default function Home() {
   }, [posts]);
 
   return (
-    <Template header>
-      <div
-        className="target"
-        style={{
-          transition: '1s',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px'
-        }}
-      >
-        <div style={{ textAlign: 'center', margin: '30px', height: '20px', wordBreak: 'keep-all' }}>
-          <i style={{ fontSize: '20px', color: '#9bc9b1' }}>{value}</i>
-        </div>
-        <SearchBar
-          placeholder="찾는 풀이의 문제제목을 입력해보세요."
-          handleChange={handleChangeKeyword}
-          handleRemove={handleRemoveKeyword}
-          value={keyword}
-          endorment={
-            <span
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                handleRemoveKeyword();
-              }}
-            >
-              <RiCloseFill />
+    !isLanguageLoading && (
+      <Template header>
+        <div
+          className="target"
+          style={{
+            transition: '1s',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px'
+          }}
+        >
+          <div
+            style={{ textAlign: 'center', margin: '30px', height: '20px', wordBreak: 'keep-all' }}
+          >
+            <i style={{ fontSize: '20px', color: '#9bc9b1' }}>{value}</i>
+          </div>
+          <SearchBar
+            placeholder="찾는 풀이의 문제제목을 입력해보세요."
+            handleChange={handleChangeKeyword}
+            handleRemove={handleRemoveKeyword}
+            value={keyword}
+            endorment={
+              <span
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  handleRemoveKeyword();
+                }}
+              >
+                <RiCloseFill />
+              </span>
+            }
+          />
+          <div>
+            <FilterList
+              elements={languages}
+              state={isSelected}
+              handleClick={handleChangeLanguage}
+            />
+          </div>
+          {keyword && (
+            <span style={{ fontSize: '2rem' }}>
+              {totalCount ? `검색 결과 ${totalCount}개의 풀이` : '검색 결과가 없습니다.'}
             </span>
-          }
-        />
-        <div>
-          <FilterList elements={languages} state={isSelected} handleClick={handleChangeLanguage} />
+          )}
+          <PostList postListRef={postListRef} posts={posts} />
+          {isLoading && <Loading />}
         </div>
-        {keyword && (
-          <span style={{ fontSize: '2rem' }}>
-            {totalCount ? `검색 결과 ${totalCount}개의 풀이` : '검색 결과가 없습니다.'}
-          </span>
-        )}
-        <PostList postListRef={postListRef} posts={posts} />
-        {isLoading && <Loading />}
-      </div>
-    </Template>
+      </Template>
+    )
   );
 }
