@@ -195,7 +195,7 @@ export default function Post() {
 
   return (
     <Template header>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div
           style={{
             display: 'flex',
