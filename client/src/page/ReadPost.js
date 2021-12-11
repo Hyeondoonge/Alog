@@ -204,7 +204,8 @@ export default function Post() {
             backgroundColor: theme.background,
             width: 700,
             borderRadius: 30,
-            padding: '5%'
+            padding: '5%',
+            marginTop: '5vh'
           }}
         >
           {!isLoading ? (
