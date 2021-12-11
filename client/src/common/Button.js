@@ -7,14 +7,14 @@ import styled, { css } from 'styled-components';
 const styleWithSize = {
   small: css`
     --button-font-size: 2rem;
-    --button-padding: 5px 20px;
-    --button-border-radius: 8px;
+    --button-padding: 0.5rem 1rem;
+    --button-border-radius: 0.8rem;
   `,
   medium: css``,
   large: css`
     --button-font-size: 3rem;
     --button-padding: 2% 5%;
-    --button-border-radius: 20px;
+    --button-border-radius: 2rem;
   `
 };
 
@@ -25,8 +25,8 @@ const StyledButton = styled.button`
   cursor: pointer;
   font-weight: 600;
   font-size: var(--button-font-size, 2.5rem);
-  padding: var(--button-padding, 10px 20px);
-  border-radius: var(--button-border-radius, 16px);
+  padding: var(--button-padding, 1rem 2rem);
+  border-radius: var(--button-border-radius, 1.6rem);
   background: ${(props) => props.color || 'default'};
   color: #ffffff;
   opacity: 0.9;

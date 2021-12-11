@@ -8,17 +8,20 @@ import UserContext from './contexts/UserContext';
 import { useHistory } from 'react-router';
 import { RiCloseFill } from 'react-icons/ri';
 import { fetchRefreshToken_POST } from './api/kakaoApi';
+import { useMediaQuery } from 'react-responsive';
+import { RiPencilFill, RiLoginCircleFill, RiLogoutCircleFill } from 'react-icons/ri';
 
 const StyledBody = styled.div`
   width: 100%;
   font-size: 2rem;
+
+  & > * {
+    padding: 3vh 5vw !important;
+  }
   @media screen and (min-width: 600px) {
     & > * {
-      padding: 5% 10% !important;
+      padding: 10vh 10vw !important;
     }
-  }
-  & > * {
-    padding: 5% 10% !important;
   }
 `;
 
@@ -70,6 +73,7 @@ export default function Template({ header, children }) {
   const loginModalRef = useRef(null);
   const bodyRef = useRef(null);
   const history = useHistory();
+  const isBigScreen = useMediaQuery({ query: '(min-width: 600px)' });
 
   return (
     <>
@@ -108,7 +112,7 @@ export default function Template({ header, children }) {
           <StickyHeader>
             {!isLoggedIn ? (
               <Button
-                label="로그인"
+                label={isBigScreen ? '로그인' : <RiLoginCircleFill />}
                 color="transparent"
                 size="small"
                 onClick={() => {
@@ -119,9 +123,9 @@ export default function Template({ header, children }) {
               />
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', fontSize: '2rem' }}>
-                {userData.userId}님, 안녕하세요!
+                <span style={{ padding: '0.5rem 1rem' }}>{userData.userId}님, 안녕하세요!</span>
                 <Button
-                  label="작성하기"
+                  label={isBigScreen ? '작성하기' : <RiPencilFill />}
                   color="transparent"
                   size="small"
                   onClick={() => {
@@ -129,7 +133,7 @@ export default function Template({ header, children }) {
                   }}
                 />
                 <Button
-                  label="로그아웃"
+                  label={isBigScreen ? '로그아웃' : <RiLogoutCircleFill />}
                   color="transparent"
                   size="small"
                   onClick={() => {
