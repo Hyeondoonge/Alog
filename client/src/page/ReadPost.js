@@ -14,6 +14,7 @@ import UserContext from '../contexts/UserContext';
 import ModalContext from '../contexts/ModalContext';
 import useToken from '../hooks/useToken';
 import Link from '../common/Link';
+import Loading from '../common/Loading';
 
 const ResponsiveImage = ({ src }) => (
   <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
@@ -118,6 +119,7 @@ const MarkDownPreview = ({ source }) => {
 export default function Post() {
   const { id } = queryString.parse(useLocation().search);
   const [isLoggedIn, _, userData] = useContext(UserContext);
+  const { userId } = userData;
   const [setMessage] = useContext(ModalContext);
   const [post, setPost] = useState({});
   const [likeCount, setLikeCount] = useState(0);
@@ -187,14 +189,13 @@ export default function Post() {
     // <Link> 컴포넌트로 감싸준다
   };
 
-  if (isLoading) return <div>로딩 중</div>;
-
   if (post === null) return <Template>존재하지 않는 게시물!!!</Template>;
+
   const { title, platform, subtitle, language, content, writeDate, writerId } = post;
 
   return (
     <Template header>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div
           style={{
             display: 'flex',
@@ -206,48 +207,65 @@ export default function Post() {
             padding: '5%'
           }}
         >
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '16px' }}>
-              <ResponsiveImage src={`/images/${platform}-symbol.png`} />
-              <h1 style={{ padding: 0, margin: 5 }}>{title}</h1>
-              {language && (
-                <div>
-                  <Tag label={language} />
+          {!isLoading ? (
+            <>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '16px' }}>
+                  <ResponsiveImage src={`/images/${platform}-symbol.png`} />
+                  <h1 style={{ padding: 0, margin: 5 }}>{title}</h1>
+                  {language && (
+                    <div>
+                      <Tag label={language} />
+                    </div>
+                  )}
                 </div>
+                <div>{subtitle}</div>
+              </div>
+              {userId === writerId && (
+                <StyledMenu underlineColor={theme.main}>
+                  <Link to={`/edit?id=${post._id}`}>수정</Link>
+                  <button type="button" onClick={onClickDelete}>
+                    <span>삭제</span>
+                  </button>
+                </StyledMenu>
               )}
+              <div>
+                <div>
+                  {writerId} ・ {writeDate}
+                </div>
+              </div>
+              {/* user profile component */}
+              <MarkDownPreview source={content} />
+              <div style={{ fontSize: '2.5rem', position: 'relative' }}>
+                {' '}
+                {clickLike && (
+                  <StyledThumbsUpText>
+                    <RiThumbUpFill color={theme.main} /> 좋은 솔루션이에요
+                  </StyledThumbsUpText>
+                )}
+                <RiThumbUpFill
+                  onClick={onClickLike}
+                  color={isLiker ? theme.main : 'white'}
+                  style={{ cursor: 'pointer' }}
+                />{' '}
+                {likeCount}
+                <RiChat1Fill color={theme.main} /> 0{' '}
+              </div>
+            </>
+          ) : (
+            <div
+              style={{
+                width: '100%',
+                height: 500,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Loading />
             </div>
-            <div>{subtitle}</div>
-          </div>
-          {userData.userId === writerId && (
-            <StyledMenu underlineColor={theme.main}>
-              <Link to={`/edit?id=${post._id}`}>수정</Link>
-              <button type="button" onClick={onClickDelete}>
-                <span>삭제</span>
-              </button>
-            </StyledMenu>
           )}
-          <div>
-            <div>
-              {writerId} ・ {writeDate}
-            </div>
-          </div>
-          {/* user profile component */}
-          <MarkDownPreview source={content} />
-          <div style={{ fontSize: '2.5rem', position: 'relative' }}>
-            {' '}
-            {clickLike && (
-              <StyledThumbsUpText>
-                <RiThumbUpFill color={theme.main} /> 좋은 솔루션이에요
-              </StyledThumbsUpText>
-            )}
-            <RiThumbUpFill
-              onClick={onClickLike}
-              color={isLiker ? theme.main : 'white'}
-              style={{ cursor: 'pointer' }}
-            />{' '}
-            {likeCount}
-            <RiChat1Fill color={theme.main} /> 0{' '}
-          </div>
         </div>
       </div>
     </Template>
