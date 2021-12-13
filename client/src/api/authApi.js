@@ -1,3 +1,22 @@
+const fetchCheckMember = async (platform, kakao_accessToken) => {
+  try {
+    const res = await fetch('/api/auth/checkMember', {
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${kakao_accessToken}`,
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        platform
+      })
+    });
+    return res.json();
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 const fetchAutoSignin_GET = async (accessToken) => {
   try {
     const res = await fetch('/api/auth/autoSignin', {
@@ -12,12 +31,17 @@ const fetchAutoSignin_GET = async (accessToken) => {
   }
 };
 
-const fetchSignin_POST = async (userNumber, platform) => {
+const fetchSignin_POST = async (kakao_accessToken, platform) => {
   try {
     const res = await fetch('/api/auth/signin', {
       method: 'post',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({ userNumber, platform })
+      headers: {
+        Authorization: `Bearer ${kakao_accessToken}`,
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        platform
+      })
     });
     return res.json();
   } catch (error) {
@@ -26,14 +50,26 @@ const fetchSignin_POST = async (userNumber, platform) => {
   }
 };
 
-const fetchSignup_POST = async (userNumber, platform, nickname, description, profilePath) => {
+const fetchSignup_POST = async (
+  kakao_accessToken,
+  platform,
+  nickname,
+  description,
+  profilePath
+) => {
   try {
     const res = await fetch('/api/auth/signup', {
       method: 'post',
       headers: {
+        Authorization: `Bearer ${kakao_accessToken}`,
         'Content-type': 'application/json'
       },
-      body: JSON.stringify({ userNumber, platform, userId: nickname, description, profilePath })
+      body: JSON.stringify({
+        platform,
+        userId: nickname,
+        description,
+        profilePath
+      })
     });
     return res;
   } catch (error) {
@@ -56,4 +92,10 @@ const fetchRefreshToken_GET = async (refreshToken) => {
   }
 };
 
-export { fetchAutoSignin_GET, fetchSignin_POST, fetchSignup_POST, fetchRefreshToken_GET };
+export {
+  fetchCheckMember,
+  fetchAutoSignin_GET,
+  fetchSignin_POST,
+  fetchSignup_POST,
+  fetchRefreshToken_GET
+};

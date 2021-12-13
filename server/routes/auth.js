@@ -1,4 +1,5 @@
 import express from 'express';
+import fetch from 'node-fetch';
 import jwt from 'jsonwebtoken';
 import { createUser, findUser, hasDuplicatedUserId } from '../queries/user.js';
 import { generateAccessToken, generateRefreshToken } from '../utils.js';
@@ -28,14 +29,57 @@ router.get('/refreshToken', async (req, res) => {
   }
 })
 
+// /api/kakaoAuth/info로부터 userNumber를 얻는다.
+router.use(async (req, res, next) => {
+   try {
+    const kakao_accessToken = req.headers['authorization'].split(' ')[1]; 
+
+    const api_res = await fetch(`http://localhost:4500/kakaoAuth/info`, {
+      headers: {
+        Authorization: `Bearer ${kakao_accessToken}`
+      }
+    });
+    const json = await api_res.json();
+    const userNumber = json?.id??null;
+  
+    if (userNumber) {
+      req.userNumber = userNumber;
+      next();
+    } else {
+      res.json({ error: 'not verified user'});
+    }
+   } catch (error) {
+      console.log(error);
+      res.json({ error: 'fetch error'});
+   }
+})
+
+router.post('/checkMember', async (req, res) => { 
+try {
+    const { platform } = req.body;
+    const { userNumber } = req;
+
+    const user = await findUser({ userNumber, platform });
+
+    if (user) {
+      res.json({ isMember: true });
+    } else {
+      res.json({ isMember: false });
+    }
+  } catch (error) {
+    res.status(401).json({ msg: '확인할 수 없습니다.'});
+}
+});
+
 router.post('/signup', async (req, res, next) => {
-    const { userId, platform, userNumber, description } = req.body;
+    const { userId, platform, description } = req.body;
+    const { userNumber } = req;
 
     // 아이디 중복 확인
     const isValidUserId = !(await hasDuplicatedUserId(userId));
 
     if (isValidUserId) {
-      createUser(req.body);
+      createUser({ userId, platform, userNumber, description });
       next();
     } else {
       res.json({ msg: '이미 같은 닉네임을 가진 회원이 있어요' });
@@ -45,7 +89,8 @@ router.post('/signup', async (req, res, next) => {
     // access_token 및 refresh_token을 생성.
     // 회원가입 성공 시 메인으로 리다이렉트.
     try {
-      const { userId, platform, userNumber } = req.body;
+      const { userId, platform } = req.body;
+      const { userNumber } = req;
 
       const accessToken = generateAccessToken(userId, userNumber, platform);
       const refreshToken = generateRefreshToken(userId, userNumber, platform);
@@ -58,31 +103,22 @@ router.post('/signup', async (req, res, next) => {
     }
 });
 
+// userNumber는 도용 방지를 위해, api_token으로 부터 읽어낸다.
 router.post('/signin', async (req, res) => {
     // 새로운 access token과 refresh token 발급
   try {
-      const { userNumber, platform } = req.body;
-      const { userId } = await findUser(req.body);
+      const { platform } = req.body;
+      const { userNumber } = req;
+
+      const { userId } = await findUser({ userNumber, platform });
 
       const accessToken = generateAccessToken(userId, userNumber, platform);
       const refreshToken = generateRefreshToken(userId, userNumber, platform);
 
-      res.json({ accessToken, refreshToken, isMember: true, userId });
+      res.json({ accessToken, refreshToken, userId });
     } catch (error) {
-      res.status(401).json({ isMember: false, msg: '로그인 할 수 없습니다'});
+      res.status(401).json({ msg: '로그인 할 수 없습니다'});
   }
-});
-
-router.get('/autoSignin', async (req, res, next) => {
-    const accessToken = req.headers['authorization'].split(' ')[1];
-    try {
-      const { userId } = await jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY); // 증명
-      // 증명에 성공
-      res.json({ userId });
-    } catch ({ name }) {
-      if (name === "TokenExpiredError") res.status(401).json({ error: 'expired token'});
-      else res.status(401).json({ error: 'token error'});
-    }
 });
 
 router.post('/signout', async (req ,res) => {

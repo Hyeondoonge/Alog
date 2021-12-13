@@ -8,8 +8,8 @@ import UserContext from '../contexts/UserContext';
 import ModalContext from '../contexts/ModalContext';
 import ThemeContext from '../contexts/ThemeContext';
 import { useEffect } from 'react';
-import { fetchToken_POST, fetchUserNumber_GET } from '../api/kakaoApi';
-import { fetchSignin_POST, fetchSignup_POST } from '../api/authApi';
+import { kakao_GetToken, kakao_GetUserInfo, kakao_RefreshAccessToken } from '../api/kakaoApi';
+import { fetchCheckMember, fetchSignin_POST, fetchSignup_POST } from '../api/authApi';
 import TextField from '../common/TextField';
 import Template from '../Template';
 import Button from '../common/Button';
@@ -41,8 +41,7 @@ export default function SignUp() {
   const theme = useContext(ThemeContext);
 
   const { code } = queryString.parse(useLocation().search);
-  const [tokens, setTokens] = useState(null);
-  const [userNumber, setUserNumber] = useState(null);
+  const [tokens, setTokens] = useState(null); // kakao api로부터 얻은 토큰을 임시적으로 저장하기 위한 상태
   const [nickname, setNickname] = useState('');
   const [description, setDescription] = useState('');
 
@@ -56,7 +55,13 @@ export default function SignUp() {
       return;
     }
     (async () => {
-      const res = await fetchSignup_POST(userNumber, 'kakao', nickname, description, '');
+      const res = await fetchSignup_POST(
+        tokens.api_accessToken,
+        'kakao',
+        nickname,
+        description,
+        ''
+      );
       if (res.status === 201) {
         const { userId, accessToken, refreshToken } = await res.json();
         setUserData({ api_accessToken: tokens.api_accessToken, accessToken, refreshToken, userId });
@@ -78,27 +83,30 @@ export default function SignUp() {
     if (!code) return;
     (async () => {
       try {
-        const [api_accessToken, api_refreshToken] = await fetchToken_POST(code);
-
-        // if (!api_accessToken) return;
-        const userNumber = await fetchUserNumber_GET(api_accessToken);
-
-        // if (!userNumber) return;
+        const [api_accessToken, api_refreshToken] = await kakao_GetToken(code);
+        if (!api_accessToken) {
+          // 외부 플랫폼에서 미확인된 사용자
+          history.replace('/');
+          return;
+        }
 
         setTokens({
           api_accessToken,
           api_refreshToken
         });
-        setUserNumber(userNumber);
 
-        const { accessToken, refreshToken, isMember, userId } = await fetchSignin_POST(
-          userNumber,
-          'kakao'
-        );
+        const { isMember } = await fetchCheckMember('kakao', api_accessToken);
+
         if (!isMember) {
           isChecking(false);
           return;
         }
+
+        const { accessToken, refreshToken, userId } = await fetchSignin_POST(
+          api_accessToken,
+          'kakao'
+        );
+
         setUserData({
           api_accessToken,
           api_refreshToken,
@@ -131,65 +139,76 @@ export default function SignUp() {
 
   return (
     <Template>
-      <h1>Alog의 회원이 되어 더 많은 서비스를 이용해보세요! </h1>
       <div
         style={{
+          height: '80vh',
           display: 'flex',
-          gap: 30
+          flexDirection: 'column',
+          justifyContent: 'space-around'
         }}
       >
+        <h1 style={{ padding: 0, margin: 0 }}>
+          Alog의 회원이 되어 더 많은 서비스를 이용해보세요!{' '}
+        </h1>
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            flex: 1,
-            gap: 50
+            gap: 30
           }}
         >
           <div
             style={{
-              backgroundColor: 'grey',
-              width: 200,
-              height: 200,
-              borderRadius: 100,
-              position: 'relative',
               display: 'flex',
-              justifyContent: 'center',
+              flexDirection: 'column',
               alignItems: 'center',
-              fontSize: '4rem'
+              flex: 1,
+              gap: 50
             }}
           >
-            ᵔࡇᵔ
+            <div
+              style={{
+                backgroundColor: 'grey',
+                width: 200,
+                height: 200,
+                borderRadius: 100,
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: '4rem'
+              }}
+            >
+              ᵔࡇᵔ
+            </div>
+            <Button label="이미지 로드" onClick={onClick} size="medium" color={theme.main} />
           </div>
-          <Button label="이미지 로드" onClick={onClick} size="medium" color={theme.main} />
-        </div>
-        <div
-          style={{
-            flex: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 50,
-            justifyContent: 'center'
-          }}
-        >
-          <TextField
-            label="닉네임"
-            onChange={(event) => {
-              setNickname(event.target.value);
+          <div
+            style={{
+              flex: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 50,
+              justifyContent: 'center'
             }}
-          />
-          <TextField
-            label="한 줄 소개"
-            fullWidth
-            onChange={(event) => {
-              setDescription(event.target.value);
-            }}
-          />
+          >
+            <TextField
+              label="닉네임"
+              onChange={(event) => {
+                setNickname(event.target.value);
+              }}
+            />
+            <TextField
+              label="한 줄 소개"
+              fullWidth
+              onChange={(event) => {
+                setDescription(event.target.value);
+              }}
+            />
+          </div>
         </div>
-      </div>
-      <div style={{ textAlign: 'center' }}>
-        <Button label="가입" onClick={onClick} size="medium" color={theme.main} />
+        <div style={{ textAlign: 'center' }}>
+          <Button label="가입" onClick={onClick} size="medium" color={theme.main} />
+        </div>
       </div>
     </Template>
   );

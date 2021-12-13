@@ -31,24 +31,4 @@ module.exports = function (app) {
       }
     })
   );
-  app.use(
-    '/kapi',
-    proxy({
-      target: 'https://kapi.kakao.com',
-      changeOrigin: true,
-      pathRewrite: {
-        '^/kapi': ''
-      }
-    })
-  );
-  app.use(
-    '/kauth',
-    proxy({
-      target: 'https://kauth.kakao.com',
-      changeOrigin: true,
-      pathRewrite: {
-        '^/kauth': ''
-      }
-    })
-  );
 };
