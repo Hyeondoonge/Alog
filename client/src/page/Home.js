@@ -88,13 +88,13 @@ export default function Home() {
     (async () => {
       const { languages: fetchedLanguages } = await fetchLanguages_GET();
       setLanguages(fetchedLanguages);
-      const localFilterLanguages = window.localStorage.getItem('filter_languages').split(',');
-
-      setIsSelected(
-        localFilterLanguages
-          ? fetchedLanguages.map(({ name }) => localFilterLanguages.includes(name))
-          : new Array(fetchedLanguages.length).fill(false)
-      );
+      let localFilterLanguages = window.localStorage.getItem('filter_languages');
+      if (!localFilterLanguages) {
+        setIsSelected(new Array(fetchedLanguages.length).fill(false));
+      } else {
+        localFilterLanguages = localFilterLanguages.split(',');
+        setIsSelected(fetchedLanguages.map(({ name }) => localFilterLanguages.includes(name)));
+      }
       setIsLanguageLoading(false);
     })();
   }, []);
