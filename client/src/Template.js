@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useContext } from 'react';
 import styled from 'styled-components';
 import Button from './common/Button';
@@ -7,7 +7,7 @@ import ThemeContext from './contexts/ThemeContext';
 import UserContext from './contexts/UserContext';
 import { useHistory } from 'react-router';
 import { RiCloseFill } from 'react-icons/ri';
-import { fetchRefreshToken_POST } from './api/kakaoApi';
+import { kakao_RefreshAccessToken, kakao_Logout, kakao_GetLoginUrl } from './api/kakaoApi';
 import { useMediaQuery } from 'react-responsive';
 import { RiPencilFill, RiLoginCircleFill, RiLogoutCircleFill } from 'react-icons/ri';
 
@@ -51,9 +51,12 @@ const StyledButton = styled.button`
   }
 `;
 
-const KakaoLogin_API = () => {
+const KakaoLoginAPI = ({ history }) => {
   const onClick = () => {
-    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_CLIENT_KEY}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}`;
+    (async () => {
+      const url = await kakao_GetLoginUrl();
+      window.location.href = url;
+    })();
   };
 
   return (
@@ -68,7 +71,6 @@ const KakaoLogin_API = () => {
 };
 
 export default function Template({ header, children }) {
-  const theme = useContext(ThemeContext);
   const [isLoggedIn, setIsLoggedIn, userData, setUserData] = useContext(UserContext);
   const loginModalRef = useRef(null);
   const bodyRef = useRef(null);
@@ -104,7 +106,7 @@ export default function Template({ header, children }) {
           <div style={{ width: 300, fontWeight: 500, fontSize: 20 }}>
             다양한 플랫폼에 등록된 계정을 사용해 ALOG를 이용할 수 있어요
           </div>
-          <KakaoLogin_API />
+          <KakaoLoginAPI history={history} />
         </StyledCard>
       </div>
       <div ref={bodyRef}>
@@ -139,12 +141,11 @@ export default function Template({ header, children }) {
                   onClick={() => {
                     try {
                       (async () => {
-                        const api_accessToken = await fetchRefreshToken_POST(
+                        const api_accessToken = await kakao_RefreshAccessToken(
                           userData.api_refreshToken
                         );
-                        await fetch('/kapi/v1/user/logout', {
-                          headers: { authorization: `Bearer ${api_accessToken}` }
-                        });
+
+                        const res = await kakao_Logout(api_accessToken);
 
                         setIsLoggedIn(false);
                         setUserData({
