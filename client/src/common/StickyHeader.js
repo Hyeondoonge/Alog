@@ -16,7 +16,7 @@ export default function StickyHeader({ children }) {
     <StyledStickyHeader>
       <div
         style={{
-          padding: '1% 2%',
+          padding: '1rem 2rem',
           display: 'flex',
           alignItems: 'center'
         }}
