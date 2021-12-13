@@ -12,16 +12,6 @@
   from = "/goorm/*"
   to = "https://level.goorm.io/:splat"
   status = 200
-
-[[redirects]]
-  from = "/kapi/*"
-  to = "https://kapi.kakao.com/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/kauth/*"
-  to = "https://kauth.kakao.com/:splat"
-  status = 200
  
 [[redirects]]
   from = "/*"
