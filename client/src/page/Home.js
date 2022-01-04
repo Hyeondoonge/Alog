@@ -139,7 +139,7 @@ export default function Home() {
           }
         />
         <div>
-          {isLanguageLoading && (
+          {!isLanguageLoading && (
             <FilterList
               elements={languages}
               state={isSelected}
