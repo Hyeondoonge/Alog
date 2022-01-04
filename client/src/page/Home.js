@@ -109,54 +109,52 @@ export default function Home() {
   }, [posts]);
 
   return (
-    !isLanguageLoading && (
-      <Template header>
-        <div
-          className="target"
-          style={{
-            transition: '1s',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px'
-          }}
-        >
-          <div
-            style={{ textAlign: 'center', margin: '30px', height: '20px', wordBreak: 'keep-all' }}
-          >
-            <i style={{ fontSize: '20px', color: '#9bc9b1' }}>{value}</i>
-          </div>
-          <SearchBar
-            placeholder="찾는 풀이의 문제제목을 입력해보세요."
-            handleChange={handleChangeKeyword}
-            handleRemove={handleRemoveKeyword}
-            value={keyword}
-            endorment={
-              <span
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  handleRemoveKeyword();
-                }}
-              >
-                <RiCloseFill />
-              </span>
-            }
-          />
-          <div>
+    <Template header>
+      <div
+        className="target"
+        style={{
+          transition: '1s',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px'
+        }}
+      >
+        <div style={{ textAlign: 'center', margin: '30px', height: '20px', wordBreak: 'keep-all' }}>
+          <i style={{ fontSize: '20px', color: '#9bc9b1' }}>{value}</i>
+        </div>
+        <SearchBar
+          placeholder="찾는 풀이의 문제제목을 입력해보세요."
+          handleChange={handleChangeKeyword}
+          handleRemove={handleRemoveKeyword}
+          value={keyword}
+          endorment={
+            <span
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                handleRemoveKeyword();
+              }}
+            >
+              <RiCloseFill />
+            </span>
+          }
+        />
+        <div>
+          {isLanguageLoading && (
             <FilterList
               elements={languages}
               state={isSelected}
               handleClick={handleChangeLanguage}
             />
-          </div>
-          {keyword && (
-            <span style={{ fontSize: '2rem' }}>
-              {totalCount ? `검색 결과 ${totalCount}개의 풀이` : '검색 결과가 없습니다.'}
-            </span>
           )}
-          <PostList postListRef={postListRef} posts={posts} />
-          {isLoading && <Loading />}
         </div>
-      </Template>
-    )
+        {keyword && (
+          <span style={{ fontSize: '2rem' }}>
+            {totalCount ? `검색 결과 ${totalCount}개의 풀이` : '검색 결과가 없습니다.'}
+          </span>
+        )}
+        <PostList postListRef={postListRef} posts={posts} />
+        {isLoading && <Loading />}
+      </div>
+    </Template>
   );
 }
