@@ -1,5 +1,4 @@
 import { useContext, useRef } from 'react';
-import { RiCloseFill } from 'react-icons/ri';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
@@ -11,7 +10,7 @@ const StyledTextFieldWrapper = styled.div`
   align-items: center;
   background-color: ${(props) => props.background};
   color: white;
-  padding: 20px 25px;
+  padding: 2rem 2.5rem;
   box-shadow: 0px 0px 5px 0px #353535;
 `;
 
