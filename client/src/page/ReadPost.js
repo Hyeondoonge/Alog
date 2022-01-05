@@ -4,6 +4,7 @@ import { fetchLike_DELETE, fetchLike_POST, fetchPost_GET } from '../post/fetchAp
 import { fetchSolution_DELETE } from '../form/fetchApis';
 import Tag from '../common/Tag';
 import { RiThumbUpFill, RiChat1Fill } from 'react-icons/ri';
+import { useMediaQuery } from 'react-responsive';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router';
@@ -18,7 +19,7 @@ import Loading from '../common/Loading';
 
 const ResponsiveImage = ({ src }) => (
   <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
-    <img src={src} width={16} />
+    <img src={src} width={25} />
   </div>
 );
 
@@ -127,6 +128,7 @@ export default function Post() {
   const [isLoading, setIsLoading] = useState(false);
   const [clickLike, setClickLike] = useState(false);
   const [__, requestService] = useToken();
+  const isBigScreen = useMediaQuery({ query: '(min-width: 600px)' });
 
   const history = useHistory();
 
@@ -195,14 +197,12 @@ export default function Post() {
 
   return (
     <Template header>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div>
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             gap: 30,
-            backgroundColor: theme.background,
-            width: 700,
             borderRadius: 30,
             padding: '5%',
             marginTop: '5vh'
@@ -211,7 +211,15 @@ export default function Post() {
           {!isLoading ? (
             <>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '16px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    fontSize: '16px',
+                    marginBottom: 5
+                  }}
+                >
                   <ResponsiveImage src={`/images/${platform}-symbol.png`} />
                   <h1 style={{ padding: 0, margin: 5 }}>{title}</h1>
                   {language && (
@@ -220,7 +228,6 @@ export default function Post() {
                     </div>
                   )}
                 </div>
-                <div>{subtitle}</div>
               </div>
               {userId === writerId && (
                 <StyledMenu underlineColor={theme.main}>
@@ -235,6 +242,7 @@ export default function Post() {
                   {writerId} ・ {writeDate}
                 </div>
               </div>
+              <div style={{ width: '100%', height: 1, backgroundColor: 'grey' }} />
               {/* user profile component */}
               <MarkDownPreview source={content} />
               <div style={{ fontSize: '2.5rem', position: 'relative' }}>

@@ -20,7 +20,7 @@ const StyledBody = styled.div`
   }
   @media screen and (min-width: 600px) {
     & > * {
-      padding: 10vh 10vw !important;
+      padding: 10vh 15vw !important;
     }
   }
 `;
