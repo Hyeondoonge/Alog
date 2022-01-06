@@ -22,6 +22,10 @@ app.use(cors({
 app.use(express.json());
 app.use(logger('dev'));
 // app.use(express.urlencoded({ extended: false }));
+app.use(function (req, res, next) {
+  res.set('Cache-control', 'must-revalidate, max-age=31536000')
+  next();
+})
 app.use('/posts', postsRouter);
 app.use('/post', postRouter);
 app.use('/languages', languageRouter);
