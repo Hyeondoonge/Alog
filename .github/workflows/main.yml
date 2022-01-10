@@ -16,7 +16,6 @@ jobs:
           password: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            whoami
             ls -al
             git pull origin main
           # npm install
