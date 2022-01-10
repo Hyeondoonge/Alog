@@ -17,8 +17,7 @@ jobs:
           port: 22
           script: |
             whoami
-            pwd
-            ls
+            ls -al
             git pull origin main
           # npm install
           # 리로드
