@@ -8,14 +8,11 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v1
-
-      - name: Deploy to my EC2 instance
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          SOURCE: "./"
-          REMOTE_HOST: ${{ secrets.EC2_HOST }}
-          REMOTE_USER:  ${{ secrets.EC2_USER }}
-          # TARGET: "/home/ec2-user/SampleExpressApp"
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            whoami
