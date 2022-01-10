@@ -5,7 +5,7 @@ on: push
 jobs:
   deploy:
     name: Push to EC2 Instance
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Deploy
@@ -13,6 +13,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.KEY }}
+          port: 22
           script: |
             whoami
