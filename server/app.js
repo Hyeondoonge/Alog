@@ -34,7 +34,7 @@ app.use('/auth', authRouter);
 app.use('/kakaoAuth', kakaoAuthRouter);
 
 app.use((req, res, next) => { // 매핑되는 경로 없을 때
-  res.status(404).send('존재하지 않는 페이지!!!');
+  res.status(404).send('다시 존재하지 않는 페이지!!!');
 });
 
 app.listen(PORT, () => {
