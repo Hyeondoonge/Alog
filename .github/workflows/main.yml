@@ -16,7 +16,7 @@ jobs:
           password: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            cd alog
+            whoami
             pwd
             ls
             git pull origin main
