@@ -17,6 +17,8 @@ jobs:
           port: 22
           script: |
             cd alog
+            pwd
+            ls
             git pull origin main
           # npm install
           # 리로드
