@@ -1,4 +1,3 @@
-import Logo from '../common/Logo';
 import { useEffect, useRef, useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import useGetPost from '../hooks/useGetPost';
@@ -10,6 +9,8 @@ import FilterList from '../post/FilterList';
 import SearchBar from '../post/SearchBar';
 import Template from '../Template';
 import { RiCloseFill } from 'react-icons/ri';
+import Skeleton from '../common/Skeleton';
+import List from '../common/List';
 
 export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
@@ -139,7 +140,13 @@ export default function Home() {
           }
         />
         <div>
-          {!isLanguageLoading && (
+          {isLanguageLoading ? (
+            <List>
+              {new Array(8).fill(null).map((e) => (
+                <Skeleton width="25px" />
+              ))}
+            </List>
+          ) : (
             <FilterList
               elements={languages}
               state={isSelected}
