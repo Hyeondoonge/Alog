@@ -16,6 +16,6 @@ jobs:
         password: ${{ secrets.EC2_SSH_KEY }}
         port: 22
         script: |
-          cd alog & git pull        
+          cd alog & git pull & pm2 reload 0
 # npm install
 # 리로드
