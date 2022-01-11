@@ -10,6 +10,7 @@ import { RiCloseFill } from 'react-icons/ri';
 import { kakao_RefreshAccessToken, kakao_Logout, kakao_GetLoginUrl } from './api/kakaoApi';
 import { useMediaQuery } from 'react-responsive';
 import { RiPencilFill, RiLoginCircleFill, RiLogoutCircleFill } from 'react-icons/ri';
+import Link from './common/Link';
 
 const StyledBody = styled.div`
   width: 100%;
@@ -20,7 +21,7 @@ const StyledBody = styled.div`
   }
   @media screen and (min-width: 600px) {
     & > * {
-      padding: 10vh 15vw !important;
+      padding: 10vh 18vw !important;
     }
   }
 `;
@@ -125,6 +126,7 @@ export default function Template({ header, children }) {
               />
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', fontSize: '2rem' }}>
+                <Link to={`/home/${userData.userId}`}>🌞</Link>
                 <span style={{ padding: '0.5rem 1rem' }}>{userData.userId}님, 안녕하세요!</span>
                 <Button
                   label={isBigScreen ? '작성하기' : <RiPencilFill />}
