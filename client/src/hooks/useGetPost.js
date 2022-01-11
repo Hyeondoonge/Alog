@@ -13,9 +13,9 @@ export default function useGetPost() {
   const [isLoading, setIsLoading] = useState(false);
 
   const updatePost = async (option) => {
-    console.log(option);
     // queryObject는 Home에서 전달
-    if (!option.keyword) {
+    console.log(option);
+    if (!option.keyword && !option.writerId) {
       setTotalCount(0);
       setPosts([]);
       return;
@@ -23,6 +23,7 @@ export default function useGetPost() {
 
     setIsLoading(true);
     const res = await fetchPosts_GET(option);
+    console.log(res);
     setTotalCount(res.totalCount);
     setLeftCount(res.leftCount);
 
