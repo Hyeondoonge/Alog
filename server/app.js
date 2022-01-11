@@ -4,6 +4,7 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
+import userRouter from './routes/user.js';
 import postsRouter from './routes/posts.js';
 import postRouter from './routes/post.js';
 import languageRouter from './routes/language.js';
@@ -26,6 +27,7 @@ app.use(function (req, res, next) {
   res.set('Cache-control', 'must-revalidate, max-age=31536000')
   next();
 })
+app.use('/user', userRouter);
 app.use('/posts', postsRouter);
 app.use('/post', postRouter);
 app.use('/languages', languageRouter);

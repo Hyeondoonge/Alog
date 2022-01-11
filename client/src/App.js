@@ -10,6 +10,7 @@ import UserContext, { UserContextProvider } from './contexts/UserContext';
 import SignUp from './page/SignUp';
 import { useContext, useEffect } from 'react';
 import useToken from './hooks/useToken';
+import UserHome from './page/UserHome';
 
 const MyComponent = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn, userData, setUserData] = useContext(UserContext);
@@ -44,12 +45,12 @@ export default function App() {
             <Router>
               <Switch>
                 <Route path="/" exact component={Home} />
+                <Route path="/home/:ownerId" exact component={UserHome} />
                 <Route path="/write" exact component={WritePost} />
                 <Route path="/edit" exact component={EditPost} />
                 <Route path="/post" exact component={ReadPost} />
                 <Route path="/signup" exact component={SignUp} />
                 <Route path="/*" exact component={Error} />
-                {/* edit/:postsId */}
               </Switch>
             </Router>
           </MyComponent>

@@ -239,14 +239,16 @@ export default function Post() {
               )}
               <div>
                 <div>
-                  {writerId} ・ {writeDate}
+                  <Link to={`/home/${writerId}`}>
+                    <strong>{writerId}</strong>
+                  </Link>
+                  ・ {writeDate}
                 </div>
               </div>
               <div style={{ width: '100%', height: 1, backgroundColor: 'grey' }} />
               {/* user profile component */}
               <MarkDownPreview source={content} />
               <div style={{ fontSize: '2.5rem', position: 'relative' }}>
-                {' '}
                 {clickLike && (
                   <StyledThumbsUpText>
                     <RiThumbUpFill color={theme.main} /> 좋은 솔루션이에요
