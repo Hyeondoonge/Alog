@@ -49,12 +49,16 @@ const findPosts = async (keyword, language, cursor, size, writerId) => {
 
    // 데이터를 페이징 하며 가져오도록 추후 변경 (무한 스크롤 구현 기능 시)
   try {
-    if (!keyword) return [];
-    const filter = { title: { $regex: '.*' + keyword + '.*' }};
+    const filter = {};
+    if (keyword) {
+      keyword = keyword.replace(/\+/g, '\\+');
+      filter.title = { $regex: '.*' + keyword + '.*' };
+    } 
     if (cursor) filter._id = { $lt: cursor };
     if (language) filter.language = { $in: language };
     if (writerId) filter.writerId = writerId;
 
+    console.log(filter);
     const doc = await Post.find(filter).sort('field -_id').limit(parseInt(size)).exec();
     return doc;
   } catch (err) {
@@ -67,8 +71,11 @@ const findPosts = async (keyword, language, cursor, size, writerId) => {
  */
 const countPosts = async (keyword, language, writerId) => {
  try {
-  if (!keyword) return [];
-  const filter = { title: { $regex: '.*' + keyword + '.*' }};
+  const filter = {};
+  if (keyword) {
+    keyword = keyword.replace(/\+/g, '\\+');
+    filter.title = { $regex: '.*' + keyword + '.*' };
+  } 
   if (language) filter.language = { $in: language };
   if (writerId) filter.writerId = writerId;
 
@@ -86,8 +93,11 @@ const countPosts = async (keyword, language, writerId) => {
  */
  const leftPosts = async (keyword, language, cursor, writerId) => { 
   try {
-    if (!keyword) return [];
-    const filter = { title: { $regex: '.*' + keyword + '.*' }};
+    const filter = {};
+    if (keyword) {
+      keyword = keyword.replace(/\+/g, '\\+');
+      filter.title = { $regex: '.*' + keyword + '.*' };
+    } 
     if (cursor) filter._id = { $lt: cursor };
     if (language) filter.language = { $in: language };
     if (writerId) filter.writerId = writerId;
