@@ -55,21 +55,21 @@ const fetchSignup_POST = async (
   platform,
   nickname,
   description,
-  profilePath
+  profileImage
 ) => {
   try {
+    const formData = new FormData();
+    formData.append('platform', platform);
+    formData.append('userId', nickname);
+    formData.append('description', description);
+    if (profileImage) formData.append('profileImage', profileImage);
+
     const res = await fetch('/api/auth/signup', {
       method: 'post',
       headers: {
-        Authorization: `Bearer ${kakao_accessToken}`,
-        'Content-type': 'application/json'
+        Authorization: `Bearer ${kakao_accessToken}`
       },
-      body: JSON.stringify({
-        platform,
-        userId: nickname,
-        description,
-        profilePath
-      })
+      body: formData
     });
     return res;
   } catch (error) {

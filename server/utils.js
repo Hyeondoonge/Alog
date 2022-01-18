@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
+import multer from 'multer';
 
 /**
  * db에 저장된 date 데이터를 받아 YYYY-MM-YY hh:mm:ss 로 변환 
@@ -57,4 +58,18 @@ const verifyToken = async (token) => {
   }
 }
 
-export { formatDate, docsMap, generateAccessToken, generateRefreshToken, verifyToken };
+const getUploader = (destination) => {
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, destination)
+    },
+    filename: function (req, file, cb) {
+      var extArray = file.mimetype.split("/");
+      var extension = extArray[extArray.length - 1];
+      cb(null, file.originalname + Date.now()+ '.' +extension)
+    }
+  });
+  return multer({ storage });
+}
+
+export { formatDate, docsMap, generateAccessToken, generateRefreshToken, verifyToken, getUploader };

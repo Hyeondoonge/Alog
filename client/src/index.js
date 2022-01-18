@@ -4,6 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+if (process.env.REACT_APP_ENV !== 'development') {
+  console.log = () => {};
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

@@ -3,7 +3,7 @@ import { findUser } from '../queries/user.js';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const { target, finder } = req.query;
+  const { target } = req.query;
   const user = await findUser({ userId: target });
 
   if (!user) {
@@ -11,12 +11,7 @@ router.get('/', async (req, res) => {
     return;
   }
 
-
-  if (target !== finder) {
-    res.status(200).json({ userId: user.userId, description: user.description });
-  } else {
-    res.status(200).json(user);
-  }
+  res.status(200).json({ userId: user.userId, description: user.description, profilePath: user.profilePath });
 });
 
 export default router;

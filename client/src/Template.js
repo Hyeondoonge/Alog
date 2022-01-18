@@ -11,6 +11,7 @@ import { kakao_RefreshAccessToken, kakao_Logout, kakao_GetLoginUrl } from './api
 import { useMediaQuery } from 'react-responsive';
 import { RiPencilFill, RiLoginCircleFill, RiLogoutCircleFill } from 'react-icons/ri';
 import Link from './common/Link';
+import ProfileImage from './common/ProfileImage';
 
 const StyledBody = styled.div`
   width: 100%;
@@ -126,7 +127,9 @@ export default function Template({ header, children }) {
               />
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', fontSize: '2rem' }}>
-                <Link to={`/home/${userData.userId}`}>🌞</Link>
+                <Link to={`/home/${userData.userId}`}>
+                  <ProfileImage size="2.5rem" filename={userData.profile_fileName} />
+                </Link>
                 <span style={{ padding: '0.5rem 1rem' }}>{userData.userId}님, 안녕하세요!</span>
                 <Button
                   label={isBigScreen ? '작성하기' : <RiPencilFill />}
@@ -161,6 +164,7 @@ export default function Template({ header, children }) {
                         window.localStorage.removeItem('api_refresh_token');
                         window.localStorage.removeItem('access_token');
                         window.localStorage.removeItem('refresh_token');
+                        window.localStorage.removeItem('profile_file_name');
                         history.replace('/');
                       })();
                     } catch (error) {

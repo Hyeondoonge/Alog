@@ -9,8 +9,26 @@ import FilterList from '../post/FilterList';
 import SearchBar from '../post/SearchBar';
 import Template from '../Template';
 import { RiCloseFill } from 'react-icons/ri';
+import { RiGhost2Fill } from 'react-icons/ri';
 import Skeleton from '../common/Skeleton';
 import List from '../common/List';
+import styled, { keyframes } from 'styled-components';
+
+const ghost_animation = keyframes`
+  0% {
+    transform: translateX(10px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0px);
+    opacity: 100;
+  }
+`;
+
+const Ghost = styled(RiGhost2Fill)`
+  animation: 4s ${ghost_animation};
+`;
 
 export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
@@ -22,9 +40,6 @@ export default function Home() {
   const [isSelected, setIsSelected] = useState([]);
   const postListRef = useRef(null);
   const [createObserver, registerTargets] = useIntersectionObserver();
-  const [value, setValue] = useState('');
-  const txt = '원하는 문제의 풀이를 찾거나 알고리즘을 기록해보세요! ᵔࡇᵔ';
-  var i = 0;
   const [isLanguageLoading, setIsLanguageLoading] = useState(true);
 
   const handleIntersect = async () => {
@@ -73,18 +88,6 @@ export default function Home() {
     });
   };
 
-  const typeWriter = () => {
-    if (i <= txt.length) {
-      setValue(txt.substring(0, i));
-      i++;
-      setTimeout(typeWriter, 50);
-    }
-  };
-
-  useEffect(() => {
-    typeWriter();
-  }, []);
-
   useEffect(() => {
     (async () => {
       const { languages: fetchedLanguages } = await fetchLanguages_GET();
@@ -121,7 +124,11 @@ export default function Home() {
         }}
       >
         <div style={{ textAlign: 'center', margin: '30px', height: '20px', wordBreak: 'keep-all' }}>
-          <i style={{ fontSize: '20px', color: '#9bc9b1' }}>{value}</i>
+          <i style={{ fontSize: '20px', color: '#9bc9b1' }}>
+            원하는 문제의 풀이를 찾거나 알고리즘을 기록해보세요&nbsp;
+            {/* <RiGhost2Fill /> */}
+            <Ghost />
+          </i>
         </div>
         <SearchBar
           placeholder="찾는 풀이의 문제제목을 입력해보세요."
@@ -143,7 +150,7 @@ export default function Home() {
           {isLanguageLoading ? (
             <List>
               {new Array(8).fill(null).map((e) => (
-                <Skeleton width="25px" />
+                <Skeleton width="10rem" height="4rem" />
               ))}
             </List>
           ) : (

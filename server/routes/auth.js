@@ -1,8 +1,9 @@
 import express from 'express';
-import fetch from 'node-fetch';
 import jwt from 'jsonwebtoken';
+import fetch from 'node-fetch';
 import { createUser, findUser, hasDuplicatedUserId } from '../queries/user.js';
-import { generateAccessToken, generateRefreshToken } from '../utils.js';
+import { generateAccessToken, generateRefreshToken, getUploader } from '../utils.js';
+
 const router = express.Router();
 
 router.get('/verifyToken', async (req, res) => {
@@ -71,15 +72,15 @@ try {
 }
 });
 
-router.post('/signup', async (req, res, next) => {
+const uplodaer = getUploader('./images/profile');
+router.post('/signup', uplodaer.single('profileImage'), async (req, res, next) => {
     const { userId, platform, description } = req.body;
     const { userNumber } = req;
-
     // 아이디 중복 확인
     const isValidUserId = !(await hasDuplicatedUserId(userId));
 
     if (isValidUserId) {
-      createUser({ userId, platform, userNumber, description });
+      createUser({ userId, platform, userNumber, description, profilePath: req?.file.filename?? null });
       next();
     } else {
       res.json({ msg: '이미 같은 닉네임을 가진 회원이 있어요' });
@@ -95,7 +96,7 @@ router.post('/signup', async (req, res, next) => {
       const accessToken = generateAccessToken(userId, userNumber, platform);
       const refreshToken = generateRefreshToken(userId, userNumber, platform);
 
-      res.status(201).json({ accessToken, refreshToken, userId });
+      res.status(201).json({ accessToken, refreshToken, userId, profilePath: req?.file.filename?? null }) ;
   
     } catch (error) {
       res.json({msg: 'END WITH ERROR'});
@@ -110,12 +111,12 @@ router.post('/signin', async (req, res) => {
       const { platform } = req.body;
       const { userNumber } = req;
 
-      const { userId } = await findUser({ userNumber, platform });
+      const { userId, profilePath } = await findUser({ userNumber, platform });
 
       const accessToken = generateAccessToken(userId, userNumber, platform);
       const refreshToken = generateRefreshToken(userId, userNumber, platform);
 
-      res.json({ accessToken, refreshToken, userId });
+      res.json({ accessToken, refreshToken, userId, profile_fileName: profilePath });
     } catch (error) {
       res.status(401).json({ msg: '로그인 할 수 없습니다'});
   }
