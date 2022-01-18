@@ -2,7 +2,7 @@
 
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string';
-import { useState } from 'react';
+import { useReducer, useRef, useState } from 'react';
 import { useContext } from 'react';
 import UserContext from '../contexts/UserContext';
 import ModalContext from '../contexts/ModalContext';
@@ -15,6 +15,8 @@ import Template from '../Template';
 import Button from '../common/Button';
 import Loading from '../common/Loading';
 import styled, { keyframes } from 'styled-components';
+import { RiCloseCircleLine, RiGhost2Fill } from 'react-icons/ri';
+import { findByRole } from '@testing-library/react';
 
 const fadeIn = keyframes`
   0% {
@@ -44,10 +46,12 @@ export default function SignUp() {
   const [tokens, setTokens] = useState(null); // kakao api로부터 얻은 토큰을 임시적으로 저장하기 위한 상태
   const [nickname, setNickname] = useState('');
   const [description, setDescription] = useState('');
+  const [profile, setProfile] = useState(null);
 
   const [checking, isChecking] = useState(true);
 
   const history = useHistory();
+  const inputRef = useRef(null);
 
   const onClick = () => {
     if (!nickname) {
@@ -55,21 +59,38 @@ export default function SignUp() {
       return;
     }
     (async () => {
+      // html 인코딩 형식
       const res = await fetchSignup_POST(
         tokens.api_accessToken,
         'kakao',
         nickname,
         description,
+        profile?.file ?? null,
         ''
       );
       if (res.status === 201) {
-        const { userId, accessToken, refreshToken } = await res.json();
-        setUserData({ api_accessToken: tokens.api_accessToken, accessToken, refreshToken, userId });
+        const {
+          userId,
+          profilePath: profile_fileName,
+          accessToken,
+          refreshToken
+        } = await res.json();
+
+        console.log(profile_fileName);
+
+        setUserData({
+          api_accessToken: tokens.api_accessToken,
+          accessToken,
+          refreshToken,
+          userId,
+          profile_fileName
+        });
         setIsLoggedIn(true);
         window.localStorage.setItem('api_access_token', tokens.api_accessToken);
         window.localStorage.setItem('api_refresh_token', tokens.api_refreshToken);
         window.localStorage.setItem('access_token', accessToken);
         window.localStorage.setItem('refresh_token', refreshToken);
+        if (profile_fileName) window.localStorage.setItem('profile_file_name', profile_fileName);
         history.replace('/'); // 리다이렉트
       } else {
         const { msg } = await res.json();
@@ -102,7 +123,7 @@ export default function SignUp() {
           return;
         }
 
-        const { accessToken, refreshToken, userId } = await fetchSignin_POST(
+        const { accessToken, refreshToken, userId, profile_fileName } = await fetchSignin_POST(
           api_accessToken,
           'kakao'
         );
@@ -112,9 +133,11 @@ export default function SignUp() {
           api_refreshToken,
           accessToken,
           refreshToken,
-          userId: userId
+          userId,
+          profile_fileName
         });
         setIsLoggedIn(true);
+        window.localStorage.setItem('profile_file_name', profile_fileName);
         window.localStorage.setItem('api_access_token', api_accessToken);
         window.localStorage.setItem('api_refresh_token', api_refreshToken);
         window.localStorage.setItem('access_token', accessToken);
@@ -153,7 +176,7 @@ export default function SignUp() {
         <div
           style={{
             display: 'flex',
-            gap: 30
+            gap: '3rem'
           }}
         >
           <div
@@ -162,32 +185,84 @@ export default function SignUp() {
               flexDirection: 'column',
               alignItems: 'center',
               flex: 1,
-              gap: 50
+              gap: '5rem'
             }}
           >
-            <div
-              style={{
-                backgroundColor: 'grey',
-                width: 200,
-                height: 200,
-                borderRadius: 100,
-                position: 'relative',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '4rem'
-              }}
-            >
-              ᵔࡇᵔ
+            <div style={{ position: 'relative' }}>
+              <RiCloseCircleLine
+                style={{ position: 'absolute', right: 0, cursor: 'pointer' }}
+                onClick={() => {
+                  setProfile(null);
+                }}
+              />
+              {!profile ? (
+                <div
+                  style={{
+                    backgroundColor: 'grey',
+                    width: '20rem',
+                    height: '20rem',
+                    borderRadius: '50%',
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: '4rem',
+                    border: '1px solid white'
+                  }}
+                >
+                  <RiGhost2Fill size="10rem" />
+                </div>
+              ) : (
+                <div>
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '20rem',
+                      height: '20rem',
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      border: '1px solid white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <img
+                      src={profile.localUrl}
+                      style={{
+                        width: '30rem'
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
-            <Button label="이미지 로드" onClick={onClick} size="medium" color={theme.main} />
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={(event) => {
+                const { files } = event.target;
+                if (!files[0]) return;
+                setProfile({ file: files[0], localUrl: URL.createObjectURL(files[0]) });
+              }}
+            />
+            <Button
+              label="이미지 로드"
+              size="medium"
+              color={theme.main}
+              onClick={() => {
+                inputRef.current.click();
+              }}
+            />
           </div>
           <div
             style={{
               flex: 2,
               display: 'flex',
               flexDirection: 'column',
-              gap: 50,
+              gap: '5rem',
               justifyContent: 'center'
             }}
           >
