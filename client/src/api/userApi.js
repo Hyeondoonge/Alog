@@ -1,6 +1,6 @@
-const fetchUserInfo_GET = async (target, finder) => {
+const fetchUserInfo_GET = async (target) => {
   try {
-    const response = await fetch(`/api/user?target=${target}&finder=${finder}`);
+    const response = await fetch(`/api/user?target=${target}`);
 
     const result = await response.json();
 
