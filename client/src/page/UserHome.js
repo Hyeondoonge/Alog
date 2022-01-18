@@ -1,5 +1,8 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { fetchUserInfo_GET } from '../api/userApi';
+import ProfileImage from '../common/ProfileImage';
+import Skeleton from '../common/Skeleton';
+import ThemeContext from '../contexts/ThemeContext';
 import UserContext from '../contexts/UserContext';
 import useGetPost from '../hooks/useGetPost';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
@@ -11,8 +14,11 @@ export default function UserHome({ match }) {
   const [createObserver, registerTargets] = useIntersectionObserver();
   const [posts, totalCount, leftCount, isLoading, updatePost] = useGetPost();
   const postListRef = useRef(null);
-  const [description, setDescription] = useState('');
+  const [ownerData, setOwnerData] = useState('');
+  const { description, profilePath } = ownerData;
   const [_, __, userData] = useContext(UserContext);
+  const theme = useContext(ThemeContext);
+  const [loading, setLoading] = useState(true);
 
   const size = 3;
 
@@ -28,10 +34,10 @@ export default function UserHome({ match }) {
   useEffect(() => {
     (async () => {
       // 유효한 사용자 페이지라고 가정, 무효한 사용자라면 404 렌더링
-      const { _, description } = await fetchUserInfo_GET(ownerId, userData?.userId ?? '');
-      console.log(description);
-      setDescription(description);
+      const { _, description, profilePath } = await fetchUserInfo_GET(ownerId);
+      setOwnerData({ description, profilePath });
       updatePost({ size, writerId: ownerId });
+      setLoading(false);
     })();
   }, []);
 
@@ -50,15 +56,49 @@ export default function UserHome({ match }) {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 30,
-          fontSize: '3rem'
+          gap: 20,
+          fontSize: '3rem',
+          margin: '50px 0'
         }}
       >
-        <div style={{ margin: '80px 0' }}>
-          🌞 <strong>{ownerId}</strong> {description}
+        <div
+          style={{
+            marginBottom: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            textAlign: 'center',
+            gap: 20,
+            fontSize: '3.5rem',
+            width: '100%'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            {loading ? (
+              <Skeleton width="10rem" height="10rem" borderRadius="50%" />
+            ) : (
+              <ProfileImage size="10rem" filename={profilePath} />
+            )}
+            <div style={{ position: 'relative' }}>
+              <strong>{ownerId}</strong>
+            </div>
+          </div>
+          {loading ? (
+            <Skeleton width="50rem" height="4.5rem" />
+          ) : (
+            <div style={{ width: '100%', wordWrap: 'break-word' }}>{description}</div>
+          )}
         </div>
         <div style={{ width: '100%', backgroundColor: 'grey', height: '1px' }}></div>
-        <PostList postListRef={postListRef} posts={posts} />
+        {posts.length === 0 ? (
+          <div
+            style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200 }}
+          >
+            작성된 솔루션이 없어요.
+          </div>
+        ) : (
+          <PostList postListRef={postListRef} posts={posts} />
+        )}
       </div>
     </Template>
   );
