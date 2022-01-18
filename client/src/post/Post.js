@@ -4,6 +4,13 @@ import Tag from '../common/Tag';
 import Card from '../common/Card';
 import ThemeContext from '../contexts/ThemeContext';
 import { RiThumbUpFill } from 'react-icons/ri';
+import { Link } from 'react-router-dom';
+
+const StyledLink = styled(Link)`
+  &:link {
+    text-decoration: none;
+  }
+`;
 
 const ResponsiveImage = ({ src }) => (
   <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
@@ -27,51 +34,53 @@ export default function Post({ post }) {
   const theme = useContext(ThemeContext);
 
   return (
-    <Card color="transparent">
-      <StyledPost>
-        <div style={{ width: '85%' }}>
+    <StyledLink to={`/post?id=${id}`}>
+      <Card color="transparent">
+        <StyledPost>
+          <div style={{ width: '85%' }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                gap: '0.5rem',
+                alignItems: 'center',
+                color: 'white'
+              }}
+            >
+              <ResponsiveImage src={`/images/${platform}-symbol.png`} />
+              <div>
+                <strong style={{ color: 'white' }}>{title}</strong>
+              </div>
+              {language && <Tag label={language} size="1.6" />}
+            </div>
+            <div style={{ color: 'white' }}>
+              <span>{subtitle}</span>
+            </div>
+            <div style={{ color: 'white' }}>
+              {writerId} ・ {writeDate}
+            </div>
+          </div>
           <div
             style={{
+              fontSize: '1.8rem',
+              wordBreak: 'keep-all',
+              textAlign: 'center',
               display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              gap: '0.5rem',
-              alignItems: 'center',
-              color: 'white'
+              flexDirection: 'column',
+              alignItems: 'center'
             }}
           >
-            <ResponsiveImage src={`/images/${platform}-symbol.png`} />
             <div>
-              <strong style={{ color: 'white' }}>{title}</strong>
+              <span style={{ color: 'grey' }}>좋은 솔루션이에요</span>
             </div>
-            {language && <Tag label={language} size="1.6" />}
+            <div style={{ display: 'flex', alignItems: 'center', color: 'white' }}>
+              <RiThumbUpFill color={theme.main} size="2rem" />
+              <strong>{likeCount}</strong>
+            </div>
           </div>
-          <div style={{ color: 'white' }}>
-            <span>{subtitle}</span>
-          </div>
-          <div style={{ color: 'white' }}>
-            {writerId} ・ {writeDate}
-          </div>
-        </div>
-        <div
-          style={{
-            fontSize: '1.8rem',
-            wordBreak: 'keep-all',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-          }}
-        >
-          <div>
-            <span style={{ color: 'grey' }}>좋은 솔루션이에요</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', color: 'white' }}>
-            <RiThumbUpFill color={theme.main} size="2rem" />
-            <strong>{likeCount}</strong>
-          </div>
-        </div>
-      </StyledPost>
-    </Card>
+        </StyledPost>
+      </Card>
+    </StyledLink>
   );
 }
