@@ -18,6 +18,7 @@ const { PORT, MONGO_URI, USER_ID, USER_PASSWORD } = process.env;
 connectDB(mongoose, MONGO_URI, USER_ID, USER_PASSWORD);
 
 const app = express();
+
 app.use(cors({
   origin: 'https://alog.netlify.app'}));
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use(function (req, res, next) {
   res.set('Cache-control', 'must-revalidate, max-age=31536000')
   next();
 })
+app.use('/images/profile', express.static('images/profile')); // 프로필 사진 요청
 app.use('/user', userRouter);
 app.use('/posts', postsRouter);
 app.use('/post', postRouter);
@@ -36,11 +38,13 @@ app.use('/auth', authRouter);
 app.use('/kakaoAuth', kakaoAuthRouter);
 
 app.use((req, res, next) => { // 매핑되는 경로 없을 때
-  res.status(404).send('다시 존재하지 않는 페이지!!!');
+  console.log('connect')
+  res.status(404).send('다시 존재하지 않는 페이지!!!!!!!!');
 });
 
 app.listen(PORT, () => {
-    console.log(`app listening at http://localhost:${PORT}`)
+  process.send('ready');
+  console.log(`app listening at http://localhost:${PORT}`)
 });
 
 export default app;
