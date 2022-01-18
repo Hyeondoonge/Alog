@@ -19,10 +19,7 @@ export default function ProfileImage({ filename, size, color, link }) {
       }}
     >
       {filename ? (
-        <StyledProfileImage
-          src={`${process.env.REACT_APP_PROFILE_IMAGE_URL}/${filename}`}
-          size={size}
-        />
+        <StyledProfileImage src={`/api/images/profile/${filename}`} size={size} />
       ) : (
         <RiGhost2Fill size={size} />
       )}
