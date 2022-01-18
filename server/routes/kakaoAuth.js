@@ -2,7 +2,7 @@ import express from 'express';
 import fetch from 'node-fetch';
 const router = express.Router();
 
-const mode = 'develop';
+const mode = 'production';
 
 router.get('/loginUrl', async (req, res) => {
   const redirect_url = mode === 'develop' ? process.env.KAKAO_API_REDIRECT_URI_DM : process.env.KAKAO_API_REDIRECT_URI_PM;
