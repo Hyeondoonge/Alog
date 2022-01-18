@@ -10,16 +10,22 @@ const gradientEffect = keyframes`
 
 const StyledSkeleton = styled.div`
   width: ${(props) => props.width};
-  height: ${(props) => props.width};
-  padding: 1rem 3rem !important;
-  border-radius: 20px;
+  height: ${(props) => props.height || props.width};
+  border-radius: ${(props) => props.borderRadius || '20px'};
   display: absolute;
   transition: 1s;
   background-color: ${(props) => props.backgroundColor};
   animation: 2s ${gradientEffect} infinite;
 `;
 
-export default function Skeleton({ width }) {
+export default function Skeleton({ width, height, borderRadius }) {
   const theme = useContext(ThemeContext);
-  return <StyledSkeleton width={width} backgroundColor={theme.background} />;
+  return (
+    <StyledSkeleton
+      width={width}
+      height={height}
+      backgroundColor={theme.background}
+      borderRadius={borderRadius}
+    />
+  );
 }
