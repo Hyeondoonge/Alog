@@ -1,4 +1,4 @@
-name: Push-to-EC2
+name: Deploy-to-EC2
 
 on:
  push:
@@ -6,7 +6,7 @@ on:
     - main
 jobs:
   deploy:
-    name: Push to EC2 Instance
+    name: Deploy to EC2 Instance
     runs-on: ubuntu-latest
 
     steps:
