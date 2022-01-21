@@ -33,7 +33,7 @@ router.use((req, res, next) => {
     const { userId } = jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
     req.userId = userId;
     next();
-  } catch (error) {
+  } catch ({ name }) {
     if (name === 'TokenExpiredError') {
       res.status(401).json({ error: 'expired token' });
       return;
