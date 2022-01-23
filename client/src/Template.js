@@ -160,11 +160,11 @@ export default function Template({ header, children }) {
                           accessToken: null,
                           refreshToken: null
                         });
-                        window.localStorage.removeItem('api_access_token');
-                        window.localStorage.removeItem('api_refresh_token');
-                        window.localStorage.removeItem('access_token');
-                        window.localStorage.removeItem('refresh_token');
-                        window.localStorage.removeItem('profile_file_name');
+                        window.localStorage.removeItem('api_accessToken');
+                        window.localStorage.removeItem('api_refreshToken');
+                        window.localStorage.removeItem('accessToken');
+                        window.localStorage.removeItem('refreshToken');
+                        window.localStorage.removeItem('profile_fileName');
                         history.replace('/');
                       })();
                     } catch (error) {
