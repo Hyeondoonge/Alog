@@ -23,6 +23,11 @@ app.use(cors({
   origin: 'https://alog.netlify.app'}));
 app.use(express.json());
 app.use(logger('dev'));
+app.use(function (req, res, next) {
+  if (req.url.startsWith('/images/profile')) res.set('Cache-control', 'max-age=31536000');
+  else res.set('Cache-control', 'no-cache');
+  next();
+})
 // app.use(express.urlencoded({ extended: false }));
 app.use('/user', userRouter);
 app.use('/posts', postsRouter);
@@ -31,11 +36,6 @@ app.use('/languages', languageRouter);
 app.use('/like', likeRouter);
 app.use('/auth', authRouter);
 app.use('/kakaoAuth', kakaoAuthRouter);
-
-app.use(function (req, res, next) {
-  res.set('Cache-control', 'max-age=31536000')
-  next();
-})
 app.use('/images/profile', express.static('images/profile')); // 프로필 사진 요청
 
 app.use((req, res, next) => { // 매핑되는 경로 없을 때
