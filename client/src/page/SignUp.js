@@ -109,7 +109,6 @@ export default function SignUp() {
       try {
         const [api_accessToken, api_refreshToken] = await kakao_GetToken(code);
         const isValidPlatformUser = api_accessToken !== undefined;
-
         if (!isValidPlatformUser) {
           replacePageTo('/');
           return;
@@ -122,8 +121,7 @@ export default function SignUp() {
 
         const { isMember } = await fetchCheckMember('kakao', api_accessToken);
 
-        if (isMember) {
-          // !isMember
+        if (!isMember) {
           setIsCheckingMember(false);
           return;
         }
