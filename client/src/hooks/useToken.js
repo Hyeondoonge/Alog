@@ -31,7 +31,7 @@ export default function useToken() {
       // access token 유효성 검증 실패이유가 토큰 만료일 때
       const accessToken = await refreshToken(userData.refreshToken);
       setUserData({ ...userData, accessToken: accessToken });
-      window.localStorage.setItem('access_token', accessToken);
+      window.localStorage.setItem('accessToken', accessToken);
       return accessToken;
     }
     // access token 유효성 검증 실패이유가 토큰 만료 외의 이유일 때 (올바르지 않은 접근)

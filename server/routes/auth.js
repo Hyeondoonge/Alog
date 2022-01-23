@@ -76,14 +76,13 @@ const uplodaer = getUploader('./images/profile');
 router.post('/signup', uplodaer.single('profileImage'), async (req, res, next) => {
     const { userId, platform, description } = req.body;
     const { userNumber } = req;
-    // 아이디 중복 확인
     const isValidUserId = !(await hasDuplicatedUserId(userId));
 
     if (isValidUserId) {
-      createUser({ userId, platform, userNumber, description, profilePath: req?.file.filename?? null });
+      createUser({ userId, platform, userNumber, description, profilePath: req.file?.filename??null });
       next();
     } else {
-      res.json({ msg: '이미 같은 닉네임을 가진 회원이 있어요' });
+      res.status(409).end();
       return;
     }
   }, (req, res) => {
@@ -96,7 +95,7 @@ router.post('/signup', uplodaer.single('profileImage'), async (req, res, next) =
       const accessToken = generateAccessToken(userId, userNumber, platform);
       const refreshToken = generateRefreshToken(userId, userNumber, platform);
 
-      res.status(201).json({ accessToken, refreshToken, userId, profilePath: req?.file.filename?? null }) ;
+      res.status(201).json({ accessToken, refreshToken, userId, profilePath: req.file?.filename?? null }) ;
   
     } catch (error) {
       res.json({msg: 'END WITH ERROR'});

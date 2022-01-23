@@ -62,7 +62,7 @@ const fetchSignup_POST = async (
     formData.append('platform', platform);
     formData.append('userId', nickname);
     formData.append('description', description);
-    if (profileImage) formData.append('profileImage', profileImage);
+    formData.append('profileImage', profileImage);
 
     const res = await fetch('/api/auth/signup', {
       method: 'post',

@@ -2,13 +2,13 @@
 
 import { useHistory, useLocation } from 'react-router';
 import queryString from 'query-string';
-import { useReducer, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useContext } from 'react';
 import UserContext from '../contexts/UserContext';
 import ModalContext from '../contexts/ModalContext';
 import ThemeContext from '../contexts/ThemeContext';
 import { useEffect } from 'react';
-import { kakao_GetToken, kakao_GetUserInfo, kakao_RefreshAccessToken } from '../api/kakaoApi';
+import { kakao_GetToken } from '../api/kakaoApi';
 import { fetchCheckMember, fetchSignin_POST, fetchSignup_POST } from '../api/authApi';
 import TextField from '../common/TextField';
 import Template from '../Template';
@@ -16,7 +16,6 @@ import Button from '../common/Button';
 import Loading from '../common/Loading';
 import styled, { keyframes } from 'styled-components';
 import { RiCloseCircleLine, RiGhost2Fill } from 'react-icons/ri';
-import { findByRole } from '@testing-library/react';
 
 const fadeIn = keyframes`
   0% {
@@ -43,60 +42,64 @@ export default function SignUp() {
   const theme = useContext(ThemeContext);
 
   const { code } = queryString.parse(useLocation().search);
-  const [tokens, setTokens] = useState(null); // kakao api로부터 얻은 토큰을 임시적으로 저장하기 위한 상태
+  const [tokens, setTokens] = useState({ api_accessToken: '', api_refreshToken: '' }); // kakao api로부터 얻은 토큰을 임시적으로 저장하기 위한 상태
+  const { api_accessToken, api_refreshToken } = tokens;
   const [nickname, setNickname] = useState('');
   const [description, setDescription] = useState('');
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState({ file: null, localUrl: null });
 
-  const [checking, isChecking] = useState(true);
+  const [isCheckingMember, setIsCheckingMember] = useState(true);
 
   const history = useHistory();
   const inputRef = useRef(null);
 
+  const replacePageTo = (path) => {
+    history.replace(path);
+  };
+
+  const updateUserData = (newData) => {
+    setUserData(newData);
+    Object.keys(newData).forEach((key) => {
+      if (newData[key]) window.localStorage.setItem(key, newData[key]);
+    });
+  };
+
+  const checkValidInputs = (...inputs) => inputs.every((input) => input !== '');
+
+  const requestSignUp = async (accesstoken, platform, nickname, desc, profileImage) => {
+    const res = await fetchSignup_POST(accesstoken, platform, nickname, desc, profileImage);
+    if (res.status === 201) return res.json();
+    throw new Error(res.status === 409 ? '중복된 닉네임입니다.' : 'Something wrong...');
+  };
+
   const onClick = () => {
-    if (!nickname) {
+    if (!checkValidInputs(nickname)) {
       setMessage('닉네임을 입력하세요');
       return;
     }
+
     (async () => {
-      // html 인코딩 형식
-      const res = await fetchSignup_POST(
-        tokens.api_accessToken,
-        'kakao',
-        nickname,
-        description,
-        profile?.file ?? null,
-        ''
-      );
-      if (res.status === 201) {
-        const {
-          userId,
-          profilePath: profile_fileName,
-          accessToken,
-          refreshToken
-        } = await res.json();
-
-        console.log(profile_fileName);
-
-        setUserData({
-          api_accessToken: tokens.api_accessToken,
+      try {
+        const { accessToken, refreshToken, userId, profilePath } = await requestSignUp(
+          api_accessToken,
+          'kakao',
+          nickname,
+          description,
+          profile?.file ?? null
+        );
+        updateUserData({
+          api_accessToken,
+          api_refreshToken,
           accessToken,
           refreshToken,
           userId,
-          profile_fileName
+          profile_fileName: profilePath
         });
         setIsLoggedIn(true);
-        window.localStorage.setItem('api_access_token', tokens.api_accessToken);
-        window.localStorage.setItem('api_refresh_token', tokens.api_refreshToken);
-        window.localStorage.setItem('access_token', accessToken);
-        window.localStorage.setItem('refresh_token', refreshToken);
-        if (profile_fileName) window.localStorage.setItem('profile_file_name', profile_fileName);
-        history.replace('/'); // 리다이렉트
-      } else {
-        const { msg } = await res.json();
-        setMessage(msg);
+        replacePageTo('/');
+      } catch (error) {
+        setMessage(error.message);
       }
-      return;
     })();
   };
 
@@ -105,9 +108,10 @@ export default function SignUp() {
     (async () => {
       try {
         const [api_accessToken, api_refreshToken] = await kakao_GetToken(code);
-        if (!api_accessToken) {
-          // 외부 플랫폼에서 미확인된 사용자
-          history.replace('/');
+        const isValidPlatformUser = api_accessToken !== undefined;
+
+        if (!isValidPlatformUser) {
+          replacePageTo('/');
           return;
         }
 
@@ -118,8 +122,9 @@ export default function SignUp() {
 
         const { isMember } = await fetchCheckMember('kakao', api_accessToken);
 
-        if (!isMember) {
-          isChecking(false);
+        if (isMember) {
+          // !isMember
+          setIsCheckingMember(false);
           return;
         }
 
@@ -128,7 +133,7 @@ export default function SignUp() {
           'kakao'
         );
 
-        setUserData({
+        updateUserData({
           api_accessToken,
           api_refreshToken,
           accessToken,
@@ -137,12 +142,7 @@ export default function SignUp() {
           profile_fileName
         });
         setIsLoggedIn(true);
-        window.localStorage.setItem('profile_file_name', profile_fileName);
-        window.localStorage.setItem('api_access_token', api_accessToken);
-        window.localStorage.setItem('api_refresh_token', api_refreshToken);
-        window.localStorage.setItem('access_token', accessToken);
-        window.localStorage.setItem('refresh_token', refreshToken);
-        history.replace('/');
+        replacePageTo('/');
       } catch (error) {
         console.log(error);
       }
@@ -151,7 +151,7 @@ export default function SignUp() {
 
   if (!code) return <Template>404</Template>;
 
-  if (checking)
+  if (isCheckingMember)
     return (
       <Template>
         <StyledDiv>
@@ -171,7 +171,7 @@ export default function SignUp() {
         }}
       >
         <h1 style={{ padding: 0, margin: 0 }}>
-          Alog의 회원이 되어 더 많은 서비스를 이용해보세요!{' '}
+          Alog의 회원이 되어 더 많은 서비스를 이용해보세요 :)
         </h1>
         <div
           style={{
@@ -192,10 +192,10 @@ export default function SignUp() {
               <RiCloseCircleLine
                 style={{ position: 'absolute', right: 0, cursor: 'pointer' }}
                 onClick={() => {
-                  setProfile(null);
+                  setProfile({ file: null, localUrl: null });
                 }}
               />
-              {!profile ? (
+              {!profile.localUrl ? (
                 <div
                   style={{
                     backgroundColor: 'grey',
