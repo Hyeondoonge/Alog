@@ -9,23 +9,15 @@ const gradientEffect = keyframes`
 `;
 
 const StyledSkeleton = styled.div`
-  width: ${(props) => props.width};
-  height: ${(props) => props.height || props.width};
-  border-radius: ${(props) => props.borderRadius || '20px'};
-  display: absolute;
-  transition: 1s;
-  background-color: ${(props) => props.backgroundColor};
-  animation: 2s ${gradientEffect} infinite;
+  & > * {
+    transition: 1s;
+    background-color: ${(props) => props.backgroundColor};
+    animation: 2s ${gradientEffect} infinite;
+  }
 `;
 
-export default function Skeleton({ width, height, borderRadius }) {
+export default function Skeleton({ Component }) {
   const theme = useContext(ThemeContext);
-  return (
-    <StyledSkeleton
-      width={width}
-      height={height}
-      backgroundColor={theme.background}
-      borderRadius={borderRadius}
-    />
-  );
+
+  return <StyledSkeleton backgroundColor={theme.background}>{Component}</StyledSkeleton>;
 }
