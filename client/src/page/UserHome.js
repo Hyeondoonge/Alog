@@ -75,7 +75,9 @@ export default function UserHome({ match }) {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             {loading ? (
-              <Skeleton width="10rem" height="10rem" borderRadius="50%" />
+              <Skeleton
+                Component={<div style={{ width: '10rem', height: '10rem', borderRadius: '50%' }} />}
+              />
             ) : (
               <ProfileImage size="10rem" filename={profilePath} />
             )}
@@ -84,7 +86,7 @@ export default function UserHome({ match }) {
             </div>
           </div>
           {loading ? (
-            <Skeleton width="50rem" height="4.5rem" />
+            <Skeleton Component={<div style={{ width: '50rem', height: '4.5rem' }} />} />
           ) : (
             <div style={{ width: '100%', wordWrap: 'break-word' }}>{description}</div>
           )}

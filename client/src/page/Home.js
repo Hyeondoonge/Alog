@@ -149,8 +149,13 @@ export default function Home() {
         <div>
           {isLanguageLoading ? (
             <List>
-              {new Array(8).fill(null).map((e) => (
-                <Skeleton width="10rem" height="4rem" />
+              {new Array(8).fill(null).map((e, index) => (
+                <Skeleton
+                  key={index}
+                  Component={
+                    <div style={{ width: '10rem', height: '4rem', borderRadius: '2rem' }} />
+                  }
+                />
               ))}
             </List>
           ) : (
@@ -161,13 +166,46 @@ export default function Home() {
             />
           )}
         </div>
-        {keyword && (
+        {keyword && !isLoading && (
           <span style={{ fontSize: '2rem' }}>
             {totalCount ? `검색 결과 ${totalCount}개의 풀이` : '검색 결과가 없습니다.'}
           </span>
         )}
         <PostList postListRef={postListRef} posts={posts} />
-        {isLoading && <Loading />}
+        {isLoading && (
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 50 }}>
+            {new Array(3).fill(null).map((e, index) => (
+              <div
+                key={index}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '0.5rem',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div
+                  style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '75%' }}
+                >
+                  <Skeleton
+                    Component={
+                      <div style={{ width: '40%', height: '5rem', borderRadius: '2rem' }} />
+                    }
+                  />
+                  <Skeleton
+                    Component={
+                      <div style={{ width: '60%', height: '5rem', borderRadius: '2rem' }} />
+                    }
+                  />
+                </div>
+                <div style={{ width: '15%' }}>
+                  <Skeleton Component={<div style={{ height: '10rem', borderRadius: '2rem' }} />} />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </Template>
   );
