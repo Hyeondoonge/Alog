@@ -9,8 +9,8 @@ import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import PostList from '../post/PostList';
 import Template from '../Template';
 
-export default function UserHome({ match }) {
-  const { ownerId } = match.params;
+export default function UserHome(props) {
+  const { ownerId } = props.match.params;
   const [createObserver, registerTargets] = useIntersectionObserver();
   const [posts, totalCount, leftCount, isLoading, updatePost] = useGetPost();
   const postListRef = useRef(null);
@@ -39,7 +39,7 @@ export default function UserHome({ match }) {
       updatePost({ size, writerId: ownerId });
       setLoading(false);
     })();
-  }, []);
+  }, [props]);
 
   useEffect(() => {
     if (posts.length === 0) return;

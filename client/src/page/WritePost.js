@@ -24,12 +24,16 @@ export default function WritePost() {
     title: ''
   });
   const [_, requestService] = useToken();
+  const [isFetching, setIsFetching] = useState(false);
 
   const onClick = () => {
     // 데이터 유효성 검사
     (async () => {
+      setIsFetching(true);
       const res = await requestService(() => fetchSolution_POST({ ...post, ...postTitle }));
       const json = await res.json();
+      setIsFetching(false);
+
       if (res.status === 201) {
         history.replace(`/post?id=${json.post._id}`);
         return;
@@ -39,7 +43,7 @@ export default function WritePost() {
   };
 
   const WriteButton = () => (
-    <Button label="작성" color={theme.main} size="small" onClick={onClick} />
+    <Button label="작성" color={theme.main} size="small" onClick={onClick} disabled={isFetching} />
   );
 
   return (
