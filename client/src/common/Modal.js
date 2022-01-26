@@ -26,6 +26,8 @@ const StyledModal = styled.div`
   box-shadow: 0px 2px 5px 1px #656565;
   text-align: center;
   word-break: keep-all;
+  font-size: 2.5rem;
+  font-weight: 600;
 `;
 
 export default function Modal({ text, onClickConfirm }) {
@@ -33,7 +35,7 @@ export default function Modal({ text, onClickConfirm }) {
 
   return (
     <StyledModal>
-      <h1>{text}</h1>
+      <div>{text}</div>
       <Button label="확인" size="small" color={theme.main} onClick={onClickConfirm} />
     </StyledModal>
   );
