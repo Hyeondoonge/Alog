@@ -16,6 +16,7 @@ import ModalContext from '../contexts/ModalContext';
 import useToken from '../hooks/useToken';
 import Link from '../common/Link';
 import Loading from '../common/Loading';
+import Skeleton from '../common/Skeleton';
 
 const ResponsiveImage = ({ src }) => (
   <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
@@ -108,6 +109,14 @@ const StyledPreview = styled(MarkdownPreview)`
     border-bottom: none;
   }
 `;
+
+const PostSkeleton = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
+    <Skeleton Component={<div style={{ width: '100%', height: 50 }} />} />
+    <Skeleton Component={<div style={{ width: '100%', height: 30 }} />} />
+    <Skeleton Component={<div style={{ width: '100%', height: 400 }} />} />
+  </div>
+);
 
 const MarkDownPreview = ({ source }) => {
   return (
@@ -264,18 +273,7 @@ export default function Post() {
               </div>
             </>
           ) : (
-            <div
-              style={{
-                width: '100%',
-                height: 500,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <Loading />
-            </div>
+            <PostSkeleton />
           )}
         </div>
       </div>
