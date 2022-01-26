@@ -9,6 +9,18 @@ import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import PostList from '../post/PostList';
 import Template from '../Template';
 
+const ProfileSkeleton = ({ ownerId }) => (
+  <>
+    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+      <Skeleton
+        Component={<div style={{ width: '10rem', height: '10rem', borderRadius: '50%' }} />}
+      />
+      <strong>{ownerId}</strong>
+    </div>
+    <Skeleton Component={<div style={{ width: '40rem', height: '4.5rem' }} />} />
+  </>
+);
+
 export default function UserHome(props) {
   const { ownerId } = props.match.params;
   const [createObserver, registerTargets] = useIntersectionObserver();
@@ -73,33 +85,67 @@ export default function UserHome(props) {
             width: '100%'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexDirection: 'column' }}>
             {loading ? (
-              <Skeleton
-                Component={<div style={{ width: '10rem', height: '10rem', borderRadius: '50%' }} />}
-              />
+              <ProfileSkeleton ownerId={ownerId} />
             ) : (
-              <ProfileImage size="10rem" filename={profilePath} />
+              <>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                  <ProfileImage size="10rem" filename={profilePath} />
+                  <strong>{ownerId}</strong>
+                </div>
+                <div style={{ width: '100%', wordWrap: 'break-word' }}>{description}</div>
+              </>
             )}
-            <div style={{ position: 'relative' }}>
-              <strong>{ownerId}</strong>
-            </div>
           </div>
-          {loading ? (
-            <Skeleton Component={<div style={{ width: '50rem', height: '4.5rem' }} />} />
-          ) : (
-            <div style={{ width: '100%', wordWrap: 'break-word' }}>{description}</div>
-          )}
         </div>
         <div style={{ width: '100%', backgroundColor: 'grey', height: '1px' }}></div>
-        {posts.length === 0 ? (
+        {posts.length === 0 && !isLoading && (
           <div
-            style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200 }}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 200
+            }}
           >
             작성된 솔루션이 없어요.
           </div>
-        ) : (
-          <PostList postListRef={postListRef} posts={posts} />
+        )}
+        <PostList postListRef={postListRef} posts={posts} />
+        {isLoading && (
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 50 }}>
+            {new Array(3).fill(null).map((e, index) => (
+              <div
+                key={index}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '0.5rem',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div
+                  style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '75%' }}
+                >
+                  <Skeleton
+                    Component={
+                      <div style={{ width: '40%', height: '5rem', borderRadius: '2rem' }} />
+                    }
+                  />
+                  <Skeleton
+                    Component={
+                      <div style={{ width: '60%', height: '5rem', borderRadius: '2rem' }} />
+                    }
+                  />
+                </div>
+                <div style={{ width: '15%' }}>
+                  <Skeleton Component={<div style={{ height: '10rem', borderRadius: '2rem' }} />} />
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </Template>
