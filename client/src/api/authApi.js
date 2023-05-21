@@ -50,6 +50,20 @@ const fetchSignin_POST = async (kakao_accessToken, platform) => {
   }
 };
 
+const fetchTesterSignin_POST = async () => {
+  try {
+    const res = await fetch('/api/auth/testerSignin', {
+      method: 'post',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    });
+    return res.json();
+  } catch (error) {
+    return null;
+  }
+};
+
 const fetchSignup_POST = async (
   kakao_accessToken,
   platform,
@@ -97,5 +111,6 @@ export {
   fetchAutoSignin_GET,
   fetchSignin_POST,
   fetchSignup_POST,
-  fetchRefreshToken_GET
+  fetchRefreshToken_GET,
+  fetchTesterSignin_POST
 };
