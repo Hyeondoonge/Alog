@@ -12,6 +12,8 @@ import { useMediaQuery } from 'react-responsive';
 import { RiPencilFill, RiLoginCircleFill, RiLogoutCircleFill } from 'react-icons/ri';
 import Link from './common/Link';
 import ProfileImage from './common/ProfileImage';
+import ModalContext from './contexts/ModalContext';
+import { fetchSignin_POST, fetchTesterSignin_POST } from './api/authApi';
 
 const StyledBody = styled.div`
   width: 100%;
@@ -29,17 +31,16 @@ const StyledBody = styled.div`
 
 const StyledCard = styled.div`
   width: 500px;
-  height: fit-content;
+  height: 200px;
   background-color: ${(props) => props.color ?? 'white'};
   color: black;
   border-radius: 10px;
-  padding: 5rem 3.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  gap: 10px;
+  gap: 15px;
+  position: relative;
 `;
 
 const StyledButton = styled.button`
@@ -78,6 +79,33 @@ export default function Template({ header, children }) {
   const bodyRef = useRef(null);
   const history = useHistory();
   const isBigScreen = useMediaQuery({ query: '(min-width: 600px)' });
+  const [setMessage] = useContext(ModalContext);
+  const theme = useContext(ThemeContext);
+
+  const updateUserData = (newData) => {
+    setUserData(newData);
+    Object.keys(newData).forEach((key) => {
+      if (newData[key]) window.localStorage.setItem(key, newData[key]);
+    });
+  };
+
+  const onClickTestUserLogin = async () => {
+    try {
+      const { accessToken, refreshToken, userId, profile_fileName } =
+        await fetchTesterSignin_POST();
+
+      updateUserData({
+        accessToken,
+        refreshToken,
+        userId,
+        profile_fileName
+      });
+      setIsLoggedIn(true);
+      window.location.reload();
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
 
   return (
     <>
@@ -98,6 +126,7 @@ export default function Template({ header, children }) {
       >
         <StyledCard>
           <RiCloseFill
+            style={{ position: 'absolute', right: 5, top: 5, cursor: 'pointer' }}
             onClick={() => {
               loginModalRef.current.style.visibility = 'hidden';
               loginModalRef.current.style.opacity = 0;
@@ -105,9 +134,12 @@ export default function Template({ header, children }) {
             }}
             size="2rem"
           />
-          <div style={{ width: 300, fontWeight: 500, fontSize: 20 }}>
-            다양한 플랫폼에 등록된 계정을 사용해 ALOG를 이용할 수 있어요
-          </div>
+          <Button
+            label={'테스트 사용자로 로그인'}
+            size="small"
+            onClick={onClickTestUserLogin}
+            color={theme.main}
+          />
           <KakaoLoginAPI history={history} />
         </StyledCard>
       </div>
@@ -115,16 +147,18 @@ export default function Template({ header, children }) {
         {header && (
           <StickyHeader>
             {!isLoggedIn ? (
-              <Button
-                label={isBigScreen ? '로그인' : <RiLoginCircleFill />}
-                color="transparent"
-                size="small"
-                onClick={() => {
-                  loginModalRef.current.style.visibility = 'visible';
-                  loginModalRef.current.style.opacity = 1;
-                  bodyRef.current.style.opacity = 0.7;
-                }}
-              />
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Button
+                  label={isBigScreen ? '로그인' : <RiLoginCircleFill />}
+                  color="transparent"
+                  size="small"
+                  onClick={() => {
+                    loginModalRef.current.style.visibility = 'visible';
+                    loginModalRef.current.style.opacity = 1;
+                    bodyRef.current.style.opacity = 0.7;
+                  }}
+                />
+              </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', fontSize: '2rem' }}>
                 <Link to={`/home/${userData.userId}`}>
