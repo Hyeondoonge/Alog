@@ -1,23 +1,22 @@
-name: Deploy-to-EC2
+name: Deploy to EC2
 
 on:
  push:
-  branches:
-    - main
-  paths:
-    - 'server/**'
+   branches:
+     - main
+   paths:
+     - 'server/**'
 jobs:
   deploy:
     name: Deploy to EC2 Instance
     runs-on: ubuntu-latest
 
     steps:
-    - name: Deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        password: ${{ secrets.EC2_SSH_KEY }}
-        port: 22
-        script: |
-          cd alog\server & git checkout main & git pull & npm install --production & pm2 reload ecosystem.config.js
+     - name: Deploy
+       uses: fifsky/ssh-action@master
+       with:
+         host: ${{ secrets.EC2_HOST }}
+         user: ${{ secrets.EC2_USER }}
+         key: ${{ secrets.EC2_SSH_KEY }}
+         script: |
+           cd alog\server & git checkout main & git pull & npm install --production & pm2 reload ecosystem.config.js
