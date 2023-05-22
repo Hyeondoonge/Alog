@@ -6,7 +6,7 @@
 
 export default class Platform {
   constructor(url) {
-    if (url.startsWith('https://programmers.co.kr')) {
+    if (url.startsWith('https://school.programmers.co.kr')) {
       this.name = 'programmers';
       this.platform = new Programmers();
     } else if (url.startsWith('https://www.acmicpc.net')) {
