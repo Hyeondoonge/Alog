@@ -4,8 +4,8 @@
   status = 200
 
 [[redirects]]
-  from = "/baekjoon/*"
-  to = "https://www.acmicpc.net/:splat"
+  from = "/solvedac/*"
+  to = "https://solved.ac/:splat"
   status = 200
 
 [[redirects]]
