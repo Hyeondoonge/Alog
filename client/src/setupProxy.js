@@ -1,10 +1,10 @@
-const proxy = require('http-proxy-middleware');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function (app) {
   app.use(
     '/api',
-    proxy({
-      target: 'http://localhost:4500',
+    createProxyMiddleware({
+      target: 'http://localhost:5050',
       changeOrigin: true,
       pathRewrite: {
         '^/api': ''
@@ -12,18 +12,18 @@ module.exports = function (app) {
     })
   );
   app.use(
-    '/baekjoon',
-    proxy({
-      target: 'https://www.acmicpc.net',
+    '/solvedac',
+    createProxyMiddleware({
+      target: 'https://solved.ac/',
       changeOrigin: true,
       pathRewrite: {
-        '^/baekjoon': ''
+        '^/solvedac': ''
       }
     })
   );
   app.use(
     '/goorm',
-    proxy({
+    createProxyMiddleware({
       target: 'https://level.goorm.io/',
       changeOrigin: true,
       pathRewrite: {

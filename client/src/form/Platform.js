@@ -6,7 +6,7 @@
 
 export default class Platform {
   constructor(url) {
-    if (url.startsWith('https://programmers.co.kr')) {
+    if (url.startsWith('https://school.programmers.co.kr')) {
       this.name = 'programmers';
       this.platform = new Programmers();
     } else if (url.startsWith('https://www.acmicpc.net')) {
@@ -34,13 +34,17 @@ export default class Platform {
 
 class Baekjoon {
   setUrl(url) {
-    this.url = url.replace('https://www.acmicpc.net', `/baekjoon`);
+    // this.url = url.replace('https://www.acmicpc.net', `/baekjoon`);
+    const problemId = url.replace('https://www.acmicpc.net/problem/', '');
+    this.url = `/solvedac/search?query=${problemId}`;
   }
   getUrl() {
     return this.url;
   }
   setProblemTitle(doc) {
-    this.problemTitle = doc.querySelector('#problem_title').innerHTML.trim();
+    const $table = doc.querySelector('table');
+    const title = $table.querySelectorAll('td')[1].querySelector('a > span > span').innerHTML;
+    this.problemTitle = title;
   }
 }
 
