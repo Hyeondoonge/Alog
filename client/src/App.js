@@ -11,6 +11,7 @@ import SignUp from './page/SignUp';
 import { useContext, useEffect } from 'react';
 import useToken from './hooks/useToken';
 import UserHome from './page/UserHome';
+import jwtDecode from 'jwt-decode';
 
 const MyComponent = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn, userData, setUserData] = useContext(UserContext);
@@ -24,7 +25,7 @@ const MyComponent = ({ children }) => {
         if (!accessToken) return;
         // authorization 호출을 통해 토큰이 인증된 상태이며 유효한 access_token을 가지고 있음.
         // 유저 정보 업데이트를 위해 client 단에서 token을 읽어내 유저 정보를 얻는다
-        const { userId } = JSON.parse(Buffer.from(accessToken.split('.')[1], 'base64').toString());
+        const { userId } = jwtDecode(accessToken);
         setUserData({ ...userData, userId: userId });
         setIsLoggedIn(true);
       } catch (error) {
