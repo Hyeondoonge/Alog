@@ -3,15 +3,15 @@ import styled, { keyframes } from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
 const loading = keyframes`
-  0 {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(15px);
-  }
-  100% {
-    transform: translateY(0);
-  }
+0% {
+  transform: translateY(0);
+}
+50% {
+  transform: translateY(15px);
+}
+100% {
+  transform: translateY(0);
+} 
 `;
 
 const StyledLoading = styled.div`
