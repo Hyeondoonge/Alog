@@ -11,8 +11,8 @@ import useToken from './hooks/useToken';
 import UserHome from './page/UserHome';
 import jwtDecode from 'jwt-decode';
 import Loading from './common/Loading';
-const WritePost = lazy(() => import('./page/WritePost'));
-const EditPost = lazy(() => import('./page/EditPost'));
+import WritePost from './page/WritePost';
+import EditPost from './page/EditPost';
 
 const MyComponent = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn, userData, setUserData] = useContext(UserContext);
