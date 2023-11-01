@@ -111,7 +111,7 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 
 <img width="1000" alt="image (1)" src="https://user-images.githubusercontent.com/55647436/229362759-f4dc139b-7b29-46db-8d1b-ab99cd7eb34b.png">
 
-**세부 구현 사항**
+**📌 세부 구현 사항**
 
 - Intersection Observer를 이용해 무한스크롤 구현
 - Debounce를 이용해 검색 기능의 UX 개선
@@ -126,7 +126,7 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 
 <img width="1000" alt="image (2)" src="https://user-images.githubusercontent.com/55647436/229362751-b3ff414d-27e9-4fc4-a3a4-3250be8da658.png">
 
-**세부 구현 사항**
+**📌 세부 구현 사항**
 
 - Auto Resizing되는 text area 구현
 - Form 컴포넌트 재사용
@@ -140,7 +140,8 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 인증된 사용자라면 좋아요 기능을 이용할 수 있습니다.
 
 ![스크린샷 2023-11-02 오전 1 24 26](https://github.com/Hyeondoonge/Alog/assets/55647436/ed66ae79-c182-4c16-8982-d7a8a36e684a)
-**세부 구현 사항**
+
+**📌 세부 구현 사항**
 
 - 작성자 풀이 삭제 기능
 - 인증된 사용자의 좋아요 / 좋아요 취소 기능
@@ -150,7 +151,8 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 특정 작성자가 작성한 풀이를 볼 수 있습니다.
 
 ![스크린샷 2023-11-02 오전 1 23 11](https://github.com/Hyeondoonge/Alog/assets/55647436/d7f2e0e5-4e58-486e-950b-1ef8e8b75da7)
-**세부 구현 사항**
+
+**📌 세부 구현 사항**
 
 - 메인 페이지의 [cusotm hook](https://github.com/Hyeondoonge/Alog/blob/develop/client/src/hooks/useGetPost.js)을 재사용하여 풀이 조회 기능 구현 시 개발 생산성 향상
 - 회원가입시 사용자가 등록한 이미지 로드
@@ -163,7 +165,7 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 
 ![스크린샷 2023-11-02 오전 1 27 51](https://github.com/Hyeondoonge/Alog/assets/55647436/817b7980-53e2-4690-8ccb-8a82395d3f7f)
 
-**세부 구현 사항**
+**📌 세부 구현 사항**
 
 - 회원가입, 로그인, 로그이웃 구현
 - OAuth와 JWT를 사용해 구현
