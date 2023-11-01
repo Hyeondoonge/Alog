@@ -6,7 +6,7 @@
 
 현재 기능 추가는 멈춘 상태이지만 유지보수를 위한 버그, 성능 개선 작업을 진행하고있습니다.
 
-**[서비스 바로가기](alog.netlify.app)**
+**[서비스 바로가기](https://alog.netlify.app)**
 
 <br/>
 
@@ -19,6 +19,12 @@
 - ### [🛠️ 기술 스택](https://github.com/Hyeondoonge/Alog/#%EF%B8%8F-기술-스택-1)
 
 - ### [✨ 구현 기능](https://github.com/Hyeondoonge/Alog/#-구현-기능-1)
+
+  - **[홈 / 풀이 검색](https://github.com/Hyeondoonge/Alog/#1-%ED%99%88--%ED%92%80%EC%9D%B4-%EA%B2%80%EC%83%89)**
+  - **[풀이 작성 및 수정](https://github.com/Hyeondoonge/Alog/#2-%ED%92%80%EC%9D%B4-%EC%9E%91%EC%84%B1-%EB%B0%8F-%EC%88%98%EC%A0%95)**
+  - **[풀이 조회](https://github.com/Hyeondoonge/Alog/#3-%ED%92%80%EC%9D%B4-%EC%A1%B0%ED%9A%8C)**
+  - **[마이 페이지](https://github.com/Hyeondoonge/Alog/#4-%EB%A7%88%EC%9D%B4-%ED%8E%98%EC%9D%B4%EC%A7%80)**
+  - **[가입 및 인증](https://github.com/Hyeondoonge/Alog/#5-%EA%B0%80%EC%9E%85-%EB%B0%8F-%EC%9D%B8%EC%A6%9D)**
 
 - ### [📄 버그 및 성능 개선 기록](https://github.com/Hyeondoonge/Alog/#-버그-및-성능-개선-기록-1)
 
