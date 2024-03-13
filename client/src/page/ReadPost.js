@@ -18,12 +18,6 @@ import Link from '../common/Link';
 import Loading from '../common/Loading';
 import Skeleton from '../common/Skeleton';
 
-const ResponsiveImage = ({ src }) => (
-  <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
-    <img src={src} width={25} />
-  </div>
-);
-
 const thumbsup_animation = keyframes`
   0% {
     transform: translateY(30px);
@@ -202,7 +196,7 @@ export default function Post() {
 
   if (post === null) return <Template>존재하지 않는 게시물!!!</Template>;
 
-  const { title, platform, subtitle, language, content, writeDate, writerId } = post;
+  const { title, subtitle, language, content, writeDate, writerId } = post;
 
   return (
     <Template header>
@@ -229,7 +223,6 @@ export default function Post() {
                     marginBottom: 5
                   }}
                 >
-                  <ResponsiveImage src={`/images/${platform}-symbol.png`} />
                   <h1 style={{ padding: 0, margin: 5 }}>{title}</h1>
                   {language && (
                     <div>
