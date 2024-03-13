@@ -1,7 +1,3 @@
-// 크기별 버튼 구현
-
-// https://www.daleseo.com/react-button-component/
-
 import styled, { css } from 'styled-components';
 
 const styleWithSize = {

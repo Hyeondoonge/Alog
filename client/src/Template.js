@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useContext } from 'react';
 import styled from 'styled-components';
 import Button from './common/Button';
@@ -13,7 +13,7 @@ import { RiPencilFill, RiLoginCircleFill, RiLogoutCircleFill } from 'react-icons
 import Link from './common/Link';
 import ProfileImage from './common/ProfileImage';
 import ModalContext from './contexts/ModalContext';
-import { fetchSignin_POST, fetchTesterSignin_POST } from './api/authApi';
+import { fetchTesterSignin_POST } from './api/authApi';
 
 const StyledBody = styled.div`
   width: 100%;
