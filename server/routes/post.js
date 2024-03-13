@@ -16,7 +16,6 @@ router.get('/', async (req, res) => {
   }
 
   const liker = await findLiker(id);
-  
 
   post = docsMap([post], (post) => {
     post.writeDate = formatDate(post.writeDate);
@@ -29,7 +28,7 @@ router.get('/', async (req, res) => {
 // 인가
 router.use((req, res, next) => {
   try {
-    const accessToken = req.headers['authorization'].split(' ')[1]; 
+    const accessToken = req.headers['authorization'].split(' ')[1];
     const { userId } = jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
     req.userId = userId;
     next();
@@ -38,24 +37,22 @@ router.use((req, res, next) => {
       res.status(401).json({ error: 'expired token' });
       return;
     }
-    res.status(401).json({ msg: "서비스를 이용하려면 로그인 또는 회원가입이 필요합니다" });
+    res.status(401).json({ msg: '서비스를 이용하려면 로그인 또는 회원가입이 필요합니다' });
   }
 });
 
-
 router.post('/', async (req, res) => {
   const { userId } = req;
-  const { title, platform, language, content, subtitle } = req.body;
+  const { title, language, content, subtitle } = req.body;
   const data = {
     title,
-    platform,
     language,
     content,
     subtitle,
-    writerId: userId, 
-  }
+    writerId: userId
+  };
 
-  if (!title || !platform) {
+  if (!title) {
     res.json({ msg: '문제 링크를 올려주세요' });
     return;
   }
@@ -74,17 +71,16 @@ router.post('/', async (req, res) => {
 router.put('/', async (req, res) => {
   const { id } = req.query;
   const { userId } = req;
-  const { title, platform, language, content, subtitle } = req.body;
+  const { title, language, content, subtitle } = req.body;
   const data = {
     title,
-    platform,
     language,
     content,
     subtitle,
-    writerId: userId, 
-  }
+    writerId: userId
+  };
 
-  if (!title || !platform) {
+  if (!title) {
     res.json({ msg: '문제 링크를 올려주세요' });
     return;
   }
@@ -99,7 +95,6 @@ router.put('/', async (req, res) => {
   const post = await updatePost(id, data);
   res.status(201).json({ post, msg: '정상적으로 글이 수정됐습니다' });
 });
-
 
 router.delete('/', async (req, res) => {
   const { id } = req.query;
