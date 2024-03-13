@@ -7,17 +7,18 @@ import User from './User.js';
 
 // postSchema.set('validateBeforeSave', true);
 
-export default mongoose.model('Post', new mongoose.Schema({
-  title: { type: String, required: true },
-  platform: { type: String, required: true },
-  subtitle: { type: String },
-  language:{ type: String },
-  content: {
-    type: String,
-    required: true,
-    // minLength: [10, 'Too short content'],
-  },
-  writerId: { type: String, ref: User, required: true }, 
-  writeDate: { type: Date, default: Date.now, required: true },
+export default mongoose.model(
+  'Post',
+  new mongoose.Schema({
+    title: { type: String, required: true },
+    subtitle: { type: String },
+    language: { type: String },
+    content: {
+      type: String,
+      required: true
+      // minLength: [10, 'Too short content'],
+    },
+    writerId: { type: String, ref: User, required: true },
+    writeDate: { type: Date, default: Date.now, required: true }
   })
 );

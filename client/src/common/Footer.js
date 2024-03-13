@@ -2,10 +2,6 @@ import { useContext } from 'react';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
-// Toggler component
-
-// 디바이스 분기
-
 const StyledFooter = styled.div`
   width: 100vw;
   height: fit-content;

@@ -12,12 +12,6 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const ResponsiveImage = ({ src }) => (
-  <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
-    <img src={src} width={16} />
-  </div>
-);
-
 const StyledPost = styled.div`
   display: flex;
   flex-direction: row;
@@ -27,9 +21,8 @@ const StyledPost = styled.div`
   gap: 10px;
 `;
 
-// StyledPost를 젤 바깥으로 빼기
 export default function Post({ post }) {
-  const { id, title, subtitle, platform, language, writerId, writeDate, likeCount } = post;
+  const { id, title, subtitle, language, writerId, writeDate, likeCount } = post;
 
   const theme = useContext(ThemeContext);
 
@@ -48,7 +41,6 @@ export default function Post({ post }) {
                 color: 'white'
               }}
             >
-              <ResponsiveImage src={`/images/${platform}-symbol.png`} />
               <div>
                 <strong style={{ color: 'white' }}>{title}</strong>
               </div>

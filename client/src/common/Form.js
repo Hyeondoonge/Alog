@@ -1,18 +1,11 @@
-import { useContext, useMemo, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import TextField from './TextField';
-import { URLField } from '../form/URLField';
 import LanguageField from '../form/LanguageField';
 import Solution from '../form/Solution';
-import { RiCloseFill } from 'react-icons/ri';
-import { RiPencilFill, RiEye2Line, RiImage2Fill } from 'react-icons/ri';
+import { RiPencilFill, RiEye2Line } from 'react-icons/ri';
 import Footer from './Footer';
 import ThemeContext from '../contexts/ThemeContext';
 import MediaQuery from 'react-responsive';
-
-// toggler 중복되는 영역 묶고,
-// media query 사용 코드도 다시 보기
-
-// 개선된 점이 있다면 기록하기 !!
 
 const Toggler = ({ toggle, onClick }) => {
   const theme = useContext(ThemeContext);
@@ -79,26 +72,14 @@ const Toggler = ({ toggle, onClick }) => {
   );
 };
 
-const ResponsiveImage = ({ src }) => (
-  <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
-    <img src={src} width={20} />
-  </div>
-);
+export default function Form({ post, setPost, Button }) {
+  const { title, subtitle, language, content } = post;
 
-export default function Form({ post, postTitle, setPost, setPostTitle, Button }) {
-  const { subtitle, language, content } = post;
-  const { title, platform } = postTitle;
   const [toggle, setToggle] = useState(0);
 
   const onClick = () => {
     setToggle(!toggle);
   };
-
-  // 기존 TextField의 onBlur 이벤트가 정의되어있는데,
-  // 추가로 클라이언트가 정의하려는 경우에 어떻게 처리하는 것이 좋을까?
-
-  // 1. 이벤트를 추가로 받게하도록 textfield를 속성을 조정한다 => 유연하지 않은 변경, 기능 추가를 위해 textfield코드가 변경되야함
-  // 2. 이벤트 버블링을 이용해 TextField를 감싸는 div에서 onBlur를 핸들링하도록한다.
 
   return (
     <div
@@ -108,28 +89,16 @@ export default function Form({ post, postTitle, setPost, setPostTitle, Button })
         gap: '2rem'
       }}
     >
-      <div style={{ height: 50, fontSize: '1rem' }}>
-        {!(title && platform) ? (
-          <URLField
-            setPostTitle={(platform, title) => {
-              setPostTitle({ platform, title });
-            }}
-          />
-        ) : (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <ResponsiveImage src={`/images/${platform}-symbol.png`} />
-            <h1>{title}</h1>
-            <h1
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                setPostTitle({ platform: '', title: '' });
-              }}
-            >
-              <RiCloseFill size="3rem" />
-            </h1>
-          </div>
-        )}
-      </div>
+      <TextField
+        name="subtitle"
+        label="제목"
+        placeholder="플랫폼, 문제의 제목을 작성해보세요"
+        value={title}
+        onChange={(event) => {
+          setPost({ ...post, title: event.target.value });
+        }}
+        fullWidth
+      />
       <TextField
         name="subtitle"
         label="한 줄 요약"
@@ -150,31 +119,6 @@ export default function Form({ post, postTitle, setPost, setPostTitle, Button })
         <div style={{ position: 'sticky', top: 0 }}>
           <div style={{ position: 'absolute', left: -50, top: 60 }}>
             <Toggler toggle={toggle} onClick={onClick} />
-            {/* <div
-              style={{
-                margin: '20px 0',
-                cursor: 'pointer',
-                borderRadius: '15px'
-              }}
-            >
-              {' '}
-              <div
-                style={{
-                  width: 30,
-                  height: 30,
-                  fontSize: 30,
-                  padding: 5,
-                  textAlign: 'center',
-                  opacity: toggle ? 0.5 : 1
-                }}
-                onClick={() => {
-                  if (toggle) return;
-                  // 이미지 load
-                }}
-              >
-                <RiImage2Fill />
-              </div>
-            </div> */}
           </div>
         </div>
       </MediaQuery>

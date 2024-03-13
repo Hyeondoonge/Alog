@@ -2,9 +2,6 @@ import { useContext } from 'react';
 import styled, { css } from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
-// Extending styles
-// 말 그대로 스타일을 확장해서 재사용할 수 있다. (=> 코드 중복 감소)
-
 const StyledTag = styled.span`
   color: black;
   background-color: ${(props) => props.color};
