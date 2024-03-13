@@ -19,13 +19,10 @@ export default function EditPost() {
   const [isLoggedIn, _, userData] = useContext(UserContext);
   const [setMessage] = useContext(ModalContext);
   const [post, setPost] = useState({
+    title: '',
     subtitle: '',
     language: '',
     content: ''
-  });
-  const [postTitle, setPostTitle] = useState({
-    platform: '',
-    title: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -42,9 +39,7 @@ export default function EditPost() {
         setIsLoading(false);
         return;
       }
-      const { title, platform, subtitle, language, content } = post;
-      setPost({ subtitle, language, content });
-      setPostTitle({ title, platform });
+      setPost({ ...post });
       setIsLoading(false);
     })();
   }, [userData, isLoggedIn]); // 필드 초기값 설정
@@ -52,7 +47,7 @@ export default function EditPost() {
   const onClick = () => {
     // 데이터 유효성 검사
     (async () => {
-      const res = await requestService(() => fetchSolution_PUT(id, { ...post, ...postTitle }));
+      const res = await requestService(() => fetchSolution_PUT(id, { ...post }));
       const json = await res.json();
       if (res.status === 201) {
         history.replace(`/post?id=${json.post._id}`);
@@ -69,7 +64,7 @@ export default function EditPost() {
 
   if (!id) return <Template>잘못된 접근입니다!!</Template>;
 
-  if (!post || !postTitle) return <Template>존재하지않는 게시물!!</Template>;
+  if (!post) return <Template>존재하지않는 게시물!!</Template>;
 
   if (error) return <Template>{error}</Template>;
 
@@ -78,13 +73,7 @@ export default function EditPost() {
       <Template>
         {isLoggedIn ? (
           !isLoading ? (
-            <Form
-              post={post}
-              postTitle={postTitle}
-              setPost={setPost}
-              setPostTitle={setPostTitle}
-              Button={EditButton}
-            />
+            <Form post={post} setPost={setPost} Button={EditButton} />
           ) : (
             <div
               style={{
