@@ -1,6 +1,5 @@
 import { useContext, useMemo, useRef, useState } from 'react';
 import TextField from './TextField';
-import { URLField } from '../form/URLField';
 import LanguageField from '../form/LanguageField';
 import Solution from '../form/Solution';
 import { RiCloseFill } from 'react-icons/ri';
@@ -79,15 +78,9 @@ const Toggler = ({ toggle, onClick }) => {
   );
 };
 
-const ResponsiveImage = ({ src }) => (
-  <div style={{ width: '2rem', justifyContent: 'center', display: 'flex' }}>
-    <img src={src} width={20} />
-  </div>
-);
+export default function Form({ post, setPost, Button }) {
+  const { title, subtitle, language, content } = post;
 
-export default function Form({ post, postTitle, setPost, setPostTitle, Button }) {
-  const { subtitle, language, content } = post;
-  const { title, platform } = postTitle;
   const [toggle, setToggle] = useState(0);
 
   const onClick = () => {
@@ -108,28 +101,16 @@ export default function Form({ post, postTitle, setPost, setPostTitle, Button })
         gap: '2rem'
       }}
     >
-      <div style={{ height: 50, fontSize: '1rem' }}>
-        {!(title && platform) ? (
-          <URLField
-            setPostTitle={(platform, title) => {
-              setPostTitle({ platform, title });
-            }}
-          />
-        ) : (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <ResponsiveImage src={`/images/${platform}-symbol.png`} />
-            <h1>{title}</h1>
-            <h1
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                setPostTitle({ platform: '', title: '' });
-              }}
-            >
-              <RiCloseFill size="3rem" />
-            </h1>
-          </div>
-        )}
-      </div>
+      <TextField
+        name="subtitle"
+        label="제목"
+        placeholder="플랫폼, 문제의 제목을 작성해보세요"
+        value={title}
+        onChange={(event) => {
+          setPost({ ...post, title: event.target.value });
+        }}
+        fullWidth
+      />
       <TextField
         name="subtitle"
         label="한 줄 요약"

@@ -15,13 +15,10 @@ export default function WritePost() {
   const [setMessage] = useContext(ModalContext);
   const [isLoggedIn] = useContext(UserContext);
   const [post, setPost] = useState({
+    title: '',
     subtitle: '',
     language: '',
     content: ''
-  });
-  const [postTitle, setPostTitle] = useState({
-    platform: '',
-    title: ''
   });
   const [_, requestService] = useToken();
   const [isFetching, setIsFetching] = useState(false);
@@ -30,7 +27,8 @@ export default function WritePost() {
     // 데이터 유효성 검사
     (async () => {
       setIsFetching(true);
-      const res = await requestService(() => fetchSolution_POST({ ...post, ...postTitle }));
+
+      const res = await requestService(() => fetchSolution_POST({ ...post }));
       const json = await res.json();
       setIsFetching(false);
 
@@ -49,13 +47,7 @@ export default function WritePost() {
   return (
     <Template>
       {isLoggedIn ? (
-        <Form
-          post={post}
-          postTitle={postTitle}
-          setPost={setPost}
-          setPostTitle={setPostTitle}
-          Button={WriteButton}
-        />
+        <Form post={post} setPost={setPost} Button={WriteButton} />
       ) : (
         '접근할 수 없는 권한입니다!!!'
       )}
