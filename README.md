@@ -109,7 +109,7 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 
 서비스의 메인 페이지로, 사용자들이 작성한 풀이를 검색하고 프로그래밍 언어 필터링을 적용하여 풀이를 빠르게 찾을 수 있습니다.
 
-<img width="1000" alt="image (1)" src="https://user-images.githubusercontent.com/55647436/229362759-f4dc139b-7b29-46db-8d1b-ab99cd7eb34b.png">
+<img width="1000" alt="image (1)" src="https://github.com/Hyeondoonge/Alog/assets/55647436/8300e63c-4d8d-4092-b2f0-43e73698cab2">
 
 **📌 세부 구현 사항**
 
@@ -122,15 +122,15 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 
 풀이를 작성하거나 수정할 수 있는 페이지입니다.
 
-풀이를 작성할 문제 URL을 입력하면 플랫폼 및 문제 정보를 가져옵니다. Markdown형식으로 글을 작성할 수 있으며, 프리뷰를 볼 수 있는 기능을 제공합니다.
+Markdown형식으로 글을 작성할 수 있으며, 프리뷰를 볼 수 있는 기능을 제공합니다.
 
-<img width="1000" alt="image (2)" src="https://user-images.githubusercontent.com/55647436/229362751-b3ff414d-27e9-4fc4-a3a4-3250be8da658.png">
+<img width="1000" alt="image (2)" src="https://github.com/Hyeondoonge/Alog/assets/55647436/e9d4f998-77f6-4fc1-963b-284de37094de">
 
 **📌 세부 구현 사항**
 
 - Auto Resizing되는 text area 구현
 - Form 컴포넌트 재사용
-- Media Query를 적용해 반응형 서비스 구현 => 모바일 버전에서 툴이 페이지 하단으로 이동
+- Media Query를 적용해 반응형 서비스 구현 (모바일 디바이스에서 확인 가능)
 
 ### 3. 풀이 조회
 
@@ -139,7 +139,7 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 해당 페이지에서 작성자 본인에 한해 수정, 삭제가 가능하며
 인증된 사용자라면 좋아요 기능을 이용할 수 있습니다.
 
-![스크린샷 2023-11-02 오전 1 24 26](https://github.com/Hyeondoonge/Alog/assets/55647436/ed66ae79-c182-4c16-8982-d7a8a36e684a)
+![스크린샷 2023-11-02 오전 1 24 26](https://github.com/Hyeondoonge/Alog/assets/55647436/868be857-d815-46e3-9f6f-36c868f19968)
 
 **📌 세부 구현 사항**
 
@@ -150,7 +150,7 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 
 특정 작성자가 작성한 풀이를 볼 수 있습니다.
 
-![스크린샷 2023-11-02 오전 1 23 11](https://github.com/Hyeondoonge/Alog/assets/55647436/d7f2e0e5-4e58-486e-950b-1ef8e8b75da7)
+![스크린샷 2023-11-02 오전 1 23 11](https://github.com/Hyeondoonge/Alog/assets/55647436/de7d0dd2-aea6-4346-ba3c-cc80761e77ed)
 
 **📌 세부 구현 사항**
 
@@ -167,13 +167,14 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 
 **📌 세부 구현 사항**
 
-- 회원가입, 로그인, 로그이웃 구현
+- 회원가입, 로그인, 로그아웃 구현
 - OAuth와 JWT를 사용해 구현
 
 <br/>
 
 ## 🔥 버그 및 성능 개선 기록
 
-- [페이지 Lazy 로딩을 통한 성능 향상](https://github.com/Hyeondoonge/Alog/pull/91)
-- [CRA 버전업에 따른 Buffer 모듈 사용 오류](https://github.com/Hyeondoonge/Alog/pull/87)
-- [풀이 등록 폼 URL 입력 버그 해결](https://github.com/Hyeondoonge/Alog/pull/78)
+- [풀이 제목 입력 버그에 따른 로직 수정 해결](https://github.com/Hyeondoonge/Alog/pull/96) (24/03/14)
+- [페이지 Lazy 로딩을 통한 성능 향상](https://github.com/Hyeondoonge/Alog/pull/91) (23/11/01)
+- [CRA 버전업에 따른 Buffer 모듈 사용 오류](https://github.com/Hyeondoonge/Alog/pull/87) (23/08/31)
+- [풀이 등록 폼 URL 입력 버그 해결](https://github.com/Hyeondoonge/Alog/pull/78) (23/08/07)
