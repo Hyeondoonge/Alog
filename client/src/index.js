@@ -5,7 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 if (process.env.REACT_APP_ENV !== 'development') {
-  console.log = () => {};
+  console.log = () => {
+    // do nothing
+  };
 }
 
 ReactDOM.render(
