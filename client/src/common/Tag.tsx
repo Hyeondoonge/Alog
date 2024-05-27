@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import styled, { css } from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
-const StyledTag = styled.span`
+const StyledTag = styled.span<{ color: string; size?: number }>`
   color: black;
   background-color: ${(props) => props.color};
   font-size: ${(props) => (props.size ? `${props.size}rem` : 'inherit')};
@@ -11,11 +11,11 @@ const StyledTag = styled.span`
   border-radius: 3rem;
 `;
 
-const StyledClickableTag = styled(StyledTag)`
+const StyledClickableTag = styled(StyledTag)<{ selected?: boolean; backgroundColor: string }>`
   ${(props) =>
     !props.selected &&
     css`
-      background-color: ${(props) => props.backgroundColor} !important;
+      background-color: ${props.backgroundColor} !important;
       color: white;
     `}
   transition: 0.4s;
@@ -25,7 +25,15 @@ const StyledClickableTag = styled(StyledTag)`
   }
 `;
 
-export default function Tag({ label, size, clickable, selected, handleClick }) {
+interface TagProps {
+  label: string;
+  size?: number;
+  clickable?: boolean;
+  selected?: boolean;
+  handleClick?: () => void;
+}
+
+export default function Tag({ label, size, clickable, selected, handleClick }: TagProps) {
   const theme = useContext(ThemeContext);
 
   return !clickable ? (
