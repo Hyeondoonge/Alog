@@ -2,7 +2,7 @@ import { useContext, useRef } from 'react';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
-const StyledTextFieldWrapper = styled.div`
+const StyledTextFieldWrapper = styled.div<{ background: string }>`
   border-radius: 25px;
   font-size: 20px;
   display: flex;
@@ -24,18 +24,19 @@ const StyledTextField = styled.input`
   color: white;
 `;
 
+interface SearchFieldProps {
+  placeholder: string;
+  handleChange: React.ChangeEventHandler<HTMLInputElement>;
+}
+
 // click 및 tab 발생 시 focus 이벤트로 처리
-export default function SearchField({ placeholder, handleFocus, handleChange, handleRemove }) {
+export default function SearchField({ placeholder, handleChange }: SearchFieldProps) {
   const inputRef = useRef(null);
   const theme = useContext(ThemeContext);
 
   return (
     <div>
-      <StyledTextFieldWrapper
-        color={theme.main}
-        onFocus={handleFocus}
-        background={theme.background}
-      >
+      <StyledTextFieldWrapper color={theme.main} background={theme.background}>
         <StyledTextField
           ref={inputRef}
           type="text"
