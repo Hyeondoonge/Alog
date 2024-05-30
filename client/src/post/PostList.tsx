@@ -1,4 +1,4 @@
-import { IPost } from 'types/Post';
+import { IPost } from 'types/post';
 import Post from './Post';
 import styled from 'styled-components';
 

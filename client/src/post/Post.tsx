@@ -5,7 +5,7 @@ import Card from '../common/Card';
 import ThemeContext from '../contexts/ThemeContext';
 import { RiThumbUpFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
-import { IPost } from 'types/Post';
+import { IPost } from 'types/post';
 
 const StyledLink = styled(Link)`
   &:link {
