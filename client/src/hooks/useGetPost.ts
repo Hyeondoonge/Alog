@@ -5,14 +5,16 @@
 
 import { useState } from 'react';
 import { fetchPosts_GET } from '../post/fetchApis';
+import { Option } from 'types/api';
+import { IPost } from 'types/post';
 
 export default function useGetPost() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<IPost[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [leftCount, setLeftCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const updatePost = async (option) => {
+  const updatePost = async (option: Option) => {
     // queryObject는 Home에서 전달
     console.log(option);
     if (!option.keyword && !option.writerId) {
@@ -32,5 +34,5 @@ export default function useGetPost() {
     setIsLoading(false);
   };
 
-  return [posts, totalCount, leftCount, isLoading, updatePost];
+  return { posts, totalCount, leftCount, isLoading, updatePost };
 }
