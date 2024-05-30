@@ -62,5 +62,5 @@ export default function useIntersectionObserver() {
   // 옵저버에서 할 수 있는 일이라면 최대한 얘네가 하도록, 메인 컴포넌트에 하는 처리해야하는 일을 줄이는 것이 목적.
   // + 확실한 옵저버 뒷처리 가능!
 
-  return [createObserver, registerTargets];
+  return { createObserver, registerTargets };
 }
