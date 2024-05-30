@@ -5,16 +5,19 @@ import { useEffect, useRef, useState } from 'react';
 // 컴포넌트에서는 처리 함수와, 타켓을 전달하면 됨.
 
 export default function useIntersectionObserver() {
-  const observerRef = useRef(null);
-  const targets = useRef([]);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const targets = useRef<HTMLElement[]>([]);
 
   const unobserve = () => {
     targets.current.forEach((target) => {
+      if (!observerRef.current) {
+        return;
+      }
       observerRef.current.unobserve(target);
     });
   };
 
-  const createObserver = (callback) => {
+  const createObserver = (callback: () => void) => {
     if (observerRef.current) {
       unobserve();
       targets.current = [];
@@ -34,10 +37,13 @@ export default function useIntersectionObserver() {
     );
   };
 
-  const registerTargets = (targetElements) => {
+  const registerTargets = (targetElements: HTMLElement[]) => {
     if (observerRef.current) {
       targets.current = targetElements;
       targetElements.forEach((target) => {
+        if (!observerRef.current) {
+          return;
+        }
         observerRef.current.observe(target);
       });
     }
