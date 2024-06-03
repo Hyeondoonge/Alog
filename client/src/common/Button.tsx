@@ -1,4 +1,5 @@
-import styled, { css } from 'styled-components';
+import { ReactNode } from 'react';
+import styled, { CSSProperties, FlattenSimpleInterpolation, css } from 'styled-components';
 
 const styleWithSize = {
   small: css`
@@ -12,9 +13,12 @@ const styleWithSize = {
     --button-padding: 2% 5%;
     --button-border-radius: 2rem;
   `
-};
+} as const;
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<{
+  color?: CSSProperties['backgroundColor'];
+  styleWithSize: FlattenSimpleInterpolation;
+}>`
   ${(props) => props.styleWithSize}
 
   border: none;
@@ -23,7 +27,7 @@ const StyledButton = styled.button`
   font-size: var(--button-font-size, 2.5rem);
   padding: var(--button-padding, 1rem 2rem);
   border-radius: var(--button-border-radius, 1.6rem);
-  background: ${(props) => props.color || 'default'};
+  background-color: ${(props) => props.color || 'default'};
   color: #ffffff;
   opacity: 0.9;
   &:hover {
@@ -31,8 +35,16 @@ const StyledButton = styled.button`
   }
 `;
 
-export default function Button({ label, size, color, disabled, onClick }) {
-  const style = styleWithSize[size];
+interface ButtonProps {
+  label?: string | ReactNode;
+  size?: keyof typeof styleWithSize;
+  color?: CSSProperties['backgroundColor'];
+  disabled?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+export default function Button({ label, size, color, disabled, onClick }: ButtonProps) {
+  const style = styleWithSize[size || 'medium'];
 
   return (
     <StyledButton color={color} disabled={disabled} styleWithSize={style} onClick={onClick}>
