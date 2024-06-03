@@ -1,4 +1,5 @@
-import { ReactNode } from 'react';
+import ThemeContext from 'contexts/ThemeContext';
+import { ReactNode, useContext } from 'react';
 import styled, { CSSProperties, FlattenSimpleInterpolation, css } from 'styled-components';
 
 const styleWithSize = {
@@ -16,7 +17,7 @@ const styleWithSize = {
 } as const;
 
 const StyledButton = styled.button<{
-  color?: CSSProperties['backgroundColor'];
+  backgroundColor: CSSProperties['backgroundColor'];
   styleWithSize: FlattenSimpleInterpolation;
 }>`
   ${(props) => props.styleWithSize}
@@ -27,7 +28,7 @@ const StyledButton = styled.button<{
   font-size: var(--button-font-size, 2.5rem);
   padding: var(--button-padding, 1rem 2rem);
   border-radius: var(--button-border-radius, 1.6rem);
-  background-color: ${(props) => props.color || 'default'};
+  background-color: ${(props) => props.backgroundColor};
   color: #ffffff;
   opacity: 0.9;
   &:hover {
@@ -45,9 +46,15 @@ interface ButtonProps {
 
 export default function Button({ label, size, color, disabled, onClick }: ButtonProps) {
   const style = styleWithSize[size || 'medium'];
+  const theme = useContext(ThemeContext);
 
   return (
-    <StyledButton color={color} disabled={disabled} styleWithSize={style} onClick={onClick}>
+    <StyledButton
+      backgroundColor={color || theme.main}
+      disabled={disabled}
+      styleWithSize={style}
+      onClick={onClick}
+    >
       {label}
     </StyledButton>
   );
