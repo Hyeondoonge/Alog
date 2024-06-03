@@ -1,7 +1,5 @@
-import { useContext } from 'react';
+import { ReactNode } from 'react';
 import styled, { keyframes } from 'styled-components';
-import ThemeContext from '../contexts/ThemeContext';
-import Button from './Button';
 
 const slideUp = keyframes`
   0% {
@@ -16,7 +14,6 @@ const slideUp = keyframes`
 
 const StyledModal = styled.div`
   width: 30%;
-  background-color: ${(props) => props.color ?? 'white'};
   color: black;
   border-radius: 10px;
   padding: 5rem;
@@ -30,13 +27,16 @@ const StyledModal = styled.div`
   font-weight: 600;
 `;
 
-export default function Modal({ text, onClickConfirm }) {
-  const theme = useContext(ThemeContext);
+interface ModalProps {
+  text: string;
+  confirmButton: ReactNode;
+}
 
+export default function Modal({ text, confirmButton }: ModalProps) {
   return (
     <StyledModal>
       <div>{text}</div>
-      <Button label="확인" size="small" color={theme.main} onClick={onClickConfirm} />
+      {confirmButton}
     </StyledModal>
   );
 }
