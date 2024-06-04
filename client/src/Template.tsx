@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Button from './common/Button';
 import StickyHeader from './common/StickyHeader';
 import ThemeContext from './contexts/ThemeContext';
-import UserContext from './contexts/UserContext';
 import { useHistory } from 'react-router';
 import { RiCloseFill } from 'react-icons/ri';
 import { kakao_RefreshAccessToken, kakao_Logout, kakao_GetLoginUrl } from './api/kakaoApi';
@@ -12,8 +11,10 @@ import { useMediaQuery } from 'react-responsive';
 import { RiPencilFill, RiLoginCircleFill, RiLogoutCircleFill } from 'react-icons/ri';
 import Link from './common/Link';
 import ProfileImage from './common/ProfileImage';
-import ModalContext from './contexts/ModalContext';
 import { fetchTesterSignin_POST } from './api/authApi';
+import useModalContext from 'hooks/useModalContext';
+import useUserContext from 'hooks/useUserContext';
+import { User } from 'types/user';
 
 const StyledBody = styled.div`
   width: 100%;
@@ -54,11 +55,18 @@ const StyledButton = styled.button`
   }
 `;
 
-const KakaoLoginAPI = ({ history }) => {
+const KakaoLoginAPI = () => {
   const onClick = () => {
     (async () => {
-      const url = await kakao_GetLoginUrl();
-      window.location.href = url;
+      try {
+        const url = await kakao_GetLoginUrl();
+        if (!url) {
+          throw new Error('failed to get login url');
+        }
+        window.location.href = url;
+      } catch (error) {
+        console.log(error);
+      }
     })();
   };
 
@@ -73,32 +81,48 @@ const KakaoLoginAPI = ({ history }) => {
   );
 };
 
-export default function Template({ header, children }) {
-  const [isLoggedIn, setIsLoggedIn, userData, setUserData] = useContext(UserContext);
-  const loginModalRef = useRef(null);
-  const bodyRef = useRef(null);
+export default function Template({
+  header,
+  children
+}: {
+  header: boolean;
+  children: React.ReactNode;
+}) {
+  const [isLoggedIn, setIsLoggedIn, userData, setUserData] = useUserContext();
+  const loginModalRef = useRef<HTMLDivElement | null>(null);
+  const bodyRef = useRef<HTMLDivElement | null>(null);
   const history = useHistory();
   const isBigScreen = useMediaQuery({ query: '(min-width: 600px)' });
-  const [setMessage] = useContext(ModalContext);
+  const [setMessage] = useModalContext();
   const theme = useContext(ThemeContext);
 
-  const updateUserData = (newData) => {
+  const updateUserData = (newData: User) => {
     setUserData(newData);
-    Object.keys(newData).forEach((key) => {
-      if (newData[key]) window.localStorage.setItem(key, newData[key]);
+    const keys = Object.keys(newData) as Array<keyof User>;
+    keys.forEach((key) => {
+      const value = newData[key];
+      if (value) {
+        window.localStorage.setItem(key, value);
+      }
     });
   };
 
   const onClickTestUserLogin = async () => {
     try {
-      const { accessToken, refreshToken, userId, profile_fileName } =
-        await fetchTesterSignin_POST();
+      const data = await fetchTesterSignin_POST();
+      if (!data) {
+        // TODO: 구체적인 error handling 대응
+        throw new Error('로그인에 실패했습니다.');
+      }
+      const { accessToken, refreshToken, userId, profile_fileName } = data;
 
       updateUserData({
         accessToken,
         refreshToken,
         userId,
-        profile_fileName
+        profile_fileName,
+        api_accessToken: null,
+        api_refreshToken: null
       });
       setIsLoggedIn(true);
       window.location.reload();
@@ -128,9 +152,13 @@ export default function Template({ header, children }) {
           <RiCloseFill
             style={{ position: 'absolute', right: 5, top: 5, cursor: 'pointer' }}
             onClick={() => {
-              loginModalRef.current.style.visibility = 'hidden';
-              loginModalRef.current.style.opacity = 0;
-              bodyRef.current.style.opacity = 1;
+              if (loginModalRef.current) {
+                loginModalRef.current.style.visibility = 'hidden';
+                loginModalRef.current.style.opacity = '0';
+              }
+              if (bodyRef.current) {
+                bodyRef.current.style.opacity = '1';
+              }
             }}
             size="2rem"
           />
@@ -140,7 +168,7 @@ export default function Template({ header, children }) {
             onClick={onClickTestUserLogin}
             color={theme.main}
           />
-          <KakaoLoginAPI history={history} />
+          <KakaoLoginAPI />
         </StyledCard>
       </div>
       <div ref={bodyRef}>
@@ -153,16 +181,20 @@ export default function Template({ header, children }) {
                   color="transparent"
                   size="small"
                   onClick={() => {
-                    loginModalRef.current.style.visibility = 'visible';
-                    loginModalRef.current.style.opacity = 1;
-                    bodyRef.current.style.opacity = 0.7;
+                    if (loginModalRef.current) {
+                      loginModalRef.current.style.visibility = 'visible';
+                      loginModalRef.current.style.opacity = '1';
+                    }
+                    if (bodyRef.current) {
+                      bodyRef.current.style.opacity = '0.7';
+                    }
                   }}
                 />
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', fontSize: '2rem' }}>
                 <Link to={`/home/${userData.userId}`}>
-                  <ProfileImage size="2.5rem" filename={userData.profile_fileName} />
+                  <ProfileImage size="2.5rem" filename={userData.profile_fileName || undefined} />
                 </Link>
                 <span style={{ padding: '0.5rem 1rem' }}>{userData.userId}님, 안녕하세요!</span>
                 <Button
@@ -180,11 +212,27 @@ export default function Template({ header, children }) {
                   onClick={() => {
                     try {
                       (async () => {
-                        const api_accessToken = await kakao_RefreshAccessToken(
+                        if (!userData.api_refreshToken) {
+                          throw new Error('failed to logout: no refresh token');
+                        }
+
+                        const refreshRes = await kakao_RefreshAccessToken(
                           userData.api_refreshToken
                         );
 
-                        const res = await kakao_Logout(api_accessToken);
+                        if (!refreshRes) {
+                          // TODO: 구체적인 error handling 대응
+                          throw new Error('failed to refresh access token');
+                        }
+
+                        const api_accessToken = refreshRes;
+
+                        const logoutRes = await kakao_Logout(api_accessToken);
+
+                        if (!logoutRes) {
+                          // TODO: 구체적인 error handling 대응
+                          throw new Error('failed to logout');
+                        }
 
                         setIsLoggedIn(false);
                         setUserData({
@@ -192,7 +240,8 @@ export default function Template({ header, children }) {
                           api_accessToken: null,
                           api_refreshToken: null,
                           accessToken: null,
-                          refreshToken: null
+                          refreshToken: null,
+                          profile_fileName: null
                         });
                         window.localStorage.removeItem('api_accessToken');
                         window.localStorage.removeItem('api_refreshToken');
