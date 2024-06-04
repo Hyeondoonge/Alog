@@ -1,3 +1,4 @@
+import { safelyCheckLanguages, safelyCheckLoginUrl, safelyCheckPosts } from 'api/helper';
 import { Language, Option } from 'types/api';
 import { IPost } from 'types/post';
 
@@ -30,8 +31,9 @@ const fetchLanguages_GET: () => Promise<{ languages: Language[] } | undefined> =
   try {
     const response = await fetch('/api/languages');
     // TODO: 안전한 에러 핸들링 추가
-    const result = await response.json();
-    return result;
+    const json = await response.json();
+    safelyCheckLanguages(json);
+    return json;
   } catch (err) {
     console.log(err);
     return;
@@ -49,16 +51,20 @@ const fetchPost_GET = async (id) => {
   }
 };
 
-const fetchPosts_GET: (
-  option: Option
-) => Promise<{ posts: IPost[]; totalCount: number; leftCount: number } | undefined> = async (
-  option
-) => {
+const fetchPosts_GET: (oprion: Option) => Promise<
+  | {
+      posts: IPost[];
+      totalCount: number;
+      leftCount: number;
+    }
+  | undefined
+> = async (option) => {
   try {
     const query = createQuery(option);
     const response = await fetch(`/api/posts/search?${query}`);
-    const result = await response.json();
-    return result;
+    const json = await response.json();
+    safelyCheckPosts(json);
+    return json;
   } catch (err) {
     console.log(err);
     return;

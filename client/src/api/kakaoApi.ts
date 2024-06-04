@@ -1,8 +1,11 @@
-const kakao_GetLoginUrl = async () => {
+import { safelyCheckLoginUrl, safelyCheckLogoutInfo, safelyCheckRefreshToken } from './helper';
+
+const kakao_GetLoginUrl: () => Promise<string | null> = async () => {
   try {
     const res = await fetch(`/api/kakaoAuth/loginUrl`);
-    const response = await res.json();
-    return response.url;
+    const json = await res.json();
+    safelyCheckLoginUrl(json);
+    return json.url;
   } catch (error) {
     console.log(error);
     return null;
@@ -35,22 +38,27 @@ const kakao_GetUserInfo = async (kakao_accessToken) => {
   }
 };
 
-const kakao_RefreshAccessToken = async (kakao_refreshToken) => {
+const kakao_RefreshAccessToken: (kakao_refreshToken: string) => Promise<string | null> = async (
+  kakao_refreshToken
+) => {
   try {
     const res = await fetch(`/api/kakaoAuth/updateToken`, {
       headers: {
         Authorization: `Bearer ${kakao_refreshToken}`
       }
     });
-    const response = await res.json();
-    return response.access_token;
+    const json = await res.json();
+    safelyCheckRefreshToken(json);
+    return json.access_token;
   } catch (error) {
     console.log(error);
     return null;
   }
 };
 
-const kakao_Logout = async (kakao_accessToken) => {
+const kakao_Logout: (kakao_accessToken: string) => Promise<{
+  id: number;
+} | null> = async (kakao_accessToken) => {
   // /v1/user/logout
   try {
     const res = await fetch(`/api/kakaoAuth/logout`, {
@@ -58,8 +66,9 @@ const kakao_Logout = async (kakao_accessToken) => {
         Authorization: `Bearer ${kakao_accessToken}`
       }
     }); // access token 만료됐다면?
-    const response = await res.json();
-    return response; // 로그아웃된 사용자의 번호
+    const json = await res.json();
+    safelyCheckLogoutInfo(json);
+    return json; // 로그아웃된 사용자의 번호
   } catch (error) {
     console.log(error);
     return null;

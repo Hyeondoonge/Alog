@@ -1,3 +1,6 @@
+import { User } from 'types/user';
+import { safelyCheckUser } from './helper';
+
 const fetchCheckMember = async (platform, kakao_accessToken) => {
   try {
     const res = await fetch('/api/auth/checkMember', {
@@ -50,7 +53,7 @@ const fetchSignin_POST = async (kakao_accessToken, platform) => {
   }
 };
 
-const fetchTesterSignin_POST = async () => {
+const fetchTesterSignin_POST: () => Promise<User | null> = async () => {
   try {
     const res = await fetch('/api/auth/testerSignin', {
       method: 'post',
@@ -58,8 +61,15 @@ const fetchTesterSignin_POST = async () => {
         'Content-type': 'application/json'
       }
     });
-    return res.json();
+    const json = await res.json();
+    Object.assign(json, {
+      api_accessToken: null,
+      api_refreshToken: null
+    });
+    safelyCheckUser(json);
+    return json;
   } catch (error) {
+    console.log(error);
     return null;
   }
 };
