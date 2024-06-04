@@ -4,8 +4,8 @@ import { IPost } from 'types/post';
 
 // createQuery를 만들기 위해 값이 비거나 없는 속성은 제거하고
 // url query를 생성
-const createQuery = (option: Option) => {
-  Object.keys(option)
+const createQuery: (option: Option) => string = (option) => {
+  return Object.keys(option)
     .filter((key) => {
       const typedKey = key as keyof Option;
       const value = option[typedKey];
@@ -23,7 +23,8 @@ const createQuery = (option: Option) => {
       let value = option[typedKey];
       if (key === 'languages') value = encodeURIComponent(JSON.stringify(value)); // 인코딩 대상 query: langauge
       return `${key}=${value}`;
-    });
+    })
+    .join('&');
 };
 
 // response type이 정상적일 때의 반환값으로 충분?
@@ -61,6 +62,7 @@ const fetchPosts_GET: (oprion: Option) => Promise<
 > = async (option) => {
   try {
     const query = createQuery(option);
+
     const response = await fetch(`/api/posts/search?${query}`);
     const json = await response.json();
     safelyCheckPosts(json);
