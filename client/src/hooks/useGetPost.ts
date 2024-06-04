@@ -15,23 +15,32 @@ export default function useGetPost() {
   const [isLoading, setIsLoading] = useState(false);
 
   const updatePost = async (option: Option) => {
-    // queryObject는 Home에서 전달
-    console.log(option);
-    if (!option.keyword && !option.writerId) {
-      setTotalCount(0);
-      setPosts([]);
-      return;
+    try {
+      // queryObject는 Home에서 전달
+      console.log(option);
+      if (!option.keyword && !option.writerId) {
+        setTotalCount(0);
+        setPosts([]);
+        return;
+      }
+
+      setIsLoading(true);
+
+      const res = await fetchPosts_GET(option);
+
+      if (!res) {
+        throw new Error('failed to fetch post');
+      }
+
+      setTotalCount(res.totalCount);
+      setLeftCount(res.leftCount);
+
+      if (!option.cursor) setPosts(res.posts);
+      else setPosts([...posts, ...res.posts]);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
     }
-
-    setIsLoading(true);
-    const res = await fetchPosts_GET(option);
-    console.log(res);
-    setTotalCount(res.totalCount);
-    setLeftCount(res.leftCount);
-
-    if (!option.cursor) setPosts(res.posts);
-    else setPosts([...posts, ...res.posts]);
-    setIsLoading(false);
   };
 
   return { posts, totalCount, leftCount, isLoading, updatePost };
