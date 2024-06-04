@@ -53,12 +53,15 @@ export function safelyCheckPosts(
     if (typeof post.title !== 'string') {
       throw new Error('failed to checking type of title');
     }
-    if (typeof post.subtitle !== undefined || typeof post.subtitle !== 'string') {
-      throw new Error('failed to checking type of content');
+
+    if (typeof post.subtitle !== undefined && typeof post.subtitle !== 'string') {
+      throw new Error('failed to checking type of subtitle');
     }
-    if (typeof post.subtitle !== undefined || typeof post.language !== 'string') {
+    if (typeof post.language !== undefined && typeof post.language !== 'string') {
       throw new Error('failed to checking type of language');
     }
+    console.log(post);
+
     if (typeof post.writerId !== 'string') {
       throw new Error('failed to checking type of writerId');
     }
@@ -90,7 +93,7 @@ export function safelyCheckLanguages(param: any): asserts param is { languages: 
 }
 
 export function safelyCheckLoginUrl(param: any): asserts param is { url: string } {
-  if (typeof param !== 'object' && param === null) {
+  if (typeof param !== 'object' || param === null) {
     throw new Error('failed to checking type of param');
   }
   if (typeof param.url !== 'string') {
@@ -99,7 +102,7 @@ export function safelyCheckLoginUrl(param: any): asserts param is { url: string 
 }
 
 export function safelyCheckRefreshToken(param: any): asserts param is { access_token: string } {
-  if (typeof param !== 'object' && param === null) {
+  if (typeof param !== 'object' || param === null) {
     throw new Error('failed to checking type of param');
   }
   if (typeof param.access_token !== 'string') {
@@ -108,7 +111,7 @@ export function safelyCheckRefreshToken(param: any): asserts param is { access_t
 }
 
 export function safelyCheckLogoutInfo(param: any): asserts param is { id: number } {
-  if (typeof param !== 'object' && param === null) {
+  if (typeof param !== 'object' || param === null) {
     throw new Error('failed to checking type of param');
   }
   if (typeof param.id !== 'number') {
