@@ -16,6 +16,7 @@ const StyledModal = styled.div`
   width: 30%;
   color: black;
   border-radius: 10px;
+  background-color: white;
   padding: 5rem;
   transition: 0.5s;
   cursor: pointer;
