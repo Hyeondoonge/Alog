@@ -12,6 +12,7 @@ const kakao_GetLoginUrl: () => Promise<string | null> = async () => {
   }
 };
 
+// @ts-ignore
 const kakao_GetToken = async (code) => {
   try {
     const res = await fetch(`/api/kakaoAuth/token?code=${code}`);
@@ -23,6 +24,7 @@ const kakao_GetToken = async (code) => {
   }
 };
 
+// @ts-ignore
 const kakao_GetUserInfo = async (kakao_accessToken) => {
   try {
     const res = await fetch(`/api/kakaoAuth/info?`, {

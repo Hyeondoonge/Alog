@@ -1,9 +1,10 @@
-import { safelyCheckLanguages, safelyCheckLoginUrl, safelyCheckPosts } from 'api/helper';
+import { safelyCheckLanguages, safelyCheckPosts } from 'api/helper';
 import { Language, Option } from 'types/api';
 import { IPost } from 'types/post';
 
 // createQuery를 만들기 위해 값이 비거나 없는 속성은 제거하고
 // url query를 생성
+
 const createQuery: (option: Option) => string = (option) => {
   return Object.keys(option)
     .filter((key) => {
@@ -41,6 +42,7 @@ const fetchLanguages_GET: () => Promise<{ languages: Language[] } | undefined> =
   }
 };
 
+// @ts-ignore
 const fetchPost_GET = async (id) => {
   try {
     const response = await fetch(`/api/post?id=${id}`);
@@ -73,6 +75,7 @@ const fetchPosts_GET: (oprion: Option) => Promise<
   }
 };
 
+// @ts-ignore
 const fetchLike_POST = (id) => async (accessToken) => {
   try {
     const response = await fetch(`/api/like`, {
@@ -91,6 +94,7 @@ const fetchLike_POST = (id) => async (accessToken) => {
   }
 };
 
+// @ts-ignore
 const fetchLike_DELETE = (id) => async (accessToken) => {
   try {
     const response = await fetch(`/api/like`, {
