@@ -54,10 +54,10 @@ export function safelyCheckPosts(
       throw new Error('failed to checking type of title');
     }
 
-    if (typeof post.subtitle !== undefined && typeof post.subtitle !== 'string') {
+    if (typeof post.subtitle !== 'undefined' && typeof post.subtitle !== 'string') {
       throw new Error('failed to checking type of subtitle');
     }
-    if (typeof post.language !== undefined && typeof post.language !== 'string') {
+    if (typeof post.language !== 'undefined' && typeof post.language !== 'string') {
       throw new Error('failed to checking type of language');
     }
     console.log(post);
