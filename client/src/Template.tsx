@@ -107,6 +107,23 @@ export default function Template({
     });
   };
 
+  function initUserData() {
+    setUserData({
+      userId: null,
+      api_accessToken: null,
+      api_refreshToken: null,
+      accessToken: null,
+      refreshToken: null,
+      profile_fileName: null
+    });
+    window.localStorage.removeItem('userId');
+    window.localStorage.removeItem('api_accessToken');
+    window.localStorage.removeItem('api_refreshToken');
+    window.localStorage.removeItem('accessToken');
+    window.localStorage.removeItem('refreshToken');
+    window.localStorage.removeItem('profile_fileName');
+  }
+
   const onClickTestUserLogin = async () => {
     try {
       const data = await fetchTesterSignin_POST();
@@ -213,7 +230,11 @@ export default function Template({
                     try {
                       (async () => {
                         if (!userData.api_refreshToken) {
-                          throw new Error('failed to logout: no refresh token');
+                          // 테스터 로그인
+                          setIsLoggedIn(false);
+                          initUserData();
+                          history.replace('/');
+                          return;
                         }
 
                         const refreshRes = await kakao_RefreshAccessToken(
@@ -226,7 +247,6 @@ export default function Template({
                         }
 
                         const api_accessToken = refreshRes;
-
                         const logoutRes = await kakao_Logout(api_accessToken);
 
                         if (!logoutRes) {
@@ -235,19 +255,7 @@ export default function Template({
                         }
 
                         setIsLoggedIn(false);
-                        setUserData({
-                          userId: null,
-                          api_accessToken: null,
-                          api_refreshToken: null,
-                          accessToken: null,
-                          refreshToken: null,
-                          profile_fileName: null
-                        });
-                        window.localStorage.removeItem('api_accessToken');
-                        window.localStorage.removeItem('api_refreshToken');
-                        window.localStorage.removeItem('accessToken');
-                        window.localStorage.removeItem('refreshToken');
-                        window.localStorage.removeItem('profile_fileName');
+                        initUserData();
                         history.replace('/');
                       })();
                     } catch (error) {
