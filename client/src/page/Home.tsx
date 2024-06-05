@@ -45,7 +45,7 @@ export default function Home() {
     if (leftCount === 0) return;
     updatePost({
       keyword,
-      languages: languages.filter((e, index) => isSelected[index]).map(({ name }) => name),
+      languages: languages.filter((_, index) => isSelected[index]).map(({ name }) => name),
       size,
       cursor: posts[posts.length - 1]._id
     });
@@ -62,7 +62,7 @@ export default function Home() {
       setKeyword(newKeyword);
       updatePost({
         keyword: newKeyword,
-        languages: languages.filter((e, index) => isSelected[index]).map(({ name }) => name),
+        languages: languages.filter((_, index) => isSelected[index]).map(({ name }) => name),
         size
       });
     }, 550);
@@ -152,7 +152,7 @@ export default function Home() {
         <div>
           {isLanguageLoading ? (
             <List>
-              {new Array(8).fill(null).map((e, index) => (
+              {new Array(8).fill(null).map((_, index) => (
                 <Skeleton
                   key={index}
                   Component={
@@ -177,7 +177,7 @@ export default function Home() {
         <PostList postListRef={postListRef} posts={posts} />
         {isLoading && (
           <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 50 }}>
-            {new Array(3).fill(null).map((e, index) => (
+            {new Array(3).fill(null).map((_, index) => (
               <div
                 key={index}
                 style={{
