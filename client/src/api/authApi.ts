@@ -1,3 +1,29 @@
+import { User } from 'types/user';
+import { safelyCheckUser } from './helper';
+
+const fetchTesterSignin_POST: () => Promise<User | null> = async () => {
+  try {
+    console.log('this function in authApi.ts');
+    const res = await fetch('/api/auth/testerSignin', {
+      method: 'post',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    });
+    const json = await res.json();
+    Object.assign(json, {
+      api_accessToken: null,
+      api_refreshToken: null
+    });
+    safelyCheckUser(json);
+    return json;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+// @ts-ignore
 const fetchCheckMember = async (platform, kakao_accessToken) => {
   try {
     const res = await fetch('/api/auth/checkMember', {
@@ -17,6 +43,7 @@ const fetchCheckMember = async (platform, kakao_accessToken) => {
   }
 };
 
+// @ts-ignore
 const fetchAutoSignin_GET = async (accessToken) => {
   try {
     const res = await fetch('/api/auth/autoSignin', {
@@ -31,8 +58,10 @@ const fetchAutoSignin_GET = async (accessToken) => {
   }
 };
 
+// @ts-ignore
 const fetchSignin_POST = async (kakao_accessToken, platform) => {
   try {
+    console.log('this function in authApi.js');
     const res = await fetch('/api/auth/signin', {
       method: 'post',
       headers: {
@@ -50,25 +79,12 @@ const fetchSignin_POST = async (kakao_accessToken, platform) => {
   }
 };
 
-const fetchTesterSignin_POST = async () => {
-  try {
-    const res = await fetch('/api/auth/testerSignin', {
-      method: 'post',
-      headers: {
-        'Content-type': 'application/json'
-      }
-    });
-    return res.json();
-  } catch (error) {
-    return null;
-  }
-};
-
 const fetchSignup_POST = async (
-  kakao_accessToken,
-  platform,
-  nickname,
-  description,
+  // @ts-ignore
+  kakao_accessToken, // @ts-ignore
+  platform, // @ts-ignore
+  nickname, // @ts-ignore
+  description, // @ts-ignore
   profileImage
 ) => {
   try {
@@ -92,6 +108,7 @@ const fetchSignup_POST = async (
   }
 };
 
+// @ts-ignore
 const fetchRefreshToken_GET = async (refreshToken) => {
   try {
     const res = await fetch('/api/auth/updateToken', {

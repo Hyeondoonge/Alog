@@ -1,9 +1,10 @@
 import { createContext, useState } from 'react';
 import Modal from '../common/Modal';
+import Button from 'common/Button';
 
-const ModalContext = createContext();
+const ModalContext = createContext<[React.Dispatch<React.SetStateAction<string>>] | null>(null);
 
-function ModalContextProvider({ children }) {
+function ModalContextProvider({ children }: { children: React.ReactNode }) {
   const [message, setMessage] = useState('');
 
   return (
@@ -23,9 +24,15 @@ function ModalContextProvider({ children }) {
         >
           <Modal
             text={message}
-            onClickConfirm={() => {
-              setMessage('');
-            }}
+            confirmButton={
+              <Button
+                label="확인"
+                size="small"
+                onClick={() => {
+                  setMessage('');
+                }}
+              />
+            }
           />
         </div>
       )}
