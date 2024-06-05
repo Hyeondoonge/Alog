@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 // hook을 재사용할 수 있게 빼내고 메인 컴포넌트로 부터 observer관련 처리 로직을 빼내어
 // 컴포넌트와 옵저버에 일을 분담

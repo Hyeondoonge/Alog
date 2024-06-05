@@ -51,11 +51,6 @@ export default function Home() {
     });
   };
 
-  const handleRemoveKeyword = () => {
-    setKeyword('');
-    updatePost({ keyword: '', size });
-  };
-
   const handleChangeKeyword = async (event: ChangeEvent<HTMLInputElement>) => {
     debounce(() => {
       const newKeyword = event.target.value;
