@@ -12,6 +12,10 @@ const StyledTextFieldWrapper = styled.div<{ background: string }>`
   color: white;
   padding: 2rem 2.5rem;
   box-shadow: 0px 0px 5px 0px #353535;
+
+  &:focus-within {
+    outline: -webkit-focus-ring-color auto 5px;
+  }
 `;
 
 const StyledTextField = styled.input`
