@@ -1,5 +1,5 @@
+import ClickbaleTag from 'common/ClickableTag';
 import List from '../common/List';
-import Tag from '../common/Tag';
 
 interface FilterListProps {
   elements: FilterItemProps[];
@@ -16,12 +16,11 @@ export default function FilterList({ elements, states, handleClick }: FilterList
   return (
     <List>
       {elements.map(({ _id: id, name }, index) => (
-        <Tag
-          key={id}
+        <ClickbaleTag
           size={2}
+          key={id}
           label={name}
           selected={states[index]}
-          clickable
           handleClick={handleClick(index)}
         />
       ))}
