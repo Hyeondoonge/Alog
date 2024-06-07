@@ -21,9 +21,11 @@ const createQuery: (option: Option) => string = (option) => {
     })
     .map((key) => {
       const typedKey = key as keyof Option;
-      let value = option[typedKey];
-      if (key === 'languages') value = encodeURIComponent(JSON.stringify(value)); // 인코딩 대상 query: langauge
-      return `${key}=${value}`;
+      if (typedKey === 'languages') {
+        const value = option[typedKey];
+        return `${key}=${encodeURIComponent(String(value))}`;
+      }
+      return `${key}=${option[typedKey]}`;
     })
     .join('&');
 };
