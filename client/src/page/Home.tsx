@@ -12,6 +12,7 @@ import List from '../common/List';
 import styled, { keyframes } from 'styled-components';
 import SearchField from 'common/SearchField';
 import { Language } from 'types/api';
+import { getFilteredLangauges, saveFilteredLangauges } from 'localStorage';
 
 const ghost_animation = keyframes`
   0% {
@@ -71,8 +72,7 @@ export default function Home() {
       .filter((_, index) => newIsSelected[index])
       .map(({ name }) => name);
 
-    window.localStorage.setItem('filter_languages', JSON.stringify(selectedLanguages));
-
+    saveFilteredLangauges(selectedLanguages);
     setIsSelected(newIsSelected);
 
     updatePost({
@@ -93,17 +93,13 @@ export default function Home() {
 
       const { languages: fetchedLanguages } = data;
       setLanguages(fetchedLanguages);
-      const localFilterLanguages = window.localStorage.getItem('filter_languages');
 
-      // TODO: 안전한 파싱
-      if (!localFilterLanguages) {
+      const filteredLanguages = getFilteredLangauges();
+
+      if (filteredLanguages.length === 0) {
         setIsSelected(new Array(fetchedLanguages.length).fill(false));
       } else {
-        // TODO: 변환 로직 함께 관리
-        const parsedLocalFilterLanguages = localFilterLanguages.split(',');
-        setIsSelected(
-          fetchedLanguages.map(({ name }) => parsedLocalFilterLanguages.includes(name))
-        );
+        setIsSelected(fetchedLanguages.map(({ name }) => filteredLanguages.includes(name)));
       }
       setIsLanguageLoading(false);
     })();
