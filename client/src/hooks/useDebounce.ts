@@ -15,7 +15,7 @@ export default function useDebounce() {
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
-  });
+  }, []);
 
   return debounce;
 }
