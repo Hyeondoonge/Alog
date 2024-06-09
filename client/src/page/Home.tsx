@@ -163,10 +163,14 @@ export default function Home() {
             />
           )}
         </div>
-        {keyword && !isLoading && (
+        {keyword && !isLoading ? (
           <span style={{ fontSize: '2rem' }}>
             {totalCount ? `검색 결과 ${totalCount}개의 풀이` : '검색 결과가 없습니다.'}
           </span>
+        ) : (
+          <Skeleton
+            Component={<div style={{ width: '20rem', height: '5rem', borderRadius: '2rem' }} />}
+          />
         )}
         <PostList postListRef={postListRef} posts={posts} />
         {isLoading && (
