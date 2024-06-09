@@ -1,4 +1,4 @@
-import { ChangeEvent, Suspense, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, Suspense, useEffect, useRef, useState, useTransition } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import useGetPost from '../hooks/useGetPost';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
@@ -44,6 +44,7 @@ export default function Home() {
 
   const handleIntersect = () => {
     if (leftCount === 0) return;
+
     updatePost({
       keyword,
       languages: languages.filter((_, index) => isSelected[index]).map(({ name }) => name),
@@ -163,11 +164,12 @@ export default function Home() {
             />
           )}
         </div>
-        {keyword && !isLoading ? (
+        {keyword && (!isLoading || posts.length !== 0) && (
           <span style={{ fontSize: '2rem' }}>
             {totalCount ? `검색 결과 ${totalCount}개의 풀이` : '검색 결과가 없습니다.'}
           </span>
-        ) : (
+        )}
+        {isLoading && !posts.length && (
           <Skeleton
             Component={<div style={{ width: '20rem', height: '5rem', borderRadius: '2rem' }} />}
           />
