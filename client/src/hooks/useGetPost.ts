@@ -14,13 +14,18 @@ export default function useGetPost() {
   const [leftCount, setLeftCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
+  const initPost = async () => {
+    setTotalCount(0);
+    setLeftCount(0);
+    setPosts([]);
+  };
+
   const updatePost = async (option: Option) => {
     try {
       // queryObject는 Home에서 전달
       console.log(option);
       if (!option.keyword && !option.writerId) {
-        setTotalCount(0);
-        setPosts([]);
+        initPost();
         return;
       }
 
@@ -43,5 +48,5 @@ export default function useGetPost() {
     }
   };
 
-  return { posts, totalCount, leftCount, isLoading, updatePost };
+  return { posts, totalCount, leftCount, isLoading, updatePost, initPost };
 }

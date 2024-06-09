@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, Suspense, useEffect, useRef, useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import useGetPost from '../hooks/useGetPost';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
@@ -34,7 +34,7 @@ export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
   const size = 3;
   const debounce = useDebounce();
-  const { posts, totalCount, leftCount, isLoading, updatePost } = useGetPost();
+  const { posts, totalCount, leftCount, isLoading, updatePost, initPost } = useGetPost();
   const [keyword, setKeyword] = useState('');
   const [languages, setLanguages] = useState<Language[]>([]);
   const [isSelected, setIsSelected] = useState<boolean[]>([]);
@@ -56,6 +56,8 @@ export default function Home() {
     debounce(() => {
       const newKeyword = event.target.value;
       setKeyword(newKeyword);
+
+      initPost();
       updatePost({
         keyword: newKeyword,
         languages: languages.filter((_, index) => isSelected[index]).map(({ name }) => name),
@@ -75,6 +77,7 @@ export default function Home() {
     saveFilteredLangauges(selectedLanguages);
     setIsSelected(newIsSelected);
 
+    initPost();
     updatePost({
       keyword,
       languages: selectedLanguages,
