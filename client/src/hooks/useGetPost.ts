@@ -3,7 +3,7 @@
 // => 서버에서 전달받은 데이터와, 클라이언트에서 만이 설정가능한 상태들을 따로 관리하면 쉽다.
 // 서버 데이터들 (상태)를 사용자 hook으로 전달받아 컴포넌트에서 사용하면 된다.
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { fetchPosts_GET } from '../post/fetchApis';
 import { Option } from 'types/api';
 import { IPost } from 'types/post';
@@ -14,6 +14,8 @@ export default function useGetPost() {
   const [leftCount, setLeftCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
+  const accRequest = useRef<number>(0);
+
   const initPost = async () => {
     setTotalCount(0);
     setLeftCount(0);
@@ -21,9 +23,10 @@ export default function useGetPost() {
   };
 
   const updatePost = async (option: Option) => {
+    const curRequest = ++accRequest.current;
+
     try {
       // queryObject는 Home에서 전달
-      console.log(option);
       if (!option.keyword && !option.writerId) {
         initPost();
         return;
@@ -35,6 +38,10 @@ export default function useGetPost() {
 
       if (!res) {
         throw new Error('failed to fetch post');
+      }
+
+      if (curRequest !== accRequest.current) {
+        return;
       }
 
       setTotalCount(res.totalCount);
