@@ -1,4 +1,4 @@
-import { ChangeEvent, Suspense, useEffect, useRef, useState, useTransition } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import useGetPost from '../hooks/useGetPost';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
