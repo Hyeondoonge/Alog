@@ -20,7 +20,7 @@ export default function FilterList({ elements, states, handleClick }: FilterList
           size={2}
           key={id}
           label={name}
-          selected={states[index]}
+          selected={states[index] || false}
           handleClick={handleClick(index)}
         />
       ))}
