@@ -13,6 +13,7 @@ import styled, { keyframes } from 'styled-components';
 import SearchField from 'common/SearchField';
 import { Language } from 'types/api';
 import { getFilteredLangauges, saveFilteredLangauges } from 'localStorage';
+import { useHistory } from 'react-router-dom';
 
 const ghost_animation = keyframes`
   0% {
@@ -53,10 +54,16 @@ export default function Home() {
     });
   };
 
+  const history = useHistory();
+
   const handleChangeKeyword = async (event: ChangeEvent<HTMLInputElement>) => {
+    const newKeyword = event.target.value;
+    setKeyword(newKeyword);
+
     debounce(() => {
-      const newKeyword = event.target.value;
-      setKeyword(newKeyword);
+      const selectedLanguages = languages
+        .filter((_, index) => isSelected[index])
+        .map(({ name }) => name);
 
       initPost();
       updatePost({
@@ -64,6 +71,18 @@ export default function Home() {
         languages: languages.filter((_, index) => isSelected[index]).map(({ name }) => name),
         size
       });
+
+      // stack history
+      const newSearchParam = new URLSearchParams();
+
+      if (newKeyword) {
+        newSearchParam.append('keyword', newKeyword);
+      }
+      if (selectedLanguages.length) {
+        newSearchParam.append('filter', encodeURIComponent(JSON.stringify(selectedLanguages)));
+      }
+
+      history.push(`/?${newSearchParam.toString()}`);
     }, 550);
   };
 
@@ -84,10 +103,26 @@ export default function Home() {
       languages: selectedLanguages,
       size
     });
+
+    // stack history
+    const newSearchParam = new URLSearchParams();
+
+    if (keyword) {
+      newSearchParam.append('keyword', keyword);
+    }
+    if (selectedLanguages.length) {
+      newSearchParam.append('filter', encodeURIComponent(JSON.stringify(selectedLanguages)));
+    }
+
+    history.push(`/?${newSearchParam.toString()}`);
   };
 
   useEffect(() => {
-    (async () => {
+    let languages: Language[] = [];
+
+    async function initLanguage() {
+      setIsLanguageLoading(false);
+
       const data = await fetchLanguages_GET();
 
       if (!data) {
@@ -96,17 +131,48 @@ export default function Home() {
       }
 
       const { languages: fetchedLanguages } = data;
-      setLanguages(fetchedLanguages);
 
-      const filteredLanguages = getFilteredLangauges();
+      setLanguages(fetchedLanguages);
+      setIsLanguageLoading(false);
+
+      languages = fetchedLanguages;
+    }
+
+    function initOption() {
+      const urlSearchParams = new URLSearchParams(window.location.search);
+
+      const keywordParam = urlSearchParams.get('keyword');
+      const filterParam = urlSearchParams.get('filter');
+      let filter = filterParam ? JSON.parse(decodeURIComponent(filterParam)) : [];
+
+      if (!Array.isArray(filter) || filter.some((value) => !(typeof value === 'string'))) {
+        filter = [];
+      }
+
+      const filteredLanguages = filter.length !== 0 ? filter : getFilteredLangauges();
 
       if (filteredLanguages.length === 0) {
-        setIsSelected(new Array(fetchedLanguages.length).fill(false));
+        setIsSelected(new Array(languages.length).fill(false));
       } else {
-        setIsSelected(fetchedLanguages.map(({ name }) => filteredLanguages.includes(name)));
+        setIsSelected(languages.map(({ name }) => filteredLanguages.includes(name)));
       }
-      setIsLanguageLoading(false);
+      setKeyword(keywordParam || '');
+      updatePost({
+        keyword: keywordParam || '',
+        languages: filteredLanguages,
+        size
+      });
+    }
+
+    (async () => {
+      await initLanguage();
+      initOption();
     })();
+
+    window.addEventListener('popstate', initOption);
+    return () => {
+      window.removeEventListener('popstate', initOption);
+    };
   }, []);
 
   useEffect(() => {
@@ -142,10 +208,11 @@ export default function Home() {
         </div>
         <SearchField
           placeholder="찾는 풀이의 문제제목을 입력해보세요."
+          value={keyword}
           handleChange={handleChangeKeyword}
         />
         <div>
-          {isLanguageLoading ? (
+          {isLanguageLoading && languages.length ? (
             <List>
               {new Array(8).fill(null).map((_, index) => (
                 <Skeleton
