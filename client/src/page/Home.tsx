@@ -156,6 +156,12 @@ export default function Home() {
       } else {
         setIsSelected(languages.map(({ name }) => filteredLanguages.includes(name)));
       }
+
+      if (!filterParam) {
+        urlSearchParams.append('filter', encodeURIComponent(JSON.stringify(filteredLanguages)));
+        history.replace(`/?${urlSearchParams.toString()}`);
+      }
+
       setKeyword(keywordParam || '');
       updatePost({
         keyword: keywordParam || '',
