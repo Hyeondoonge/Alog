@@ -50,10 +50,55 @@ export default function useGetPost() {
       if (!option.cursor) setPosts(res.posts);
       else setPosts([...posts, ...res.posts]);
       setIsLoading(false);
+
+      // 결과 기록하기
+      const { search } = window.location;
+      window.sessionStorage.setItem(
+        search,
+        JSON.stringify({
+          totalCount: res.totalCount,
+          leftCount: res.leftCount,
+          posts: !option.cursor ? res.posts : [...posts, ...res.posts]
+        })
+      );
     } catch (error) {
       console.log(error);
     }
   };
 
-  return { posts, totalCount, leftCount, isLoading, updatePost, initPost };
+  function initPostWithQuery() {
+    if (window.location.pathname !== '/') {
+      return;
+    }
+
+    const { search } = window.location;
+
+    // FIX: assertion
+    const data = JSON.parse(window.sessionStorage.getItem(search) || 'null') as {
+      posts: IPost[];
+      leftCount: number;
+      totalCount: number;
+    };
+
+    if (!data) {
+      setTotalCount(0);
+      setLeftCount(0);
+      setPosts([]);
+      return;
+    }
+
+    setTotalCount(data.totalCount);
+    setLeftCount(data.leftCount);
+    setPosts(data.posts);
+  }
+
+  return {
+    posts,
+    totalCount,
+    leftCount,
+    isLoading,
+    updatePost,
+    initPost,
+    initPostWithQuery
+  };
 }

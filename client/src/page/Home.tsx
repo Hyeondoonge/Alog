@@ -35,7 +35,8 @@ export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
   const size = 3;
   const debounce = useDebounce();
-  const { posts, totalCount, leftCount, isLoading, updatePost, initPost } = useGetPost();
+  const { posts, totalCount, leftCount, isLoading, updatePost, initPost, initPostWithQuery } =
+    useGetPost();
   const [keyword, setKeyword] = useState('');
   const [languages, setLanguages] = useState<Language[]>([]);
   const [isSelected, setIsSelected] = useState<boolean[]>([]);
@@ -65,24 +66,22 @@ export default function Home() {
         .filter((_, index) => isSelected[index])
         .map(({ name }) => name);
 
-      initPost();
-      updatePost({
-        keyword: newKeyword,
-        languages: languages.filter((_, index) => isSelected[index]).map(({ name }) => name),
-        size
-      });
-
       // stack history
       const newSearchParam = new URLSearchParams();
 
       if (newKeyword) {
         newSearchParam.append('keyword', newKeyword);
       }
-      if (selectedLanguages.length) {
-        newSearchParam.append('filter', encodeURIComponent(JSON.stringify(selectedLanguages)));
-      }
+      newSearchParam.append('filter', encodeURIComponent(JSON.stringify(selectedLanguages)));
 
       history.push(`/?${newSearchParam.toString()}`);
+
+      initPost();
+      updatePost({
+        keyword: newKeyword,
+        languages: languages.filter((_, index) => isSelected[index]).map(({ name }) => name),
+        size
+      });
     }, 550);
   };
 
@@ -97,31 +96,28 @@ export default function Home() {
     saveFilteredLangauges(selectedLanguages);
     setIsSelected(newIsSelected);
 
-    initPost();
-    updatePost({
-      keyword,
-      languages: selectedLanguages,
-      size
-    });
-
-    // stack history
     const newSearchParam = new URLSearchParams();
-
     if (keyword) {
       newSearchParam.append('keyword', keyword);
     }
-    if (selectedLanguages.length) {
-      newSearchParam.append('filter', encodeURIComponent(JSON.stringify(selectedLanguages)));
-    }
-
+    newSearchParam.append('filter', encodeURIComponent(JSON.stringify(selectedLanguages)));
     history.push(`/?${newSearchParam.toString()}`);
+    // stack history
+    if (keyword) {
+      initPost();
+      updatePost({
+        keyword,
+        languages: selectedLanguages,
+        size
+      });
+    }
   };
 
   useEffect(() => {
     let languages: Language[] = [];
 
     async function initLanguage() {
-      setIsLanguageLoading(false);
+      setIsLanguageLoading(true);
 
       const data = await fetchLanguages_GET();
 
@@ -138,7 +134,11 @@ export default function Home() {
       languages = fetchedLanguages;
     }
 
+    // 첫 로딩, pop state
     function initOption() {
+      if (window.location.pathname !== '/') {
+        return;
+      }
       const urlSearchParams = new URLSearchParams(window.location.search);
 
       const keywordParam = urlSearchParams.get('keyword');
@@ -161,23 +161,22 @@ export default function Home() {
         urlSearchParams.append('filter', encodeURIComponent(JSON.stringify(filteredLanguages)));
         history.replace(`/?${urlSearchParams.toString()}`);
       }
-
       setKeyword(keywordParam || '');
-      updatePost({
-        keyword: keywordParam || '',
-        languages: filteredLanguages,
-        size
-      });
+    }
+
+    function init() {
+      initOption();
+      initPostWithQuery();
     }
 
     (async () => {
       await initLanguage();
-      initOption();
+      init();
     })();
 
-    window.addEventListener('popstate', initOption);
+    window.addEventListener('popstate', init);
     return () => {
-      window.removeEventListener('popstate', initOption);
+      window.removeEventListener('popstate', init);
     };
   }, []);
 
