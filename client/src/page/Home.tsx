@@ -136,20 +136,25 @@ export default function Home() {
 
     // 첫 로딩, pop state
     function initOption() {
+      function isStringArray(param: any): param is string[] {
+        return Array.isArray(param) && param.every((value) => typeof value === 'string');
+      }
+
       if (window.location.pathname !== '/') {
         return;
       }
       const urlSearchParams = new URLSearchParams(window.location.search);
+      const filterParam: null | string[] | unknown = JSON.parse(
+        decodeURIComponent(urlSearchParams.get('filter') || 'null')
+      );
 
-      const keywordParam = urlSearchParams.get('keyword');
-      const filterParam = urlSearchParams.get('filter');
-      let filter = filterParam ? JSON.parse(decodeURIComponent(filterParam)) : [];
+      let filteredLanguages: string[] = [];
 
-      if (!Array.isArray(filter) || filter.some((value) => !(typeof value === 'string'))) {
-        filter = [];
+      if (!filterParam) {
+        filteredLanguages = getFilteredLangauges() as string[];
+      } else if (isStringArray(filterParam)) {
+        filteredLanguages = filterParam;
       }
-
-      const filteredLanguages = filter.length !== 0 ? filter : getFilteredLangauges();
 
       if (filteredLanguages.length === 0) {
         setIsSelected(new Array(languages.length).fill(false));
@@ -161,6 +166,8 @@ export default function Home() {
         urlSearchParams.append('filter', encodeURIComponent(JSON.stringify(filteredLanguages)));
         history.replace(`/?${urlSearchParams.toString()}`);
       }
+
+      const keywordParam = urlSearchParams.get('keyword');
       setKeyword(keywordParam || '');
     }
 
