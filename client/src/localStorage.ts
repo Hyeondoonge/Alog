@@ -19,7 +19,11 @@ const getFilteredLangauges = () => {
       throw new Error('not array');
     }
 
-    return parsed as unknown[];
+    if (parsed.some((value) => typeof value !== 'string')) {
+      throw new Error('not string array');
+    }
+
+    return parsed as string[];
   } catch (error) {
     console.log(error);
     return [];

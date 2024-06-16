@@ -139,36 +139,39 @@ export default function Home() {
       function isStringArray(param: any): param is string[] {
         return Array.isArray(param) && param.every((value) => typeof value === 'string');
       }
+      try {
+        if (window.location.pathname !== '/') {
+          return;
+        }
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const filterParam: null | string[] | unknown = JSON.parse(
+          decodeURIComponent(urlSearchParams.get('filter') || 'null')
+        );
 
-      if (window.location.pathname !== '/') {
-        return;
+        let filteredLanguages: string[] = [];
+
+        if (!filterParam) {
+          filteredLanguages = getFilteredLangauges();
+        } else if (isStringArray(filterParam)) {
+          filteredLanguages = filterParam;
+        }
+
+        if (filteredLanguages.length === 0) {
+          setIsSelected(new Array(languages.length).fill(false));
+        } else {
+          setIsSelected(languages.map(({ name }) => filteredLanguages.includes(name)));
+        }
+
+        if (!filterParam) {
+          urlSearchParams.append('filter', encodeURIComponent(JSON.stringify(filteredLanguages)));
+          history.replace(`/?${urlSearchParams.toString()}`);
+        }
+
+        const keywordParam = urlSearchParams.get('keyword');
+        setKeyword(keywordParam || '');
+      } catch (error) {
+        console.log(error);
       }
-      const urlSearchParams = new URLSearchParams(window.location.search);
-      const filterParam: null | string[] | unknown = JSON.parse(
-        decodeURIComponent(urlSearchParams.get('filter') || 'null')
-      );
-
-      let filteredLanguages: string[] = [];
-
-      if (!filterParam) {
-        filteredLanguages = getFilteredLangauges() as string[];
-      } else if (isStringArray(filterParam)) {
-        filteredLanguages = filterParam;
-      }
-
-      if (filteredLanguages.length === 0) {
-        setIsSelected(new Array(languages.length).fill(false));
-      } else {
-        setIsSelected(languages.map(({ name }) => filteredLanguages.includes(name)));
-      }
-
-      if (!filterParam) {
-        urlSearchParams.append('filter', encodeURIComponent(JSON.stringify(filteredLanguages)));
-        history.replace(`/?${urlSearchParams.toString()}`);
-      }
-
-      const keywordParam = urlSearchParams.get('keyword');
-      setKeyword(keywordParam || '');
     }
 
     function init() {
