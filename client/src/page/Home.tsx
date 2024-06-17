@@ -31,6 +31,10 @@ const Ghost = styled(RiGhost2Fill)`
   animation: 4s ${ghost_animation};
 `;
 
+function isStringArray(param: any): param is string[] {
+  return Array.isArray(param) && param.every((value) => typeof value === 'string');
+}
+
 export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
   const size = 3;
@@ -38,11 +42,36 @@ export default function Home() {
   const { posts, totalCount, leftCount, isLoading, updatePost, initPost, initPostWithQuery } =
     useGetPost();
   const [keyword, setKeyword] = useState('');
-  const [languages, setLanguages] = useState<Language[]>([]);
-  const [isSelected, setIsSelected] = useState<boolean[]>([]);
+  const [languages, setLanguages] = useState<Language[]>(
+    JSON.parse(window.sessionStorage.getItem('languages') || '[]') as Language[]
+  );
+  const [isSelected, setIsSelected] = useState<boolean[]>(() => {
+    if (languages.length === 0) {
+      return [];
+    }
+
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const filterParam: null | string[] | unknown = JSON.parse(
+      decodeURIComponent(urlSearchParams.get('filter') || 'null')
+    );
+
+    let filteredLanguages: string[] = [];
+
+    if (!filterParam) {
+      filteredLanguages = getFilteredLangauges();
+    } else if (isStringArray(filterParam)) {
+      filteredLanguages = filterParam;
+    }
+
+    if (filteredLanguages.length === 0) {
+      return new Array(languages.length).fill(false);
+    }
+    return languages.map(({ name }) => filteredLanguages.includes(name));
+  });
+
   const postListRef = useRef<HTMLDivElement | null>(null);
   const { createObserver, registerTargets } = useIntersectionObserver();
-  const [isLanguageLoading, setIsLanguageLoading] = useState(true);
+  const [isLanguageLoading, setIsLanguageLoading] = useState(false);
 
   const handleIntersect = () => {
     if (leftCount === 0) return;
@@ -114,7 +143,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    let languages: Language[] = [];
+    let languagesData: Language[] = [];
 
     async function initLanguage() {
       setIsLanguageLoading(true);
@@ -131,7 +160,10 @@ export default function Home() {
       setLanguages(fetchedLanguages);
       setIsLanguageLoading(false);
 
-      languages = fetchedLanguages;
+      languagesData = fetchedLanguages;
+
+      // ✨save langguage on session storage
+      window.sessionStorage.setItem('languages', JSON.stringify(languagesData));
     }
 
     // 첫 로딩, pop state
@@ -140,6 +172,7 @@ export default function Home() {
         return Array.isArray(param) && param.every((value) => typeof value === 'string');
       }
       try {
+        // isSelected 상태 초기화 로직 => 중복 제거하기!
         if (window.location.pathname !== '/') {
           return;
         }
@@ -157,18 +190,16 @@ export default function Home() {
         }
 
         if (filteredLanguages.length === 0) {
-          setIsSelected(new Array(languages.length).fill(false));
+          setIsSelected(new Array(languagesData.length).fill(false));
         } else {
-          setIsSelected(languages.map(({ name }) => filteredLanguages.includes(name)));
+          setIsSelected(languagesData.map(({ name }) => filteredLanguages.includes(name)));
         }
 
         if (!filterParam) {
           urlSearchParams.append('filter', encodeURIComponent(JSON.stringify(filteredLanguages)));
           history.replace(`/?${urlSearchParams.toString()}`);
         }
-
-        const keywordParam = urlSearchParams.get('keyword');
-        setKeyword(keywordParam || '');
+        setKeyword(urlSearchParams.get('keyword') || '');
       } catch (error) {
         console.log(error);
       }
@@ -180,7 +211,11 @@ export default function Home() {
     }
 
     (async () => {
-      await initLanguage();
+      if (!window.sessionStorage.getItem('languages')) {
+        await initLanguage();
+      } else {
+        languagesData = languages;
+      }
       init();
     })();
 
@@ -227,7 +262,7 @@ export default function Home() {
           handleChange={handleChangeKeyword}
         />
         <div>
-          {isLanguageLoading && languages.length ? (
+          {isLanguageLoading ? (
             <List>
               {new Array(8).fill(null).map((_, index) => (
                 <Skeleton

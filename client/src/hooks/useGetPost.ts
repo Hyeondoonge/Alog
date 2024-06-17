@@ -9,9 +9,54 @@ import { Option } from 'types/api';
 import { IPost } from 'types/post';
 
 export default function useGetPost() {
-  const [posts, setPosts] = useState<IPost[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [leftCount, setLeftCount] = useState(0);
+  const [posts, setPosts] = useState<IPost[]>(() => {
+    const { search } = window.location;
+
+    // FIX: assertion
+    const data = JSON.parse(window.sessionStorage.getItem(search) || 'null') as {
+      posts: IPost[];
+      leftCount: number;
+      totalCount: number;
+    };
+
+    if (!data) {
+      return [];
+    }
+
+    return data.posts;
+  });
+  const [totalCount, setTotalCount] = useState(() => {
+    const { search } = window.location;
+
+    // FIX: assertion
+    const data = JSON.parse(window.sessionStorage.getItem(search) || 'null') as {
+      posts: IPost[];
+      leftCount: number;
+      totalCount: number;
+    };
+
+    if (!data) {
+      return [];
+    }
+
+    return data.totalCount;
+  });
+  const [leftCount, setLeftCount] = useState(() => {
+    const { search } = window.location;
+
+    // FIX: assertion
+    const data = JSON.parse(window.sessionStorage.getItem(search) || 'null') as {
+      posts: IPost[];
+      leftCount: number;
+      totalCount: number;
+    };
+
+    if (!data) {
+      return 0;
+    }
+
+    return data.leftCount;
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const accRequest = useRef<number>(0);
