@@ -13,7 +13,7 @@ import styled, { keyframes } from 'styled-components';
 import SearchField from 'common/SearchField';
 import { Language } from 'types/api';
 import { getFilteredLangauges, saveFilteredLangauges } from 'localStorage';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const ghost_animation = keyframes`
   0% {
@@ -237,6 +237,20 @@ export default function Home() {
     createObserver(handleIntersect);
     registerTargets([lastPost]);
   }, [posts]);
+
+  const location = useLocation();
+  const mount = useRef(false);
+
+  useEffect(() => {
+    if (!mount.current) {
+      mount.current = true;
+      return;
+    }
+    if (location.search !== '') {
+      return;
+    }
+    window.location.reload();
+  }, [location]);
 
   return (
     <Template header>
