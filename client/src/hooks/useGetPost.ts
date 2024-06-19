@@ -9,7 +9,7 @@ import { Option } from 'types/api';
 import { IPost } from 'types/post';
 
 export default function useGetPost() {
-  const [posts, setPosts] = useState<{ posts: IPost[]; leftCount: number; totalCount: number }>(
+  const [data, setData] = useState<{ posts: IPost[]; leftCount: number; totalCount: number }>(
     () => {
       const { search } = window.location;
 
@@ -32,7 +32,7 @@ export default function useGetPost() {
   const accRequest = useRef<number>(0);
 
   const initPost = async () => {
-    setPosts({ posts: [], totalCount: 0, leftCount: 0 });
+    setData({ posts: [], totalCount: 0, leftCount: 0 });
   };
 
   const updatePost = async (option: Option) => {
@@ -58,14 +58,14 @@ export default function useGetPost() {
       }
 
       if (!option.cursor)
-        setPosts({
+        setData({
           posts: res.posts,
           leftCount: res.leftCount,
           totalCount: res.totalCount
         });
       else
-        setPosts({
-          posts: [...posts.posts, ...res.posts],
+        setData({
+          posts: [...data.posts, ...res.posts],
           leftCount: res.leftCount,
           totalCount: res.totalCount
         });
@@ -78,7 +78,7 @@ export default function useGetPost() {
         JSON.stringify({
           totalCount: res.totalCount,
           leftCount: res.leftCount,
-          posts: !option.cursor ? res.posts : [...posts.posts, ...res.posts]
+          posts: !option.cursor ? res.posts : [...data.posts, ...res.posts]
         })
       );
     } catch (error) {
@@ -105,11 +105,11 @@ export default function useGetPost() {
       return;
     }
 
-    setPosts({ posts: data.posts, totalCount: data.totalCount, leftCount: data.leftCount });
+    setData({ posts: data.posts, totalCount: data.totalCount, leftCount: data.leftCount });
   }
 
   return {
-    posts,
+    data,
     isLoading,
     updatePost,
     initPost,

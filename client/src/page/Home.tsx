@@ -39,7 +39,13 @@ export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
   const size = 3;
   const debounce = useDebounce();
-  const { posts, isLoading, updatePost, initPost, initPostWithQuery } = useGetPost();
+  const {
+    data: { posts, leftCount, totalCount },
+    isLoading,
+    updatePost,
+    initPost,
+    initPostWithQuery
+  } = useGetPost();
   const [keyword, setKeyword] = useState('');
   const [languages, setLanguages] = useState<Language[]>(
     JSON.parse(window.sessionStorage.getItem('languages') || '[]') as Language[]
@@ -73,13 +79,13 @@ export default function Home() {
   const [isLanguageLoading, setIsLanguageLoading] = useState(false);
 
   const handleIntersect = () => {
-    if (posts.leftCount === 0) return;
+    if (leftCount === 0) return;
 
     updatePost({
       keyword,
       languages: languages.filter((_, index) => isSelected[index]).map(({ name }) => name),
       size,
-      cursor: posts.posts[posts.posts.length - 1]._id
+      cursor: posts[posts.length - 1]._id
     });
   };
 
@@ -225,7 +231,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (posts.posts.length === 0) return;
+    if (posts.length === 0) return;
     if (postListRef.current === null) {
       return;
     }
@@ -294,17 +300,17 @@ export default function Home() {
             />
           )}
         </div>
-        {keyword && (!isLoading || posts.posts.length !== 0) && (
+        {keyword && (!isLoading || posts.length !== 0) && (
           <span style={{ fontSize: '2rem' }}>
-            {posts.totalCount ? `검색 결과 ${posts.totalCount}개의 풀이` : '검색 결과가 없습니다.'}
+            {totalCount ? `검색 결과 ${totalCount}개의 풀이` : '검색 결과가 없습니다.'}
           </span>
         )}
-        {isLoading && !posts.posts.length && (
+        {isLoading && !posts.length && (
           <Skeleton
             Component={<div style={{ width: '20rem', height: '5rem', borderRadius: '2rem' }} />}
           />
         )}
-        <PostList postListRef={postListRef} posts={posts.posts} />
+        <PostList postListRef={postListRef} posts={posts} />
         {isLoading && (
           <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 50 }}>
             {new Array(3).fill(null).map((_, index) => (
