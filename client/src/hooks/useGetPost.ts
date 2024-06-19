@@ -7,26 +7,39 @@ import { useRef, useState } from 'react';
 import { fetchPosts_GET } from '../post/fetchApis';
 import { Option } from 'types/api';
 import { IPost } from 'types/post';
+import { safelyCheckPosts } from 'api/helper';
+
+interface IData {
+  posts: IPost[];
+  leftCount: number;
+  totalCount: number;
+}
+
+const PostStorage = {
+  get: (key: string) => {
+    const value = window.sessionStorage.getItem(key);
+    if (!value) {
+      return null;
+    }
+    const data = JSON.parse(value);
+    // TODO: safelyCheckPosts 공통 함수로 뺄지 여부
+    safelyCheckPosts(data);
+    return data;
+  },
+  set: (key: string, value: IData) => {
+    window.sessionStorage.setItem(key, JSON.stringify(value));
+  }
+};
 
 export default function useGetPost() {
-  const [data, setData] = useState<{ posts: IPost[]; leftCount: number; totalCount: number }>(
-    () => {
-      const { search } = window.location;
-
-      // FIX: assertion
-      const data = JSON.parse(window.sessionStorage.getItem(search) || 'null') as {
-        posts: IPost[];
-        leftCount: number;
-        totalCount: number;
-      };
-
-      if (!data) {
-        return { posts: [], totalCount: 0, leftCount: 0 };
-      }
-
-      return data;
+  const [data, setData] = useState<IData>(() => {
+    const { search } = window.location;
+    const value = PostStorage.get(search);
+    if (!value) {
+      return { posts: [], totalCount: 0, leftCount: 0 };
     }
-  );
+    return value;
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const accRequest = useRef<number>(0);
@@ -71,16 +84,12 @@ export default function useGetPost() {
         });
       setIsLoading(false);
 
-      // 결과 기록하기
       const { search } = window.location;
-      window.sessionStorage.setItem(
-        search,
-        JSON.stringify({
-          totalCount: res.totalCount,
-          leftCount: res.leftCount,
-          posts: !option.cursor ? res.posts : [...data.posts, ...res.posts]
-        })
-      );
+      PostStorage.set(search, {
+        totalCount: res.totalCount,
+        leftCount: res.leftCount,
+        posts: !option.cursor ? res.posts : [...data.posts, ...res.posts]
+      });
     } catch (error) {
       console.log(error);
     }
@@ -92,13 +101,7 @@ export default function useGetPost() {
     }
 
     const { search } = window.location;
-
-    // FIX: assertion
-    const data = JSON.parse(window.sessionStorage.getItem(search) || 'null') as {
-      posts: IPost[];
-      leftCount: number;
-      totalCount: number;
-    };
+    const data = PostStorage.get(search);
 
     if (!data) {
       initPost();
