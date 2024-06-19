@@ -37,7 +37,7 @@ function isStringArray(param: any): param is string[] {
 
 export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
-  const size = 3;
+  const size = 50;
   const debounce = useDebounce();
   const {
     data: { posts, leftCount, totalCount },
