@@ -9,62 +9,30 @@ import { Option } from 'types/api';
 import { IPost } from 'types/post';
 
 export default function useGetPost() {
-  const [posts, setPosts] = useState<IPost[]>(() => {
-    const { search } = window.location;
+  const [posts, setPosts] = useState<{ posts: IPost[]; leftCount: number; totalCount: number }>(
+    () => {
+      const { search } = window.location;
 
-    // FIX: assertion
-    const data = JSON.parse(window.sessionStorage.getItem(search) || 'null') as {
-      posts: IPost[];
-      leftCount: number;
-      totalCount: number;
-    };
+      // FIX: assertion
+      const data = JSON.parse(window.sessionStorage.getItem(search) || 'null') as {
+        posts: IPost[];
+        leftCount: number;
+        totalCount: number;
+      };
 
-    if (!data) {
-      return [];
+      if (!data) {
+        return { posts: [], totalCount: 0, leftCount: 0 };
+      }
+
+      return data;
     }
-
-    return data.posts;
-  });
-  const [totalCount, setTotalCount] = useState(() => {
-    const { search } = window.location;
-
-    // FIX: assertion
-    const data = JSON.parse(window.sessionStorage.getItem(search) || 'null') as {
-      posts: IPost[];
-      leftCount: number;
-      totalCount: number;
-    };
-
-    if (!data) {
-      return [];
-    }
-
-    return data.totalCount;
-  });
-  const [leftCount, setLeftCount] = useState(() => {
-    const { search } = window.location;
-
-    // FIX: assertion
-    const data = JSON.parse(window.sessionStorage.getItem(search) || 'null') as {
-      posts: IPost[];
-      leftCount: number;
-      totalCount: number;
-    };
-
-    if (!data) {
-      return 0;
-    }
-
-    return data.leftCount;
-  });
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   const accRequest = useRef<number>(0);
 
   const initPost = async () => {
-    setTotalCount(0);
-    setLeftCount(0);
-    setPosts([]);
+    setPosts({ posts: [], totalCount: 0, leftCount: 0 });
   };
 
   const updatePost = async (option: Option) => {
@@ -89,11 +57,18 @@ export default function useGetPost() {
         return;
       }
 
-      setTotalCount(res.totalCount);
-      setLeftCount(res.leftCount);
-
-      if (!option.cursor) setPosts(res.posts);
-      else setPosts([...posts, ...res.posts]);
+      if (!option.cursor)
+        setPosts({
+          posts: res.posts,
+          leftCount: res.leftCount,
+          totalCount: res.totalCount
+        });
+      else
+        setPosts({
+          posts: [...posts.posts, ...res.posts],
+          leftCount: res.leftCount,
+          totalCount: res.totalCount
+        });
       setIsLoading(false);
 
       // 결과 기록하기
@@ -103,7 +78,7 @@ export default function useGetPost() {
         JSON.stringify({
           totalCount: res.totalCount,
           leftCount: res.leftCount,
-          posts: !option.cursor ? res.posts : [...posts, ...res.posts]
+          posts: !option.cursor ? res.posts : [...posts.posts, ...res.posts]
         })
       );
     } catch (error) {
@@ -126,21 +101,15 @@ export default function useGetPost() {
     };
 
     if (!data) {
-      setTotalCount(0);
-      setLeftCount(0);
-      setPosts([]);
+      initPost();
       return;
     }
 
-    setTotalCount(data.totalCount);
-    setLeftCount(data.leftCount);
-    setPosts(data.posts);
+    setPosts({ posts: data.posts, totalCount: data.totalCount, leftCount: data.leftCount });
   }
 
   return {
     posts,
-    totalCount,
-    leftCount,
     isLoading,
     updatePost,
     initPost,
