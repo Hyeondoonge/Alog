@@ -11,10 +11,10 @@ import Skeleton from '../common/Skeleton';
 import List from '../common/List';
 import styled, { keyframes } from 'styled-components';
 import SearchField from 'common/SearchField';
-import { Language } from 'types/api';
-import { getFilteredLangauges, saveFilteredLangauges } from 'localStorage';
 import { useHistory, useLocation } from 'react-router-dom';
-import { LanguageStorage } from 'Storage';
+import { Language } from 'types/api';
+import { getFilteredLangauges, saveFilteredLangauges } from 'storage/LocalStorage';
+import { LanguageStorage } from 'storage/SessionStorage';
 
 const ghost_animation = keyframes`
   0% {
