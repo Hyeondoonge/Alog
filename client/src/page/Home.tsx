@@ -14,6 +14,7 @@ import SearchField from 'common/SearchField';
 import { Language } from 'types/api';
 import { getFilteredLangauges, saveFilteredLangauges } from 'localStorage';
 import { useHistory, useLocation } from 'react-router-dom';
+import { LanguageStorage } from 'Storage';
 
 const ghost_animation = keyframes`
   0% {
@@ -47,9 +48,7 @@ export default function Home() {
     initPostWithQuery
   } = useGetPost();
   const [keyword, setKeyword] = useState('');
-  const [languages, setLanguages] = useState<Language[]>(
-    JSON.parse(window.sessionStorage.getItem('languages') || '[]') as Language[]
-  );
+  const [languages, setLanguages] = useState<Language[]>(LanguageStorage.get() || []);
   const [isSelected, setIsSelected] = useState<boolean[]>(() => {
     if (languages.length === 0) {
       return [];
@@ -167,8 +166,7 @@ export default function Home() {
 
       languagesData = fetchedLanguages;
 
-      // ✨save langguage on session storage
-      window.sessionStorage.setItem('languages', JSON.stringify(languagesData));
+      LanguageStorage.set('languages', languagesData);
     }
 
     // 첫 로딩, pop state
@@ -216,7 +214,7 @@ export default function Home() {
     }
 
     (async () => {
-      if (!window.sessionStorage.getItem('languages')) {
+      if (!LanguageStorage.get()) {
         await initLanguage();
       } else {
         languagesData = languages;
