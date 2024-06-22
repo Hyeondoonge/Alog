@@ -31,10 +31,11 @@ const StyledTextField = styled.input`
 interface SearchFieldProps {
   placeholder: string;
   handleChange: React.ChangeEventHandler<HTMLInputElement>;
+  value: string;
 }
 
 // click 및 tab 발생 시 focus 이벤트로 처리
-export default function SearchField({ placeholder, handleChange }: SearchFieldProps) {
+export default function SearchField({ placeholder, handleChange, value }: SearchFieldProps) {
   const inputRef = useRef(null);
   const theme = useContext(ThemeContext);
 
@@ -43,6 +44,7 @@ export default function SearchField({ placeholder, handleChange }: SearchFieldPr
       <StyledTextFieldWrapper color={theme.main} background={theme.background}>
         <StyledTextField
           ref={inputRef}
+          value={value}
           type="text"
           placeholder={placeholder}
           onChange={handleChange}
