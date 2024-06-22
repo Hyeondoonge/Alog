@@ -2,16 +2,18 @@ import styled from 'styled-components';
 import Logo from './Logo';
 
 const StyledStickyHeader = styled.div`
-  /* background-color: #212121; */
   position: fixed;
   width: 100vw;
   top: 0;
   z-index: 999;
   backdrop-filter: blur(30px);
-  background-color: ${(props) => props.background}00;
 `;
 
-export default function StickyHeader({ children }) {
+interface StickyHeaderProps {
+  children: React.ReactNode;
+}
+
+export default function StickyHeader({ children }: StickyHeaderProps) {
   return (
     <StyledStickyHeader>
       <div

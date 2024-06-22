@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { ReactNode, useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 
@@ -8,7 +8,7 @@ const gradientEffect = keyframes`
   }
 `;
 
-const StyledSkeleton = styled.div`
+const StyledSkeleton = styled.div<{ backgroundColor: string }>`
   & > * {
     transition: 1s;
     background-color: ${(props) => props.backgroundColor};
@@ -16,7 +16,7 @@ const StyledSkeleton = styled.div`
   }
 `;
 
-export default function Skeleton({ Component }) {
+export default function Skeleton({ Component }: { Component: ReactNode }) {
   const theme = useContext(ThemeContext);
 
   return <StyledSkeleton backgroundColor={theme.background}>{Component}</StyledSkeleton>;

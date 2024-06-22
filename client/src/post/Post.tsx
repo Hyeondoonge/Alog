@@ -5,6 +5,7 @@ import Card from '../common/Card';
 import ThemeContext from '../contexts/ThemeContext';
 import { RiThumbUpFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
+import { IPost } from 'types/post';
 
 const StyledLink = styled(Link)`
   &:link {
@@ -21,13 +22,17 @@ const StyledPost = styled.div`
   gap: 10px;
 `;
 
-export default function Post({ post }) {
-  const { id, title, subtitle, language, writerId, writeDate, likeCount } = post;
+interface PostProps {
+  post: IPost;
+}
+
+export default function Post({ post }: PostProps) {
+  const { _id, title, subtitle, language, writerId, writeDate, likeCount } = post;
 
   const theme = useContext(ThemeContext);
 
   return (
-    <StyledLink to={`/post?id=${id}`}>
+    <StyledLink to={`/post?id=${_id}`}>
       <Card color="transparent">
         <StyledPost>
           <div style={{ width: '85%' }}>
@@ -44,7 +49,7 @@ export default function Post({ post }) {
               <div>
                 <strong style={{ color: 'white' }}>{title}</strong>
               </div>
-              {language && <Tag label={language} size="1.6" />}
+              {language && <Tag label={language} size={1.6} />}
             </div>
             <div style={{ color: 'white' }}>
               <span>{subtitle}</span>

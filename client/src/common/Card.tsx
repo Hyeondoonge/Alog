@@ -13,6 +13,11 @@ const StyledCard = styled.div`
   }
 `;
 
-export default function Card({ color, children }) {
+interface CardProps {
+  color?: string;
+  children: React.ReactNode;
+}
+
+export default function Card({ color, children }: CardProps) {
   return <StyledCard color={color}>{children}</StyledCard>;
 }

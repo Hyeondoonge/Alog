@@ -23,8 +23,12 @@ const ProfileSkeleton = ({ ownerId }) => (
 
 export default function UserHome(props) {
   const { ownerId } = props.match.params;
-  const [createObserver, registerTargets] = useIntersectionObserver();
-  const [posts, totalCount, leftCount, isLoading, updatePost] = useGetPost();
+  const { createObserver, registerTargets } = useIntersectionObserver();
+  const {
+    data: { posts, totalCount, leftCount },
+    isLoading,
+    updatePost
+  } = useGetPost();
   const postListRef = useRef(null);
   const [ownerData, setOwnerData] = useState('');
   const { description, profilePath } = ownerData;

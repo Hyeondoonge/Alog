@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 
 export default function useDebounce() {
-  const timer = useRef(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const debounce = (callback, time) => {
+  const debounce = (callback: () => void, time: number) => {
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => {
       callback();
@@ -13,9 +13,9 @@ export default function useDebounce() {
 
   useEffect(() => {
     return () => {
-      if (timer.current) clearTimeout(timer);
+      if (timer.current) clearTimeout(timer.current);
     };
-  });
+  }, []);
 
   return debounce;
 }

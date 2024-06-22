@@ -1,20 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 // hook을 재사용할 수 있게 빼내고 메인 컴포넌트로 부터 observer관련 처리 로직을 빼내어
 // 컴포넌트와 옵저버에 일을 분담
 // 컴포넌트에서는 처리 함수와, 타켓을 전달하면 됨.
 
 export default function useIntersectionObserver() {
-  const observerRef = useRef(null);
-  const targets = useRef([]);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const targets = useRef<HTMLElement[]>([]);
 
   const unobserve = () => {
     targets.current.forEach((target) => {
+      if (!observerRef.current) {
+        return;
+      }
       observerRef.current.unobserve(target);
     });
   };
 
-  const createObserver = (callback) => {
+  const createObserver = (callback: () => void) => {
     if (observerRef.current) {
       unobserve();
       targets.current = [];
@@ -34,10 +37,13 @@ export default function useIntersectionObserver() {
     );
   };
 
-  const registerTargets = (targetElements) => {
+  const registerTargets = (targetElements: HTMLElement[]) => {
     if (observerRef.current) {
       targets.current = targetElements;
       targetElements.forEach((target) => {
+        if (!observerRef.current) {
+          return;
+        }
         observerRef.current.observe(target);
       });
     }
@@ -56,5 +62,5 @@ export default function useIntersectionObserver() {
   // 옵저버에서 할 수 있는 일이라면 최대한 얘네가 하도록, 메인 컴포넌트에 하는 처리해야하는 일을 줄이는 것이 목적.
   // + 확실한 옵저버 뒷처리 가능!
 
-  return [createObserver, registerTargets];
+  return { createObserver, registerTargets };
 }

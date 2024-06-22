@@ -1,28 +1,50 @@
+import { safelyCheckLanguages, safelyCheckPosts } from 'api/helper';
+import { Language, Option } from 'types/api';
+import { IPost } from 'types/post';
+
 // createQuery를 만들기 위해 값이 비거나 없는 속성은 제거하고
 // url query를 생성
-const createQuery = (option) => {
+
+const createQuery: (option: Option) => string = (option) => {
   return Object.keys(option)
-    .filter((key) => option[key].length !== 0 && option[key])
+    .filter((key) => {
+      const typedKey = key as keyof Option;
+      const value = option[typedKey];
+
+      if (!value) return false; // undefined, null, 0, '' 우선 제거
+
+      if (value instanceof Array) {
+        return value.length !== 0;
+      }
+
+      return true;
+    })
     .map((key) => {
-      let value = option[key];
-      if (key === 'languages') value = encodeURIComponent(option[key]); // 인코딩 대상 query: langauge
-      return `${key}=${value}`;
+      const typedKey = key as keyof Option;
+      if (typedKey === 'languages') {
+        const value = option[typedKey];
+        return `${key}=${encodeURIComponent(String(value))}`;
+      }
+      return `${key}=${option[typedKey]}`;
     })
     .join('&');
 };
 
-const fetchLanguages_GET = async () => {
+// response type이 정상적일 때의 반환값으로 충분?
+const fetchLanguages_GET: () => Promise<{ languages: Language[] } | undefined> = async () => {
   try {
     const response = await fetch('/api/languages');
-
-    const result = await response.json();
-    return result;
+    // TODO: 안전한 에러 핸들링 추가
+    const json = await response.json();
+    safelyCheckLanguages(json);
+    return json;
   } catch (err) {
     console.log(err);
     return;
   }
 };
 
+// @ts-ignore
 const fetchPost_GET = async (id) => {
   try {
     const response = await fetch(`/api/post?id=${id}`);
@@ -34,18 +56,28 @@ const fetchPost_GET = async (id) => {
   }
 };
 
-const fetchPosts_GET = async (option) => {
+const fetchPosts_GET: (oprion: Option) => Promise<
+  | {
+      posts: IPost[];
+      totalCount: number;
+      leftCount: number;
+    }
+  | undefined
+> = async (option) => {
   try {
     const query = createQuery(option);
+
     const response = await fetch(`/api/posts/search?${query}`);
-    const result = await response.json();
-    return result;
+    const json = await response.json();
+    safelyCheckPosts(json);
+    return json;
   } catch (err) {
     console.log(err);
     return;
   }
 };
 
+// @ts-ignore
 const fetchLike_POST = (id) => async (accessToken) => {
   try {
     const response = await fetch(`/api/like`, {
@@ -64,6 +96,7 @@ const fetchLike_POST = (id) => async (accessToken) => {
   }
 };
 
+// @ts-ignore
 const fetchLike_DELETE = (id) => async (accessToken) => {
   try {
     const response = await fetch(`/api/like`, {

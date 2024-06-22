@@ -10,6 +10,6 @@ const StyledList = styled.div`
   }
 `;
 
-export default function List({ children }) {
+export default function List({ children }: { children: React.ReactNode }) {
   return <StyledList>{children}</StyledList>;
 }
