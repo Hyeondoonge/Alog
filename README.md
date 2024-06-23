@@ -4,7 +4,7 @@
 
 2021년 9월부터 2022년 1월까지 약 4개월간, 기획부터 배포까지 개인으로 진행한 프로젝트입니다. 다양한 코드 채점 플랫폼에서 제공하는 문제의 풀이를 기록하고, 원하는 문제의 풀이를 찾도록하는 웹 서비스를 제공합니다.
 
-현재 기능 추가는 멈춘 상태이지만 유지보수를 위한 버그, 성능 개선 작업을 진행하고있습니다.
+현재 기능 추가는 멈춘 상태이지만 유지보수 작업을 진행하고있습니다.
 
 **[서비스 바로가기](https://alog.netlify.app)**
 
@@ -26,7 +26,7 @@
   - **[마이 페이지](https://github.com/Hyeondoonge/Alog/#4-%EB%A7%88%EC%9D%B4-%ED%8E%98%EC%9D%B4%EC%A7%80)**
   - **[가입 및 인증](https://github.com/Hyeondoonge/Alog/#5-%EA%B0%80%EC%9E%85-%EB%B0%8F-%EC%9D%B8%EC%A6%9D)**
 
-- ### [버그 및 성능 개선 기록](https://github.com/Hyeondoonge/Alog/#-버그-및-성능-개선-기록-1)
+- ### [개선 기록](https://github.com/Hyeondoonge/Alog?tab=readme-ov-file#개선-기록-1)
 
 <br/>
 
@@ -163,7 +163,7 @@ SNS 로그인(카카오 로그인 지원)을 통해 간단하게 가입/인증�
 
 <br/>
 
-## 개선 사항
+## 개선 기록
 
 - [메인 페이지 검색, 필터링, 히스토리 탐색 기능 UX 개선](https://github.com/Hyeondoonge/Alog/pull/110) (24/06/22)
 - [메인 페이지 접근성 개선](https://github.com/Hyeondoonge/Alog/pull/109) (24/06/07)
