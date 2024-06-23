@@ -12,13 +12,13 @@
 
 ## 목차
 
-- ### [💬 계기](https://github.com/Hyeondoonge/Alog/#-계기-1)
+- ### [계기](https://github.com/Hyeondoonge/Alog/#-계기-1)
 
-- ### [⛳️ 시작 방법](https://github.com/Hyeondoonge/Alog/#%EF%B8%8F-시작-방법-1)
+- ### [시작 방법](https://github.com/Hyeondoonge/Alog/#%EF%B8%8F-시작-방법-1)
 
-- ### [🛠️ 기술 스택](https://github.com/Hyeondoonge/Alog/#%EF%B8%8F-기술-스택-1)
+- ### [기술 스택](https://github.com/Hyeondoonge/Alog/#%EF%B8%8F-기술-스택-1)
 
-- ### [✨ 구현 기능](https://github.com/Hyeondoonge/Alog/#-구현-기능-1)
+- ### [구현 기능](https://github.com/Hyeondoonge/Alog/#-구현-기능-1)
 
   - **[홈 / 풀이 검색](https://github.com/Hyeondoonge/Alog/#1-%ED%99%88--%ED%92%80%EC%9D%B4-%EA%B2%80%EC%83%89)**
   - **[풀이 작성 및 수정](https://github.com/Hyeondoonge/Alog/#2-%ED%92%80%EC%9D%B4-%EC%9E%91%EC%84%B1-%EB%B0%8F-%EC%88%98%EC%A0%95)**
@@ -26,11 +26,11 @@
   - **[마이 페이지](https://github.com/Hyeondoonge/Alog/#4-%EB%A7%88%EC%9D%B4-%ED%8E%98%EC%9D%B4%EC%A7%80)**
   - **[가입 및 인증](https://github.com/Hyeondoonge/Alog/#5-%EA%B0%80%EC%9E%85-%EB%B0%8F-%EC%9D%B8%EC%A6%9D)**
 
-- ### [📄 버그 및 성능 개선 기록](https://github.com/Hyeondoonge/Alog/#-버그-및-성능-개선-기록-1)
+- ### [버그 및 성능 개선 기록](https://github.com/Hyeondoonge/Alog/#-버그-및-성능-개선-기록-1)
 
 <br/>
 
-## 💬 계기
+## 계기
 
 개인 블로그에 풀이를 작성하면서 알고리즘 글과 다른 유형의 기술 글들과 섞이는 것에 대해 불편함이 있었습니다. 블로그를 통해 자신이 어떤 것에대해 관심있어하는지를 보여주기 어렵다는 생각에서 출발하여, 문제 풀이만을 작성할 수 있는 서비스가 있으면 좋을 것 같다고 생각했습니다.
 
@@ -42,7 +42,7 @@
 
 <br/>
 
-## ⛳️ 시작 방법
+## 시작 방법
 
 ### Clone
 
@@ -91,7 +91,7 @@ $ pm2 start ecosystem.config.js
 
 <br/>
 
-## 🛠️ 기술 스택
+## 기술 스택
 
 ### Frontend
 
@@ -103,7 +103,7 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 
 <br/>
 
-## ✨ 구현 기능
+## 구현 기능
 
 ### 1. 홈 / 풀이 검색
 
@@ -111,11 +111,11 @@ express, mongoDB, mongoose, JWT, PM2, AWS EC2, Github Actions
 
 <img width="1000" alt="image (1)" src="https://github.com/Hyeondoonge/Alog/assets/55647436/8300e63c-4d8d-4092-b2f0-43e73698cab2">
 
-**📌 세부 구현 사항**
+**‣ 세부 구현 사항**
 
-- Intersection Observer를 이용해 무한스크롤 구현
-- Debounce를 이용해 검색 기능의 UX 개선
-- [cusotm hook](https://github.com/Hyeondoonge/Alog/blob/develop/client/src/hooks/useGetPost.js)을 활용해 코드 품질 향상
+- Intersection Observer API를 이용해 무한스크롤 구현
+- Debounce를 이용해 연속된 키워드 입력을 제한하여 검색 기능의 UX 개선
+- [useGetPost(custom hook)](https://github.com/Hyeondoonge/Alog/blob/develop/client/src/hooks/useGetPost.ts)을 통해 풀이 server state 관리 코드 재사용
 - LocalStorage를 이용해 선택된 필터 유지
 
 ### 2. 풀이 작성 및 수정
@@ -126,25 +126,20 @@ Markdown형식으로 글을 작성할 수 있으며, 프리뷰를 볼 수 있는
 
 <img width="1000" alt="image (2)" src="https://github.com/Hyeondoonge/Alog/assets/55647436/e9d4f998-77f6-4fc1-963b-284de37094de">
 
-**📌 세부 구현 사항**
+**‣ 세부 구현 사항**
 
-- Auto Resizing되는 text area 구현
-- Form 컴포넌트 재사용
-- Media Query를 적용해 반응형 서비스 구현 (모바일 디바이스에서 확인 가능)
+- auto resizing되는 textarea 구현
+- 풀이 작성/수정을 위한 재사용 [Form 컴포넌트](https://github.com/Hyeondoonge/Alog/blob/develop/client/src/common/Form.js) 구현
+- `react-responsive` 라이브러리를 활용해 반응형 레이아웃 적용
 
 ### 3. 풀이 조회
 
-작성자가 등록한 풀이를 조회할 수 있습니다.
+서비스에 등록된 풀이를 조회합니다.
 
-해당 페이지에서 작성자 본인에 한해 수정, 삭제가 가능하며
-인증된 사용자라면 좋아요 기능을 이용할 수 있습니다.
+풀이는 작성자 본인에 한해 수정, 삭제가 가능합니다.
+모든 인증된 사용자는 좋아요 기능을 이용할 수 있습니다.
 
 ![스크린샷 2023-11-02 오전 1 24 26](https://github.com/Hyeondoonge/Alog/assets/55647436/868be857-d815-46e3-9f6f-36c868f19968)
-
-**📌 세부 구현 사항**
-
-- 작성자 풀이 삭제 기능
-- 인증된 사용자의 좋아요 / 좋아요 취소 기능
 
 ### 4. 마이 페이지
 
@@ -152,28 +147,27 @@ Markdown형식으로 글을 작성할 수 있으며, 프리뷰를 볼 수 있는
 
 ![스크린샷 2023-11-02 오전 1 23 11](https://github.com/Hyeondoonge/Alog/assets/55647436/de7d0dd2-aea6-4346-ba3c-cc80761e77ed)
 
-**📌 세부 구현 사항**
-
-- 메인 페이지의 [cusotm hook](https://github.com/Hyeondoonge/Alog/blob/develop/client/src/hooks/useGetPost.js)을 재사용하여 풀이 조회 기능 구현 시 개발 생산성 향상
-- 회원가입시 사용자가 등록한 이미지 로드
-
 ### 5. 가입 및 인증
 
-카카오 계정을 통해 편리하게 서비스를 이용할 수 있습니다.
+SNS 로그인(카카오 로그인 지원)을 통해 간단하게 가입/인증할 수 있습니다.
 
-테스트 계정을 통해 서비스를 편하게 둘러볼 수도 있습니다.
+테스트 계정으로 로그인하여 서비스를 편하게 둘러볼 수도 있습니다.
 
 ![스크린샷 2023-11-02 오전 1 27 51](https://github.com/Hyeondoonge/Alog/assets/55647436/817b7980-53e2-4690-8ccb-8a82395d3f7f)
 
-**📌 세부 구현 사항**
+**‣ 세부 구현 사항**
 
 - 회원가입, 로그인, 로그아웃 구현
-- OAuth와 JWT를 사용해 구현
+- JWT와 cookie를 활용해 인증 데이터 관리
+- Local storage를 이용해 로그인 상태 유지
 
 <br/>
 
-## 🔥 버그 및 성능 개선 기록
+## 개선 사항
 
+- [메인 페이지 검색, 필터링, 히스토리 탐색 기능 UX 개선](https://github.com/Hyeondoonge/Alog/pull/110) (24/06/22)
+- [메인 페이지 접근성 개선](https://github.com/Hyeondoonge/Alog/pull/109) (24/06/07)
+- [메인 페이지 JS -> TS 마이그레이션](https://github.com/Hyeondoonge/Alog/pull/104) (24/06/05)
 - [풀이 제목 입력 버그에 따른 로직 수정 해결](https://github.com/Hyeondoonge/Alog/pull/96) (24/03/14)
 - [페이지 Lazy 로딩을 통한 성능 향상](https://github.com/Hyeondoonge/Alog/pull/91) (23/11/01)
 - [CRA 버전업에 따른 Buffer 모듈 사용 오류](https://github.com/Hyeondoonge/Alog/pull/87) (23/08/31)
