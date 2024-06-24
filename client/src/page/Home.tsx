@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import useGetPost from '../hooks/useGetPost';
-import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import { fetchLanguages_GET } from '../post/fetchApis';
 import PostList from '../post/PostList';
 import FilterList from '../post/FilterList';
@@ -73,13 +72,10 @@ export default function Home() {
     return languages.map(({ name }) => filteredLanguages.includes(name));
   });
 
-  const postListRef = useRef<HTMLDivElement | null>(null);
-  const { createObserver, registerTargets } = useIntersectionObserver();
   const [isLanguageLoading, setIsLanguageLoading] = useState(false);
 
   const handleIntersect = () => {
     if (leftCount === 0) return;
-
     updatePost({
       keyword,
       languages: languages.filter((_, index) => isSelected[index]).map(({ name }) => name),
@@ -228,19 +224,6 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    if (posts.length === 0) return;
-    if (postListRef.current === null) {
-      return;
-    }
-    const lastPost = postListRef.current.lastElementChild;
-    if (!(lastPost instanceof HTMLElement)) {
-      return;
-    }
-    createObserver(handleIntersect);
-    registerTargets([lastPost]);
-  }, [posts]);
-
   const location = useLocation();
   const mount = useRef(false);
 
@@ -308,41 +291,7 @@ export default function Home() {
             Component={<div style={{ width: '20rem', height: '5rem', borderRadius: '2rem' }} />}
           />
         )}
-        <PostList postListRef={postListRef} posts={posts} />
-        {isLoading && (
-          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 50 }}>
-            {new Array(3).fill(null).map((_, index) => (
-              <div
-                key={index}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  gap: '0.5rem',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <div
-                  style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '75%' }}
-                >
-                  <Skeleton
-                    Component={
-                      <div style={{ width: '40%', height: '5rem', borderRadius: '2rem' }} />
-                    }
-                  />
-                  <Skeleton
-                    Component={
-                      <div style={{ width: '60%', height: '5rem', borderRadius: '2rem' }} />
-                    }
-                  />
-                </div>
-                <div style={{ width: '15%' }}>
-                  <Skeleton Component={<div style={{ height: '10rem', borderRadius: '2rem' }} />} />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <PostList posts={posts} handleIntersect={handleIntersect} isLoading={isLoading} />
       </div>
     </Template>
   );

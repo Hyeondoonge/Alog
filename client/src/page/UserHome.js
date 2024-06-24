@@ -23,13 +23,11 @@ const ProfileSkeleton = ({ ownerId }) => (
 
 export default function UserHome(props) {
   const { ownerId } = props.match.params;
-  const { createObserver, registerTargets } = useIntersectionObserver();
   const {
     data: { posts, totalCount, leftCount },
     isLoading,
     updatePost
   } = useGetPost();
-  const postListRef = useRef(null);
   const [ownerData, setOwnerData] = useState('');
   const { description, profilePath } = ownerData;
   const [_, __, userData] = useContext(UserContext);
@@ -56,15 +54,6 @@ export default function UserHome(props) {
       setLoading(false);
     })();
   }, [props]);
-
-  useEffect(() => {
-    if (posts.length === 0) return;
-    const postItems = postListRef.current.children;
-    const targetElement = postItems[postItems.length - 1];
-
-    createObserver(handleIntersect);
-    registerTargets([targetElement]);
-  }, [posts]);
 
   return (
     <Template header>
@@ -116,41 +105,7 @@ export default function UserHome(props) {
             작성된 솔루션이 없어요.
           </div>
         )}
-        <PostList postListRef={postListRef} posts={posts} />
-        {isLoading && (
-          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 50 }}>
-            {new Array(3).fill(null).map((e, index) => (
-              <div
-                key={index}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  gap: '0.5rem',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <div
-                  style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '75%' }}
-                >
-                  <Skeleton
-                    Component={
-                      <div style={{ width: '40%', height: '5rem', borderRadius: '2rem' }} />
-                    }
-                  />
-                  <Skeleton
-                    Component={
-                      <div style={{ width: '60%', height: '5rem', borderRadius: '2rem' }} />
-                    }
-                  />
-                </div>
-                <div style={{ width: '15%' }}>
-                  <Skeleton Component={<div style={{ height: '10rem', borderRadius: '2rem' }} />} />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <PostList posts={posts} isLoading={isLoading} handleIntersect={handleIntersect} />
       </div>
     </Template>
   );
