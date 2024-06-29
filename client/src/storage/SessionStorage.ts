@@ -20,9 +20,10 @@ export const PostStorage = {
   }
 };
 
+const LanguageStorageKey = 'languages';
 export const LanguageStorage = {
-  get: (key = 'languages') => {
-    const value = sessionStorage.getItem(key);
+  get: () => {
+    const value = sessionStorage.getItem(LanguageStorageKey);
     if (!value) {
       return null;
     }
@@ -30,8 +31,8 @@ export const LanguageStorage = {
     safelyCheckLanguages(data);
     return data;
   },
-  set: (key: string, value: Language[]) => {
-    sessionStorage.setItem(key, JSON.stringify(value));
+  set: (value: Language[]) => {
+    sessionStorage.setItem(LanguageStorageKey, JSON.stringify(value));
   }
 };
 

@@ -162,7 +162,7 @@ export default function Home() {
 
       languagesData = fetchedLanguages;
 
-      LanguageStorage.set('languages', languagesData);
+      LanguageStorage.set(languagesData);
     }
 
     // 첫 로딩, pop state
