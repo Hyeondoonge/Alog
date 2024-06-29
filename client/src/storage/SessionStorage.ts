@@ -1,6 +1,7 @@
 import { Language } from 'types/api';
 import { safelyCheckPosts } from 'api/helper';
 import { IData } from 'hooks/useGetPost';
+import { LANGUAGE_STORAGE_KEY } from './constants';
 
 const { sessionStorage } = window;
 
@@ -20,10 +21,9 @@ export const PostStorage = {
   }
 };
 
-const LanguageStorageKey = 'languages';
 export const LanguageStorage = {
   get: () => {
-    const value = sessionStorage.getItem(LanguageStorageKey);
+    const value = sessionStorage.getItem(LANGUAGE_STORAGE_KEY);
     if (!value) {
       return null;
     }
@@ -32,7 +32,7 @@ export const LanguageStorage = {
     return data;
   },
   set: (value: Language[]) => {
-    sessionStorage.setItem(LanguageStorageKey, JSON.stringify(value));
+    sessionStorage.setItem(LANGUAGE_STORAGE_KEY, JSON.stringify(value));
   }
 };
 
