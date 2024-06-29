@@ -35,6 +35,31 @@ function isStringArray(param: any): param is string[] {
   return Array.isArray(param) && param.every((value) => typeof value === 'string');
 }
 
+const KEYWORD_KEY = 'keyword';
+const FILTER_KEY = 'filter';
+
+const OptionQueryString = {
+  createQueryString: (keyword: string, selectedLanguages: string[]) => {
+    const urlSearchParams = new URLSearchParams();
+
+    if (keyword) {
+      urlSearchParams.append(KEYWORD_KEY, keyword);
+    }
+    urlSearchParams.append(FILTER_KEY, encodeURIComponent(JSON.stringify(selectedLanguages)));
+
+    return urlSearchParams;
+  },
+  getOption: () => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const keywordParam = urlSearchParams.get(KEYWORD_KEY) || '';
+    const filterParam: null | string[] = JSON.parse(
+      decodeURIComponent(urlSearchParams.get(FILTER_KEY) || 'null')
+    );
+
+    return { keyword: keywordParam, languages: filterParam };
+  }
+};
+
 export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
   const size = 50;
@@ -48,16 +73,13 @@ export default function Home() {
   } = useGetPost();
   const [keyword, setKeyword] = useState('');
   const [languages, setLanguages] = useState<Language[]>(LanguageStorage.get() || []);
+
   const [isSelected, setIsSelected] = useState<boolean[]>(() => {
     if (languages.length === 0) {
       return [];
     }
 
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const filterParam: null | string[] | unknown = JSON.parse(
-      decodeURIComponent(urlSearchParams.get('filter') || 'null')
-    );
-
+    const { languages: filterParam } = OptionQueryString.getOption();
     let filteredLanguages: string[] = [];
 
     if (!filterParam) {
@@ -74,6 +96,7 @@ export default function Home() {
 
   const [isLanguageLoading, setIsLanguageLoading] = useState(false);
 
+  const history = useHistory();
   const handleIntersect = () => {
     if (leftCount === 0) return;
     updatePost({
@@ -83,8 +106,6 @@ export default function Home() {
       cursor: posts[posts.length - 1]._id
     });
   };
-
-  const history = useHistory();
 
   const handleChangeKeyword = async (event: ChangeEvent<HTMLInputElement>) => {
     const newKeyword = event.target.value;
@@ -96,14 +117,8 @@ export default function Home() {
         .map(({ name }) => name);
 
       // stack history
-      const newSearchParam = new URLSearchParams();
-
-      if (newKeyword) {
-        newSearchParam.append('keyword', newKeyword);
-      }
-      newSearchParam.append('filter', encodeURIComponent(JSON.stringify(selectedLanguages)));
-
-      history.push(`/?${newSearchParam.toString()}`);
+      const urlSearchParams = OptionQueryString.createQueryString(newKeyword, selectedLanguages);
+      history.push(`/?${urlSearchParams.toString()}`);
 
       initPost();
       updatePost({
@@ -125,13 +140,9 @@ export default function Home() {
     saveFilteredLangauges(selectedLanguages);
     setIsSelected(newIsSelected);
 
-    const newSearchParam = new URLSearchParams();
-    if (keyword) {
-      newSearchParam.append('keyword', keyword);
-    }
-    newSearchParam.append('filter', encodeURIComponent(JSON.stringify(selectedLanguages)));
-    history.push(`/?${newSearchParam.toString()}`);
-    // stack history
+    const urlSearchParams = OptionQueryString.createQueryString(keyword, selectedLanguages);
+    history.push(`/?${urlSearchParams.toString()}`);
+
     if (keyword) {
       initPost();
       updatePost({
@@ -175,11 +186,8 @@ export default function Home() {
         if (window.location.pathname !== '/') {
           return;
         }
-        const urlSearchParams = new URLSearchParams(window.location.search);
-        const filterParam: null | string[] | unknown = JSON.parse(
-          decodeURIComponent(urlSearchParams.get('filter') || 'null')
-        );
 
+        const { keyword, languages: filterParam } = OptionQueryString.getOption();
         let filteredLanguages: string[] = [];
 
         if (!filterParam) {
@@ -195,10 +203,11 @@ export default function Home() {
         }
 
         if (!filterParam) {
-          urlSearchParams.append('filter', encodeURIComponent(JSON.stringify(filteredLanguages)));
+          const urlSearchParams = OptionQueryString.createQueryString('', filteredLanguages);
           history.replace(`/?${urlSearchParams.toString()}`);
         }
-        setKeyword(urlSearchParams.get('keyword') || '');
+
+        setKeyword(keyword);
       } catch (error) {
         console.log(error);
       }
@@ -217,6 +226,7 @@ export default function Home() {
       }
       init();
     })();
+    console.log('mount');
 
     window.addEventListener('popstate', init);
     return () => {
