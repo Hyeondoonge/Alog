@@ -248,6 +248,12 @@ export default function Home() {
     window.location.reload();
   }, [location]);
 
+  useEffect(() => {
+    return () => {
+      mount.current = false;
+    };
+  }, []);
+
   return (
     <Template header>
       <div
