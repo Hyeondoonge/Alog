@@ -1,5 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import useDebounce from '../hooks/useDebounce';
+import { useEffect, useRef, useState } from 'react';
 import useGetPost from '../hooks/useGetPost';
 import { fetchLanguages_GET } from '../post/fetchApis';
 import PostList from '../post/PostList';
@@ -14,6 +13,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Language } from 'types/api';
 import { getFilteredLangauges, saveFilteredLangauges } from 'storage/LocalStorage';
 import { LanguageStorage } from 'storage/SessionStorage';
+import useOptionStore from 'store/option';
 
 const ghost_animation = keyframes`
   0% {
@@ -38,12 +38,24 @@ function isStringArray(param: any): param is string[] {
 const KEYWORD_KEY = 'keyword';
 const FILTER_KEY = 'filter';
 
-const OptionQueryString = {
-  createQueryString: (keyword: string, selectedLanguages: string[]) => {
+export const OptionQueryString = {
+  createQSUsingKeyword: (keyword: string) => {
+    const { languages: original_languages } = OptionQueryString.getOption();
     const urlSearchParams = new URLSearchParams();
 
     if (keyword) {
       urlSearchParams.append(KEYWORD_KEY, keyword);
+    }
+    urlSearchParams.append(FILTER_KEY, encodeURIComponent(JSON.stringify(original_languages)));
+
+    return urlSearchParams;
+  },
+  createQSUsingSelectedLanguages: (selectedLanguages: string[]) => {
+    const { keyword: original_keyword } = OptionQueryString.getOption();
+    const urlSearchParams = new URLSearchParams();
+
+    if (original_keyword) {
+      urlSearchParams.append(KEYWORD_KEY, original_keyword);
     }
     urlSearchParams.append(FILTER_KEY, encodeURIComponent(JSON.stringify(selectedLanguages)));
 
@@ -63,7 +75,6 @@ const OptionQueryString = {
 export default function Home() {
   // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
   const size = 50;
-  const debounce = useDebounce();
   const {
     data: { posts, leftCount, totalCount },
     isLoading,
@@ -71,7 +82,8 @@ export default function Home() {
     initPost,
     initPostWithQuery
   } = useGetPost();
-  const [keyword, setKeyword] = useState('');
+  const keyword = useOptionStore((state) => state.keyword);
+
   const [languages, setLanguages] = useState<Language[]>(LanguageStorage.get() || []);
 
   const [isSelected, setIsSelected] = useState<boolean[]>(() => {
@@ -107,28 +119,6 @@ export default function Home() {
     });
   };
 
-  const handleChangeKeyword = async (event: ChangeEvent<HTMLInputElement>) => {
-    const newKeyword = event.target.value;
-    setKeyword(newKeyword);
-
-    debounce(() => {
-      const selectedLanguages = languages
-        .filter((_, index) => isSelected[index])
-        .map(({ name }) => name);
-
-      // stack history
-      const urlSearchParams = OptionQueryString.createQueryString(newKeyword, selectedLanguages);
-      history.push(`/?${urlSearchParams.toString()}`);
-
-      initPost();
-      updatePost({
-        keyword: newKeyword,
-        languages: languages.filter((_, index) => isSelected[index]).map(({ name }) => name),
-        size
-      });
-    }, 550);
-  };
-
   // 언어 변경 시 post 리셋.
   const handleChangeLanguage = (index: number) => () => {
     const newIsSelected = [...isSelected];
@@ -140,7 +130,7 @@ export default function Home() {
     saveFilteredLangauges(selectedLanguages);
     setIsSelected(newIsSelected);
 
-    const urlSearchParams = OptionQueryString.createQueryString(keyword, selectedLanguages);
+    const urlSearchParams = OptionQueryString.createQSUsingSelectedLanguages(selectedLanguages);
     history.push(`/?${urlSearchParams.toString()}`);
 
     if (keyword) {
@@ -187,7 +177,7 @@ export default function Home() {
           return;
         }
 
-        const { keyword, languages: filterParam } = OptionQueryString.getOption();
+        const { languages: filterParam } = OptionQueryString.getOption();
         let filteredLanguages: string[] = [];
 
         if (!filterParam) {
@@ -203,11 +193,10 @@ export default function Home() {
         }
 
         if (!filterParam) {
-          const urlSearchParams = OptionQueryString.createQueryString('', filteredLanguages);
+          const urlSearchParams =
+            OptionQueryString.createQSUsingSelectedLanguages(filteredLanguages);
           history.replace(`/?${urlSearchParams.toString()}`);
         }
-
-        setKeyword(keyword);
       } catch (error) {
         console.log(error);
       }
@@ -272,11 +261,7 @@ export default function Home() {
             <Ghost />
           </i>
         </div>
-        <SearchField
-          placeholder="찾는 풀이의 문제제목을 입력해보세요."
-          value={keyword}
-          handleChange={handleChangeKeyword}
-        />
+        <SearchField />
         <div>
           {isLanguageLoading ? (
             <List>
