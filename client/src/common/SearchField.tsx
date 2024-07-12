@@ -32,6 +32,7 @@ const StyledTextField = styled.input`
   color: white;
 `;
 
+// TODO: 전역상태 사용 및 특수한 작업이 추가됨에 따라 재사용이 어려워짐, 추후 개선 필요
 export default function SearchField() {
   const [immediateKeyword, setImmediateKeyword] = useState('');
   const setKeyword = useOptionStore((state) => state.setKeyword);
