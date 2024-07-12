@@ -1,6 +1,6 @@
-const Localstorage = window.localStorage;
+import { FILTER_LANGUAGES_KEY } from './constants';
 
-const FILTER_LANGUAGES_KEY = 'filter_languages';
+const Localstorage = window.localStorage;
 
 const saveFilteredLangauges = (languages: string[]) => {
   Localstorage.setItem(FILTER_LANGUAGES_KEY, JSON.stringify(languages));

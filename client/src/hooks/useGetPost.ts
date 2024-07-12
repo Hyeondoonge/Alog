@@ -7,29 +7,13 @@ import { useRef, useState } from 'react';
 import { fetchPosts_GET } from '../post/fetchApis';
 import { Option } from 'types/api';
 import { IPost } from 'types/post';
-import { safelyCheckPosts } from 'api/helper';
+import { PostStorage } from 'storage/SessionStorage';
 
-interface IData {
+export interface IData {
   posts: IPost[];
   leftCount: number;
   totalCount: number;
 }
-
-const PostStorage = {
-  get: (key: string) => {
-    const value = window.sessionStorage.getItem(key);
-    if (!value) {
-      return null;
-    }
-    const data = JSON.parse(value);
-    // TODO: safelyCheckPosts 공통 함수로 뺄지 여부
-    safelyCheckPosts(data);
-    return data;
-  },
-  set: (key: string, value: IData) => {
-    window.sessionStorage.setItem(key, JSON.stringify(value));
-  }
-};
 
 export default function useGetPost() {
   const [data, setData] = useState<IData>(() => {

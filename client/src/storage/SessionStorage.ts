@@ -1,10 +1,29 @@
 import { Language } from 'types/api';
+import { safelyCheckPosts } from 'api/helper';
+import { IData } from 'hooks/useGetPost';
+import { LANGUAGE_STORAGE_KEY } from './constants';
 
 const { sessionStorage } = window;
 
-export const LanguageStorage = {
-  get: (key = 'languages') => {
+export const PostStorage = {
+  get: (key: string) => {
     const value = sessionStorage.getItem(key);
+    if (!value) {
+      return null;
+    }
+    const data = JSON.parse(value);
+    // TODO: safelyCheckPosts 공통 함수로 뺄지 여부
+    safelyCheckPosts(data);
+    return data;
+  },
+  set: (key: string, value: IData) => {
+    sessionStorage.setItem(key, JSON.stringify(value));
+  }
+};
+
+export const LanguageStorage = {
+  get: () => {
+    const value = sessionStorage.getItem(LANGUAGE_STORAGE_KEY);
     if (!value) {
       return null;
     }
@@ -12,8 +31,8 @@ export const LanguageStorage = {
     safelyCheckLanguages(data);
     return data;
   },
-  set: (key: string, value: Language[]) => {
-    sessionStorage.setItem(key, JSON.stringify(value));
+  set: (value: Language[]) => {
+    sessionStorage.setItem(LANGUAGE_STORAGE_KEY, JSON.stringify(value));
   }
 };
 
