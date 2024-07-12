@@ -32,7 +32,6 @@ const StyledTextField = styled.input`
   color: white;
 `;
 
-// click 및 tab 발생 시 focus 이벤트로 처리
 export default function SearchField() {
   const [immediateKeyword, setImmediateKeyword] = useState('');
   const setKeyword = useOptionStore((state) => state.setKeyword);
@@ -79,15 +78,6 @@ export default function SearchField() {
           placeholder={'찾는 풀이의 문제제목을 입력해보세요.'}
           onChange={handleChange}
         />
-        {/* <span
-          style={{ cursor: 'pointer' }}
-          onClick={() => {
-            inputRef.current.value = '';
-            handleRemove();
-          }}
-        >
-          <RiCloseFill size="25px" />
-        </span> */}
       </StyledTextFieldWrapper>
     </div>
   );

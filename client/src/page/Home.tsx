@@ -73,7 +73,6 @@ export const OptionQueryString = {
 };
 
 export default function Home() {
-  // 함수에 다수의 파라미터를 사용하지 않고 object하나를 사용해서 파라미터 순서 신경X, 전달할 값이 없어 null을 전달을 할 필요가 없어짐
   const size = 50;
   const {
     data: { posts, leftCount, totalCount },
@@ -119,7 +118,6 @@ export default function Home() {
     });
   };
 
-  // 언어 변경 시 post 리셋.
   const handleChangeLanguage = (index: number) => () => {
     const newIsSelected = [...isSelected];
     newIsSelected[index] = !isSelected[index] ? true : false;
@@ -215,7 +213,6 @@ export default function Home() {
       }
       init();
     })();
-    console.log('mount');
 
     window.addEventListener('popstate', init);
     return () => {
@@ -257,7 +254,6 @@ export default function Home() {
         <div style={{ textAlign: 'center', margin: '30px', height: '20px', wordBreak: 'keep-all' }}>
           <i style={{ fontSize: '20px', color: '#9bc9b1' }}>
             원하는 문제의 풀이를 찾거나 알고리즘을 기록해보세요&nbsp;
-            {/* <RiGhost2Fill /> */}
             <Ghost />
           </i>
         </div>
