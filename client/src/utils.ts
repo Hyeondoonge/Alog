@@ -34,3 +34,7 @@ export const OptionQueryString = {
     return { keyword: keywordParam, languages: filterParam };
   }
 };
+
+export function isStringArray(param: any): param is string[] {
+  return Array.isArray(param) && param.every((value) => typeof value === 'string');
+}
