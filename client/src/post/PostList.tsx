@@ -50,6 +50,7 @@ export default function PostList() {
       });
 
       if (!res) {
+        // TODO: 에러 핸들링 개선
         throw new Error('failed to fetch post');
       }
       const { posts, totalCount, leftCount } = res;
@@ -58,7 +59,8 @@ export default function PostList() {
     },
     initialPageParam: '',
     getNextPageParam: (lastPage) => (lastPage.length ? lastPage[lastPage.length - 1]._id : null),
-    throwOnError: false
+    throwOnError: false,
+    gcTime: 120 * 60 * 1000
   });
 
   const ref = useRef<HTMLDivElement | null>(null);
@@ -88,7 +90,7 @@ export default function PostList() {
   }, [data]);
 
   if (error || !data) {
-    // FIX: Error boundary 없는 관계로 임의 코드 삽입
+    // FIX: 에러, 로딩 핸들링 개선
     return <div>Error</div>;
   }
 
