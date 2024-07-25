@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useState } from 'react';
 import Skeleton from 'common/Skeleton';
 import useOptionStore from 'store/option';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -19,17 +19,20 @@ export default function SearchPostList() {
     .filter((_, index) => isSelected[index])
     .map(({ name }) => name);
 
-  const metadata = useRef<{ totalCount: null | number; leftCount: null | number }>({
-    totalCount: 0,
-    leftCount: 0
+  const [metadata, setMetadata] = useState<{
+    totalCount: null | number;
+    leftCount: null | number;
+  }>({
+    totalCount: null,
+    leftCount: null
   });
-  const { totalCount, leftCount } = metadata.current;
+  const { totalCount, leftCount } = metadata;
 
   const { data, fetchNextPage, isFetchingNextPage, error } = useInfiniteQuery({
     queryKey: ['posts', keyword, filteredLanguages],
     queryFn: async ({ pageParam }) => {
       if (!keyword) {
-        metadata.current = { totalCount: 0, leftCount: 0 };
+        setMetadata({ totalCount: null, leftCount: null });
         return [];
       }
 
@@ -44,8 +47,10 @@ export default function SearchPostList() {
         // TODO: 에러 핸들링 개선
         throw new Error('failed to fetch post');
       }
+
       const { posts, totalCount, leftCount } = res;
-      metadata.current = { totalCount, leftCount };
+
+      setMetadata({ totalCount, leftCount });
       return posts;
     },
     initialPageParam: '',
