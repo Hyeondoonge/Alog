@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Button from './common/Button';
 import StickyHeader from './common/StickyHeader';
 import ThemeContext from './contexts/ThemeContext';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { RiCloseFill } from 'react-icons/ri';
 import { kakao_RefreshAccessToken, kakao_Logout, kakao_GetLoginUrl } from './api/kakaoApi';
 import { useMediaQuery } from 'react-responsive';
@@ -91,7 +91,7 @@ export default function Template({
   const [isLoggedIn, setIsLoggedIn, userData, setUserData] = useUserContext();
   const loginModalRef = useRef<HTMLDivElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   const isBigScreen = useMediaQuery({ query: '(min-width: 600px)' });
   const [setMessage] = useModalContext();
   const theme = useContext(ThemeContext);
@@ -219,7 +219,7 @@ export default function Template({
                   color="transparent"
                   size="small"
                   onClick={() => {
-                    history.push('/write');
+                    navigate('/write');
                   }}
                 />
                 <Button
@@ -233,7 +233,7 @@ export default function Template({
                           // 테스터 로그인
                           setIsLoggedIn(false);
                           initUserData();
-                          history.replace('/');
+                          navigate('/', { replace: true });
                           return;
                         }
 
@@ -256,7 +256,7 @@ export default function Template({
 
                         setIsLoggedIn(false);
                         initUserData();
-                        history.replace('/');
+                        navigate('/', { replace: true });
                       })();
                     } catch (error) {
                       console.log(error);
