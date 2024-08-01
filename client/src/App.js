@@ -1,7 +1,7 @@
 import Home from './page/Home';
 import ReadPost from './page/ReadPost';
 import Error from './page/Error';
-import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ThemeContextProvider } from './contexts/ThemeContext';
 import { ModalContextProvider } from './contexts/ModalContext';
 import UserContext, { UserContextProvider } from './contexts/UserContext';
@@ -58,15 +58,15 @@ export default function App() {
           >
             <MyComponent>
               <Router>
-                <Switch>
-                  <Route path="/" exact component={Home} />
-                  <Route path="/home/:ownerId" exact component={UserHome} />
-                  <Route path="/write" exact component={WritePost} />
-                  <Route path="/edit" exact component={EditPost} />
-                  <Route path="/post" exact component={ReadPost} />
-                  <Route path="/signup" exact component={SignUp} />
-                  <Route path="/*" exact component={Error} />
-                </Switch>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="home/:ownerId" element={<UserHome />} />
+                  <Route path="write" element={<WritePost />} />
+                  <Route path="edit" element={<EditPost />} />
+                  <Route path="post" element={<ReadPost />} />
+                  <Route path="signup" element={<SignUp />} />
+                  <Route path="*" element={<Error />} />
+                </Routes>
               </Router>
             </MyComponent>
           </Suspense>
