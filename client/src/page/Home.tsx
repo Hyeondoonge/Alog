@@ -10,7 +10,7 @@ import Skeleton from '../common/Skeleton';
 import List from '../common/List';
 import styled, { keyframes } from 'styled-components';
 import SearchField from 'common/SearchField';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Language } from 'types/api';
 import { getFilteredLangauges, saveFilteredLangauges } from 'storage/LocalStorage';
 import { LanguageStorage } from 'storage/SessionStorage';
@@ -96,7 +96,7 @@ export default function Home() {
 
   const [isLanguageLoading, setIsLanguageLoading] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleIntersect = () => {
     if (leftCount === 0) return;
     updatePost({
@@ -118,7 +118,7 @@ export default function Home() {
 
       // stack history
       const urlSearchParams = OptionQueryString.createQueryString(newKeyword, selectedLanguages);
-      history.push(`/?${urlSearchParams.toString()}`);
+      navigate(`/?${urlSearchParams.toString()}`);
 
       initPost();
       updatePost({
@@ -141,7 +141,7 @@ export default function Home() {
     setIsSelected(newIsSelected);
 
     const urlSearchParams = OptionQueryString.createQueryString(keyword, selectedLanguages);
-    history.push(`/?${urlSearchParams.toString()}`);
+    navigate(`/?${urlSearchParams.toString()}`);
 
     if (keyword) {
       initPost();
@@ -204,7 +204,7 @@ export default function Home() {
 
         if (!filterParam) {
           const urlSearchParams = OptionQueryString.createQueryString('', filteredLanguages);
-          history.replace(`/?${urlSearchParams.toString()}`);
+          navigate(`/?${urlSearchParams.toString()}`, { replace: true });
         }
 
         setKeyword(keyword);

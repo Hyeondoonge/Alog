@@ -1,6 +1,7 @@
 // kakao 로그인 api test 용 컴포넌트
 
-import { useHistory, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import queryString from 'query-string';
 import { useRef, useState } from 'react';
 import { useContext } from 'react';
@@ -50,11 +51,11 @@ export default function SignUp() {
 
   const [isCheckingMember, setIsCheckingMember] = useState(true);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const inputRef = useRef(null);
 
   const replacePageTo = (path) => {
-    history.replace(path);
+    navigate(path, { replace: true });
   };
 
   const updateUserData = (newData) => {

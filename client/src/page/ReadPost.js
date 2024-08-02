@@ -6,8 +6,7 @@ import Tag from '../common/Tag';
 import { RiThumbUpFill, RiChat1Fill } from 'react-icons/ri';
 import { useMediaQuery } from 'react-responsive';
 import queryString from 'query-string';
-import { useLocation } from 'react-router-dom';
-import { useHistory } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import styled, { keyframes } from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
@@ -133,7 +132,7 @@ export default function Post() {
   const [__, requestService] = useToken();
   const isBigScreen = useMediaQuery({ query: '(min-width: 600px)' });
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const theme = useContext(ThemeContext);
 
@@ -184,7 +183,7 @@ export default function Post() {
       if (confirm) {
         const res = await requestService(() => fetchSolution_DELETE(id));
         alert('삭제 됐습니다.');
-        history.goBack();
+        navigate(-1);
       }
     })();
   };
