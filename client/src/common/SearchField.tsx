@@ -2,7 +2,7 @@ import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 import useDebounce from 'hooks/useDebounce';
-import { OptionQueryString } from 'page/Home';
+import { OptionQueryString } from 'utils';
 import { useHistory } from 'react-router-dom';
 import useOptionStore from 'store/option';
 
