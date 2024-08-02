@@ -4,7 +4,7 @@ import useLanguagesStore from 'store/languages';
 import { useEffect } from 'react';
 import useOptionStore, { initIsSelected } from 'store/option';
 import { getFilteredLangauges, saveFilteredLangauges } from 'storage/LocalStorage';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { OptionQueryString } from 'utils';
 import { Language } from 'types/api';
 
@@ -20,7 +20,7 @@ export default function FilterList() {
     changeIsSelected: state.changeIsSelected
   }));
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleChangeLanguage = (index: number) => () => {
     const newIsSelected = [...isSelected];
@@ -33,7 +33,7 @@ export default function FilterList() {
     setIsSelected(newIsSelected);
 
     const urlSearchParams = OptionQueryString.createQSUsingSelectedLanguages(selectedLanguages);
-    history.push(`/?${urlSearchParams.toString()}`);
+    navigate(`/?${urlSearchParams.toString()}`);
   };
 
   useEffect(() => {

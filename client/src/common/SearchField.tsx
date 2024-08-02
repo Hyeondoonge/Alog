@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 import useDebounce from 'hooks/useDebounce';
 import { OptionQueryString } from 'utils';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useOptionStore from 'store/option';
 
 const StyledTextFieldWrapper = styled.div<{ background: string }>`
@@ -42,7 +42,7 @@ export default function SearchField() {
   const inputRef = useRef(null);
   const theme = useContext(ThemeContext);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const newKeyword = event.target.value;
@@ -50,7 +50,7 @@ export default function SearchField() {
     debounce(() => {
       setKeyword(newKeyword);
       const urlSearchParams = OptionQueryString.createQSUsingKeyword(newKeyword);
-      history.push(`/?${urlSearchParams.toString()}`);
+      navigate(`/?${urlSearchParams.toString()}`);
     }, 550);
   };
 
