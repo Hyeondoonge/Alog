@@ -9,7 +9,7 @@ import Skeleton from '../common/Skeleton';
 import List from '../common/List';
 import styled, { keyframes } from 'styled-components';
 import SearchField from 'common/SearchField';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Language } from 'types/api';
 import { getFilteredLangauges, saveFilteredLangauges } from 'storage/LocalStorage';
 import { LanguageStorage } from 'storage/SessionStorage';
@@ -107,7 +107,7 @@ export default function Home() {
 
   const [isLanguageLoading, setIsLanguageLoading] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleIntersect = () => {
     if (leftCount === 0) return;
     updatePost({

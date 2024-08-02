@@ -7,11 +7,11 @@ import Button from '../common/Button';
 import Template from '../Template';
 import { fetchSolution_POST } from '../form/fetchApis';
 import useToken from '../hooks/useToken';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 export default function WritePost() {
   const theme = useContext(ThemeContext);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [setMessage] = useContext(ModalContext);
   const [isLoggedIn] = useContext(UserContext);
   const [post, setPost] = useState({
@@ -33,7 +33,7 @@ export default function WritePost() {
       setIsFetching(false);
 
       if (res.status === 201) {
-        history.replace(`/post?id=${json.post._id}`);
+        navigate(`/post?id=${json.post._id}`, { replace: true });
         return;
       }
       setMessage(`${json.msg} ${res.status === 201 ? ' ^ࡇ^ ' : ' ㅠࡇㅠ '}`);
