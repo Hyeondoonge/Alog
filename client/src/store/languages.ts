@@ -22,12 +22,12 @@ const useLanguagesStore = create<State & Action>()(
       fetch: async () => {
         get().setIsLoading(true);
         const data = await fetchLanguages_GET();
+        get().setIsLoading(false);
 
         if (!data) {
           // TODO: 안전한 에러 핸들링 추가
           return [];
         }
-        get().setIsLoading(false);
 
         const { languages: fetchedLanguages } = data;
         LanguageStorage.set(fetchedLanguages);
