@@ -6,7 +6,7 @@ import { fetchPosts_GET } from '../post/fetchApis';
 import useLanguagesStore from 'store/languages';
 import PostList from 'common/PostList';
 
-export default function SearchPostList() {
+function SearchPostList() {
   const size = 50;
   const { keyword, isSelected } = useOptionStore((state) => ({
     keyword: state.keyword,
@@ -28,7 +28,7 @@ export default function SearchPostList() {
   });
   const { totalCount, leftCount } = metadata;
 
-  const { data, fetchNextPage, isFetchingNextPage, error } = useInfiniteQuery({
+  const { data, fetchNextPage, isFetching, error } = useInfiniteQuery({
     queryKey: ['posts', keyword, filteredLanguages],
     queryFn: async ({ pageParam }) => {
       if (!keyword) {
@@ -64,26 +64,31 @@ export default function SearchPostList() {
     fetchNextPage();
   };
 
-  if (error || !data) {
-    // FIX: 에러, 로딩 핸들링 개선
+  if (error) {
+    // FIX: 에 핸들링 개선
     return <div>Error</div>;
   }
 
-  const posts = data.pages.flat();
+  const posts = data?.pages.flat() ?? [];
 
   return (
     <>
-      {keyword && (!isFetchingNextPage || posts.length !== 0) && (
+      {keyword && !isFetching && (
         <span style={{ fontSize: '2rem' }}>
           {totalCount ? `검색 결과 ${totalCount}개의 풀이` : '검색 결과가 없습니다.'}
         </span>
       )}
-      {isFetchingNextPage && !posts.length && (
+      {isFetching && (
         <Skeleton
           Component={<div style={{ width: '20rem', height: '5rem', borderRadius: '2rem' }} />}
         />
       )}
-      <PostList posts={posts} handleIntersect={handleIntersect} isLoading={isFetchingNextPage} />
+      <PostList posts={posts} handleIntersect={handleIntersect} isLoading={isFetching} />
     </>
   );
+}
+
+export default function SearchPostListWrapper() {
+  const keyword = useOptionStore((state) => state.keyword);
+  return keyword ? <SearchPostList /> : null;
 }

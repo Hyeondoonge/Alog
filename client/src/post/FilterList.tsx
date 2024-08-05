@@ -7,6 +7,7 @@ import { getFilteredLangauges, saveFilteredLangauges } from 'storage/LocalStorag
 import { useNavigate } from 'react-router-dom';
 import { OptionQueryString } from 'utils';
 import { Language } from 'types/api';
+import Skeleton from 'common/Skeleton';
 
 export default function FilterList() {
   const { fetch, languages, isLoading } = useLanguagesStore((state) => ({
@@ -60,6 +61,7 @@ export default function FilterList() {
       } else {
         fetchedLanguages = await fetch();
       }
+
       initFilter();
     })();
 
@@ -69,12 +71,17 @@ export default function FilterList() {
     };
   }, []);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <List>
+      {isLoading &&
+        new Array(8)
+          .fill(null)
+          .map((_, index) => (
+            <Skeleton
+              key={index}
+              Component={<div style={{ width: '10rem', height: '4rem', borderRadius: '2rem' }} />}
+            />
+          ))}
       {languages.map(({ _id: id, name }, index) => (
         <ClickbaleTag
           size={2}
