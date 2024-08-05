@@ -60,7 +60,7 @@ export default function SearchPostList() {
   });
 
   const handleIntersect = () => {
-    if (leftCount === 0) return;
+    if (!leftCount) return;
     fetchNextPage();
   };
 
