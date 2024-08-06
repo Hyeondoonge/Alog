@@ -1,9 +1,9 @@
 import { IPost } from 'types/post';
-import Post from './Post';
 import styled from 'styled-components';
 import { useEffect, useRef } from 'react';
 import useIntersectionObserver from 'hooks/useIntersectionObserver';
 import Skeleton from 'common/Skeleton';
+import Post from 'post/Post';
 
 const StyledPostList = styled.div`
   display: flex;

@@ -1,0 +1,94 @@
+import { useState } from 'react';
+import Skeleton from 'common/Skeleton';
+import useOptionStore from 'store/option';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { fetchPosts_GET } from '../post/fetchApis';
+import useLanguagesStore from 'store/languages';
+import PostList from 'common/PostList';
+
+function SearchPostList() {
+  const size = 50;
+  const { keyword, isSelected } = useOptionStore((state) => ({
+    keyword: state.keyword,
+    isSelected: state.isSelected
+  }));
+  const { languages } = useLanguagesStore((state) => ({
+    languages: state.languages
+  }));
+  const filteredLanguages = languages
+    .filter((_, index) => isSelected[index])
+    .map(({ name }) => name);
+
+  const [metadata, setMetadata] = useState<{
+    totalCount: null | number;
+    leftCount: null | number;
+  }>({
+    totalCount: null,
+    leftCount: null
+  });
+  const { totalCount, leftCount } = metadata;
+
+  const { data, fetchNextPage, isFetching, error } = useInfiniteQuery({
+    queryKey: ['posts', keyword, filteredLanguages],
+    queryFn: async ({ pageParam }) => {
+      if (!keyword) {
+        setMetadata({ totalCount: null, leftCount: null });
+        return [];
+      }
+
+      const res = await fetchPosts_GET({
+        keyword,
+        languages: filteredLanguages,
+        cursor: pageParam,
+        size
+      });
+
+      if (!res) {
+        // TODO: 에러 핸들링 개선
+        throw new Error('failed to fetch post');
+      }
+
+      const { posts, totalCount, leftCount } = res;
+
+      setMetadata({ totalCount, leftCount });
+      return posts;
+    },
+    initialPageParam: '',
+    getNextPageParam: (lastPage) => (lastPage.length ? lastPage[lastPage.length - 1]._id : null),
+    throwOnError: false,
+    gcTime: 120 * 60 * 1000
+  });
+
+  const handleIntersect = () => {
+    if (!leftCount) return;
+    fetchNextPage();
+  };
+
+  if (error) {
+    // FIX: 에 핸들링 개선
+    return <div>Error</div>;
+  }
+
+  const posts = data?.pages.flat() ?? [];
+
+  return (
+    <>
+      {keyword && !isFetching && (
+        <span style={{ fontSize: '2rem' }}>
+          {totalCount ? `검색 결과 ${totalCount}개의 풀이` : '검색 결과가 없습니다.'}
+        </span>
+      )}
+      {isFetching && (
+        <Skeleton
+          Component={<div style={{ width: '20rem', height: '5rem', borderRadius: '2rem' }} />}
+        />
+      )}
+      <PostList posts={posts} handleIntersect={handleIntersect} isLoading={isFetching} />
+    </>
+  );
+}
+
+export default function SearchPostListWrapper() {
+  const keyword = useOptionStore((state) => state.keyword);
+  return keyword ? <SearchPostList /> : null;
+}

@@ -5,8 +5,7 @@ import Skeleton from '../common/Skeleton';
 import ThemeContext from '../contexts/ThemeContext';
 import UserContext from '../contexts/UserContext';
 import useGetPost from '../hooks/useGetPost';
-import useIntersectionObserver from '../hooks/useIntersectionObserver';
-import PostList from '../post/PostList';
+import PostList from '../common/PostList';
 import Template from '../Template';
 import { useParams } from 'react-router-dom';
 

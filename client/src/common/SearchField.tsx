@@ -1,6 +1,10 @@
-import { useContext, useRef } from 'react';
+import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
+import useDebounce from 'hooks/useDebounce';
+import { OptionQueryString } from 'utils';
+import { useNavigate } from 'react-router-dom';
+import useOptionStore from 'store/option';
 
 const StyledTextFieldWrapper = styled.div<{ background: string }>`
   border-radius: 25px;
@@ -28,36 +32,53 @@ const StyledTextField = styled.input`
   color: white;
 `;
 
-interface SearchFieldProps {
-  placeholder: string;
-  handleChange: React.ChangeEventHandler<HTMLInputElement>;
-  value: string;
-}
+// TODO: 전역상태 사용 및 특수한 작업이 추가됨에 따라 재사용이 어려워짐, 추후 개선 필요
+export default function SearchField() {
+  const [immediateKeyword, setImmediateKeyword] = useState('');
+  const setKeyword = useOptionStore((state) => state.setKeyword);
 
-// click 및 tab 발생 시 focus 이벤트로 처리
-export default function SearchField({ placeholder, handleChange, value }: SearchFieldProps) {
+  const debounce = useDebounce();
+
   const inputRef = useRef(null);
   const theme = useContext(ThemeContext);
+
+  const navigate = useNavigate();
+
+  const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const newKeyword = event.target.value;
+    setImmediateKeyword(newKeyword);
+    debounce(() => {
+      setKeyword(newKeyword);
+      const urlSearchParams = OptionQueryString.createQSUsingKeyword(newKeyword);
+      navigate(`/?${urlSearchParams.toString()}`);
+    }, 550);
+  };
+
+  useEffect(() => {
+    function init() {
+      const { keyword } = OptionQueryString.getOption();
+      setImmediateKeyword(keyword);
+      setKeyword(keyword);
+    }
+
+    init();
+
+    window.addEventListener('popstate', init);
+    return () => {
+      window.removeEventListener('popstate', init);
+    };
+  }, []);
 
   return (
     <div>
       <StyledTextFieldWrapper color={theme.main} background={theme.background}>
         <StyledTextField
           ref={inputRef}
-          value={value}
+          value={immediateKeyword}
           type="text"
-          placeholder={placeholder}
+          placeholder={'찾는 풀이의 문제제목을 입력해보세요.'}
           onChange={handleChange}
         />
-        {/* <span
-          style={{ cursor: 'pointer' }}
-          onClick={() => {
-            inputRef.current.value = '';
-            handleRemove();
-          }}
-        >
-          <RiCloseFill size="25px" />
-        </span> */}
       </StyledTextFieldWrapper>
     </div>
   );
